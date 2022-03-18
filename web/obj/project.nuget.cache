@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Uaib464d2ukmiDWArPI32JSwrKIIPUFXvNpRBajjDmsfsum4IDoJm+FJBlewkQHywtqKXwRuLu0XrVOZwi3T+w==",
+  "success": true,
+  "projectFilePath": "D:\\Avans\\Jaar 3\\Project Everyware\\Code\\VirtualAssistant\\web\\web.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\wesle\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.14.0\\microsoft.visualstudio.azure.containers.tools.targets.1.14.0.nupkg.sha512"
+  ],
+  "logs": []
+}

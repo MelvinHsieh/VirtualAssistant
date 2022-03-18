@@ -1,0 +1,1 @@
+const amqp = require("amqplib")
