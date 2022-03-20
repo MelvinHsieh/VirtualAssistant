@@ -1,4 +1,4 @@
-name: build and test dataservice
+name: build and test web
 
 defaults:
     run:
