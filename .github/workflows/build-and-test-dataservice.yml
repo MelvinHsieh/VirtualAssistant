@@ -1,5 +1,9 @@
 name: build and test dataservice
 
+defaults:
+    run:
+      working-directory: './dataservice/dataservice'
+
 on:
   push:
   pull_request:

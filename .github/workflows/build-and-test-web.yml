@@ -1,4 +1,8 @@
-name: build and test web
+name: build and test dataservice
+
+defaults:
+    run:
+      working-directory: './web/web'
 
 on:
   push:
