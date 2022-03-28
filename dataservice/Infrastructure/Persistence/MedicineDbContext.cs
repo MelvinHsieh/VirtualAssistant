@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
 {
-    internal class MedicineDbContext : DbContext
+    public class MedicineDbContext : DbContext
     {
         public DbSet<Medicine> Medicine { get; set; }
         public DbSet<MedicineColor> Medicine_Colors { get; set; }
