@@ -9,7 +9,7 @@ namespace Application.Repositories
     {
         private MedicineDbContext _context { get; set; }
 
-        public DoseUnit(MedicineDbContext context)
+        public DoseUnitRepo(MedicineDbContext context)
         {
             _context = context;
         }

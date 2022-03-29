@@ -11,11 +11,13 @@ namespace Application
         {
             Infrastructure.DependencyInjection.AddInfrastructure(services, configuration);
 
-            services.AddSingleton<IColorRepo, ColorRepo>();
-            services.AddSingleton<IShapeRepo, ShapeRepo>();
-            services.AddSingleton<ITypeRepo, TypeRepo>();
-            services.AddSingleton<IDoseUnitRepo, DoseUnitRepo>();
-            services.AddSingleton<IMedicineRepo, MedicineRepo>();
+            services.AddScoped<IColorRepo, ColorRepo>();
+            services.AddScoped<IShapeRepo, ShapeRepo>();
+            services.AddScoped<ITypeRepo, TypeRepo>();
+            services.AddScoped<IDoseUnitRepo, DoseUnitRepo>();
+            services.AddScoped<IMedicineRepo, MedicineRepo>();
+            services.AddScoped<IPatientRepo, PatientRepo>();
+            services.AddScoped<IPatientIntakeRepo, PatientIntakeRepo>();
 
             return services;
         }

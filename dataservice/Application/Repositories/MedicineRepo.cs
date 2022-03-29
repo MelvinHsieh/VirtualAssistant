@@ -22,17 +22,17 @@ namespace Application.Repositories
             _unitRepo = unitRepo;
         }
 
-        public Result AddMedicine(string name, string indicator, double dose, DoseUnit unit, MedicineType type, MedicineColor color, MedicineShape shape)
+        public Result AddMedicine(string name, string indicator, double dose, string unit, string type, string color, string shape)
         {
             Medicine medicine = new Medicine()
             {
                 Name = name,
                 Indication = indicator,
                 Dose = dose,
-                DoseUnit = unit.Unit,
-                Type = type.Type,
-                Color = color.Color,
-                Shape = shape.Shape
+                DoseUnit = unit,
+                Type = type,
+                Color = color,
+                Shape = shape
             };
 
             Result result = ValidateMedicine(medicine);

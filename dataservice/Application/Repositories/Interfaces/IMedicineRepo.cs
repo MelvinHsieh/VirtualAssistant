@@ -5,7 +5,7 @@ namespace Application.Repositories.Interfaces
 {
     public interface IMedicineRepo
     {
-        public Result AddMedicine(string name, string indicator, double dose, DoseUnit unit, MedicineType type, MedicineColor color, MedicineShape shape);
+        public Result AddMedicine(string name, string indicator, double dose, string unit, string type, string color, string shape);
 
         public Medicine? GetMedicine(int id);
 

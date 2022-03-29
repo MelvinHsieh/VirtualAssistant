@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations.MedicineDbMigrations
 {
     [DbContext(typeof(MedicineDbContext))]
-    partial class MedicineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220329093937_Added_PatientIntakes")]
+    partial class Added_PatientIntakes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,98 +286,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.HasKey("Id");
 
                     b.ToTable("PatientIntakes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
-                            MedicineId = 1,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 11, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
-                            MedicineId = 2,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 12, 0, 0, 0),
-                            MedicineId = 2,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
-                            MedicineId = 3,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
-                            MedicineId = 4,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
-                            MedicineId = 5,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
-                            MedicineId = 6,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
-                            MedicineId = 7,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
-                            MedicineId = 8,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Amount = 1,
-                            IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
-                            IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
-                            MedicineId = 9,
-                            PatientId = 1
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.MedicalData.Medicine", b =>

@@ -1,5 +1,6 @@
 ﻿using Domain.Entities.MedicalData;
 using Infrastructure.Persistence.Seeders;
+using Infrastructure.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
@@ -11,6 +12,7 @@ namespace Infrastructure.Persistence
         public DbSet<MedicineShape> Medicine_Shapes { get; set; }
         public DbSet<MedicineType> Medicine_Types { get; set; }
         public DbSet<DoseUnit> DoseUnits { get; set; }
+        public DbSet<PatientIntake> PatientIntakes { get; set; }
 
         public MedicineDbContext(DbContextOptions<MedicineDbContext> options)
             : base(options)
@@ -20,6 +22,17 @@ namespace Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Allow the use of timeonly object
+            modelBuilder.Entity<PatientIntake>(builder =>
+            {
+                builder.Property(x => x.IntakeStart)
+                    .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
+
+                builder.Property(x => x.IntakeEnd)
+                    .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
+            });
+
+            //Lay the lookup table keys
             modelBuilder.Entity<Medicine>()
                 .HasOne<MedicineColor>()
                 .WithMany()
@@ -40,8 +53,10 @@ namespace Infrastructure.Persistence
                 .WithMany()
                 .HasForeignKey(m => m.DoseUnit);
 
+            //Seed Data
             MedicineIdentifierSeeder.SeedMedicineIdentifiers(modelBuilder);
             MedicineSeeder.SeedMedicine(modelBuilder);
+            PatientIntakeSeeder.SeedPatientIntake(modelBuilder);
         }
     }
 }
