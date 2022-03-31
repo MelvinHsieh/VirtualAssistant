@@ -26,12 +26,8 @@ public class SpeechIntentService extends IntentService {
     private static final String SubscriptionKey = "0829870a77cf497096c5b42a2c15ae0a";
     private static final String ServiceRegion = "westeurope";
 
-    private static final String RECOGNIZE = "com.example.virtualassistent.services.action.RECOGNIZE";
-
+    private static final String ACTION_RECOGNIZE = "com.example.virtualassistent.services.action.RECOGNIZE";
     private static final String RESULT_RECEIVER = "com.example.virtualassistent.services.extra.RESULT_RECEIVER";
-//    private static final String PARAM_RESULT = "com.example.virtualassistent.services.extra.PARAM_RESULT";
-
-
 
     public SpeechIntentService() {
         super("SpeechIntentService");
@@ -40,8 +36,7 @@ public class SpeechIntentService extends IntentService {
 
     public static void startRecognize(Context context) {
         Intent intent = new Intent(context, SpeechIntentService.class);
-        intent.setAction(RECOGNIZE);
-//        intent.putExtra(EXTRA_PARAM1, param1);
+        intent.setAction(ACTION_RECOGNIZE);
         context.startService(intent);
     }
 
@@ -51,8 +46,7 @@ public class SpeechIntentService extends IntentService {
         ResultReceiver resultReceiver = intent.getParcelableExtra(RESULT_RECEIVER);
 
         final String action = intent.getAction();
-        if (RECOGNIZE.equals(action)) {
-//                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
+        if (ACTION_RECOGNIZE.equals(action)) {
             try {
                 handleActionRecognize(resultReceiver);
             } catch (ExecutionException | InterruptedException e) {
@@ -62,7 +56,7 @@ public class SpeechIntentService extends IntentService {
     }
 
     /**
-     * Handle the recognizer in a secondary thread
+     * Handle the recognizer in a worker thread
      */
     private void handleActionRecognize(ResultReceiver resultReceiver) throws ExecutionException, InterruptedException {
         Bundle bundle = new Bundle();
@@ -77,23 +71,14 @@ public class SpeechIntentService extends IntentService {
         SpeechRecognitionResult speechRecognitionResult = task.get();
 
         if (speechRecognitionResult.getReason() == ResultReason.RecognizedSpeech) {
-            //System.out.println("RECOGNIZED: Text=" + speechRecognitionResult.getText());
             bundle.putSerializable(SpeechResultReciever.PARAM_RESULT, speechRecognitionResult.getText());
         }
         else if (speechRecognitionResult.getReason() == ResultReason.NoMatch) {
-            //System.out.println("NOMATCH: Speech could not be recognized.");
             bundle.putSerializable(SpeechResultReciever.PARAM_RESULT, "NOMATCH: Speech could not be recognized.");
         }
         else if (speechRecognitionResult.getReason() == ResultReason.Canceled) {
             CancellationDetails cancellation = CancellationDetails.fromResult(speechRecognitionResult);
-            //System.out.println("CANCELED: Reason=" + cancellation.getReason());
             bundle.putSerializable(SpeechResultReciever.PARAM_RESULT, "CANCELED: Reason=" + cancellation.getReason());
-
-//            if (cancellation.getReason() == CancellationReason.Error) {
-//                System.out.println("CANCELED: ErrorCode=" + cancellation.getErrorCode());
-//                System.out.println("CANCELED: ErrorDetails=" + cancellation.getErrorDetails());
-//                System.out.println("CANCELED: Did you update the subscription info?");
-//            }
         }
 
         if(resultReceiver != null){
@@ -106,7 +91,7 @@ public class SpeechIntentService extends IntentService {
         speechResultReceiver.setReceiver(resultReceiverCallBack);
 
         Intent intent = new Intent(context, SpeechIntentService.class);
-        intent.setAction(RECOGNIZE);
+        intent.setAction(ACTION_RECOGNIZE);
         intent.putExtra(RESULT_RECEIVER, speechResultReceiver);
         context.startService(intent);
     }
