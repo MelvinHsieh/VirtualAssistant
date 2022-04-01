@@ -1,0 +1,10 @@
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\obj\Debug\netstandard2.1\Bot.Model.csproj.AssemblyReference.cache
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\obj\Debug\netstandard2.1\Bot.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\obj\Debug\netstandard2.1\Bot.Model.AssemblyInfoInputs.cache
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\obj\Debug\netstandard2.1\Bot.Model.AssemblyInfo.cs
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\obj\Debug\netstandard2.1\Bot.Model.csproj.CoreCompileInputs.cache
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\bin\Debug\netstandard2.1\Bot.Model.deps.json
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\bin\Debug\netstandard2.1\Bot.Model.dll
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\bin\Debug\netstandard2.1\Bot.Model.pdb
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\obj\Debug\netstandard2.1\Bot.Model.dll
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\Bot.Model\obj\Debug\netstandard2.1\Bot.Model.pdb

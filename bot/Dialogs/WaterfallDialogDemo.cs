@@ -80,50 +80,5 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
         }
-
-        //private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        //{
-        //    if (!_luisRecognizer.IsConfigured)
-        //    {
-        //        await stepContext.Context.SendActivityAsync(
-        //            MessageFactory.Text("LUIS is niet geconfigureerd.", inputHint: InputHints.IgnoringInput), cancellationToken);
-
-        //        return await stepContext.NextAsync(null, cancellationToken);
-        //    }
-
-        //    var messageText = stepContext.Options?.ToString() ?? $"Hallo! Waar kan ik u vandaag mee ondersteunen?";
-        //    var promptMessage = MessageFactory.Text(messageText, messageText, InputHints.ExpectingInput);
-        //    return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
-        //}
-
-        //private async Task<DialogTurnResult> FindIntentAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        //{
-        //    var luisResult = await _luisRecognizer.RecognizeAsync(stepContext.Context, cancellationToken);
-        //    var intents = luisResult.Intents.OrderBy(i => i.Value);
-
-        //    switch (luisResult.Intents.First().Key)
-        //    {
-        //        case nameof(FlightBooking.Intent.findMedicine):
-        //            var medicineQuestion = $"Klopt het dat je benieuwd bent welke medicijnen je moet innemen?";
-        //            var medicineQuestionMessage = MessageFactory.Text(medicineQuestion, medicineQuestion, InputHints.IgnoringInput);
-        //            await stepContext.Context.SendActivityAsync(medicineQuestionMessage, cancellationToken);
-
-        //            break;
-        //        case nameof(FlightBooking.Intent.findMedicineDose):
-        //            var medicineDoseQuestion = $"Klopt het dat je iets wilt weten over de dosering van een medicijn?";
-        //            var medicineDoseQuestionMessage = MessageFactory.Text(medicineDoseQuestion, medicineDoseQuestion, InputHints.IgnoringInput);
-        //            await stepContext.Context.SendActivityAsync(medicineDoseQuestionMessage, cancellationToken);
-
-        //            break;
-        //        default:
-        //            var catchText = $"Mijn exuses, ik heb de vraag niet begrepen.";
-        //            var catchMessage = MessageFactory.Text(catchText, catchText, InputHints.IgnoringInput);
-        //            await stepContext.Context.SendActivityAsync(catchMessage, cancellationToken);
-
-        //            break;
-        //    }
-
-        //    return await stepContext.NextAsync(null, cancellationToken);
-        //}
     }
 }

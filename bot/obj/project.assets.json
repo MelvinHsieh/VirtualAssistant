@@ -2389,6 +2389,16 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
+      },
+      "Bot.Model/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.1",
+        "compile": {
+          "bin/placeholder/Bot.Model.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Bot.Model.dll": {}
+        }
       }
     }
   },
@@ -7735,10 +7745,16 @@
         "system.xml.xmlserializer.4.3.0.nupkg.sha512",
         "system.xml.xmlserializer.nuspec"
       ]
+    },
+    "Bot.Model/1.0.0": {
+      "type": "project",
+      "path": "../Bot.Model/Bot.Model.csproj",
+      "msbuildProject": "../Bot.Model/Bot.Model.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "Bot.Model >= 1.0.0",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 3.1.1",
       "Microsoft.Bot.Builder.AI.Luis >= 4.15.2",
       "Microsoft.Bot.Builder.Dialogs >= 4.15.2",
@@ -7772,7 +7788,11 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Ryan\\OneDrive\\Desktop\\New folder\\VirtualAssistant\\Bot.Model\\Bot.Model.csproj": {
+              "projectPath": "C:\\Users\\Ryan\\OneDrive\\Desktop\\New folder\\VirtualAssistant\\Bot.Model\\Bot.Model.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
