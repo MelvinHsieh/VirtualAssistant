@@ -4,14 +4,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreBot.Models;
+using Domain.Entities.MedicalData;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
+using Newtonsoft.Json;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -37,7 +40,21 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> Confirm(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text($"U zou vandaag twéé keer {stepContext.Result} moeten innemen. Eén keer om 9 uur 's ochtends, en één keer om 4 uur 's middags."));
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:5257");
+
+            Medicine medicine = JsonConvert.DeserializeObject<List<Medicine>>(await client.GetStringAsync("api/medicine")).FirstOrDefault(m => m.Name == (String) stepContext.Result);
+
+            if (medicine != null)
+            {
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"De dosering '{medicine.Name}' is {medicine.Dose} {medicine.DoseUnit}."));
+            }
+            else
+            {
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Van dit medicijn is geen dosering bekend."));
+            }
+
+            
             return await stepContext.EndDialogAsync(null, cancellationToken);
         }
     }

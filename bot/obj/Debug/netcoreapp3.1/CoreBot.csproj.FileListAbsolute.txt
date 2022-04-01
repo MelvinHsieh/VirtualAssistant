@@ -200,7 +200,6 @@ C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcore
 C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\CoreBot.AssemblyInfoInputs.cache
 C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\CoreBot.AssemblyInfo.cs
 C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\CoreBot.csproj.CoreCompileInputs.cache
-C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\CoreBot.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\CoreBot.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\staticwebassets\CoreBot.StaticWebAssets.Manifest.cache
 C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\CoreBot.RazorTargetAssemblyInfo.cache
@@ -208,3 +207,5 @@ C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcore
 C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\CoreBot.dll
 C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\CoreBot.pdb
 C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\obj\Debug\netcoreapp3.1\CoreBot.genruntimeconfig.cache
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\bin\Debug\netcoreapp3.1\Bot.Model.dll
+C:\Users\Ryan\OneDrive\Desktop\New folder\VirtualAssistant\bot\bin\Debug\netcoreapp3.1\Bot.Model.pdb
