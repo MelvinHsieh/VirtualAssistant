@@ -1,4 +1,4 @@
-package com.example.virtualassistent;
+package com.avans.virtualassistant;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.virtualassistent", appContext.getPackageName());
+        assertEquals("com.avans.virtualassistant", appContext.getPackageName());
     }
 }

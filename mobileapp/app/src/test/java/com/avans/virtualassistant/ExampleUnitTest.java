@@ -1,4 +1,4 @@
-package com.example.virtualassistent;
+package com.avans.virtualassistant;
 
 import org.junit.Test;
 

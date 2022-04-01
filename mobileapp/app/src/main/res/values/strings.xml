@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">VirtualAssistent</string>
+    <string name="app_name">VirtualAssistant</string>
+    <string name="ask_question">Stel Vraag</string>
+    <string name="question">Uw vraag</string>
 </resources>
