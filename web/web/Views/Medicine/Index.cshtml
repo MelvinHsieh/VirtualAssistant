@@ -46,6 +46,16 @@
 <script>
     let apiUrl = "https://localhost:44385/api";
 
+    function deleteMedicine(id){
+        var xhr = new XMLHttpRequest();
+        var url = apiUrl + "/Medicine/" + id;
+        xhr.open("DELETE", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.send();
+        window.location.replace(window.location.origin + "/Medicine");
+    }
+
     async function loadNames() {
           const response = await fetch(apiUrl + '/Medicine')
             .then((response) => {
@@ -67,6 +77,7 @@
                     var cell6 = row.insertCell(5);
                     var cell7 = row.insertCell(6);
                     var cell8 = row.insertCell(7);
+                    var cell9 = row.insertCell(8);
 
                     // Add some text to the new cells:
                     cell1.innerHTML = item.id;
@@ -77,6 +88,7 @@
                     cell6.innerHTML = item.shape;
                     cell7.innerHTML = item.color;
                     cell8.innerHTML = item.type;
+                    cell9.innerHTML = '<button class="btn btn-danger" onclick="deleteMedicine('+item.id+')">Verwijderen</button>'
                 });
 
             })
