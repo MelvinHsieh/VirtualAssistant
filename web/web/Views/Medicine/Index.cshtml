@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Medicijnen</h1>
+
+<p>
+    <a asp-action="Create">Nieuw medicijn</a>
+</p>
+<table class="table" id="table">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Naam
+            </th>
+            <th>
+                indicatie
+            </th>
+            <th>
+                Dosering
+            </th>
+            <th>
+                Hoeveelheid
+            </th>
+            <th>
+                Vorm
+            </th>
+            <th>
+                Kleur
+            </th>
+            <th>
+                Type
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section Scripts
+{
+<script>
+    let apiUrl = "https://localhost:44385/api";
+
+    async function loadNames() {
+          const response = await fetch(apiUrl + '/Medicine')
+            .then((response) => {
+            return response.json()
+            })
+            .then((data) => {
+                var table = document.getElementById("table");
+
+                data.forEach((item, key) => {
+                    // Create an empty <tr> element and add it to the 1st position of the table:
+                    var row = table.insertRow(-1);
+
+                    // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+                    var cell5 = row.insertCell(4);
+                    var cell6 = row.insertCell(5);
+                    var cell7 = row.insertCell(6);
+                    var cell8 = row.insertCell(7);
+
+                    // Add some text to the new cells:
+                    cell1.innerHTML = item.id;
+                    cell2.innerHTML = item.name;
+                    cell3.innerHTML = item.indication;
+                    cell4.innerHTML = item.dose;
+                    cell5.innerHTML = item.doseUnit;
+                    cell6.innerHTML = item.shape;
+                    cell7.innerHTML = item.color;
+                    cell8.innerHTML = item.type;
+                });
+
+            })
+            .catch((err) => {
+            // Do something for an error here
+            })
+    }
+
+    loadNames();
+</script>
+}
