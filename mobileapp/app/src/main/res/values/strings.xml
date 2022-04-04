@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">VirtualAssistent</string>
+    <string name="listen_text">...</string>
+    <string name="listen_button">Listen</string>
 </resources>
