@@ -7,7 +7,7 @@ namespace web.Controllers
 {
     public class MedicineController : Controller
     {
-        private readonly String _apiURL;
+        private readonly string _apiURL;
 
         public MedicineController(IConfiguration configuration)
         {
@@ -98,6 +98,44 @@ namespace web.Controllers
                 TempData["error"] = "Er is iets fout gegaan bij het aanmaken van het medicijn!";
                 return RedirectToAction("Index");
             }
+        }
+
+        // GET: MedicineController/CreateMedicineDoseUnit
+        public ActionResult CreateMedicineDoseUnitAsync()
+        {
+            return View();
+        }
+
+        // POST: MedicineController/CreateMedicineDoseUnit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateMedicineDoseUnitAsync(string doseUnit)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var uri = new Uri(_apiURL + "/DoseUnit");
+                    var result = await client.PostAsJsonAsync(uri, doseUnit);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        TempData["success"] = "Dosering eenheid aangemaakt!";
+                    }
+                    else
+                    {
+                        TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de dosering eenheid!";
+                    }
+                }
+
+            }
+            catch
+            {
+                TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de dosering eenheid!";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
         }
 
         // GET: MedicineController/Delete/5
