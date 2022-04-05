@@ -100,8 +100,41 @@ namespace web.Controllers
             }
         }
 
+        // GET: MedicineController/Delete/5
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            if (id != 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var uri = new Uri(_apiURL + "/Medicine/" + id);
+                        var result = await client.DeleteAsync(uri);
+
+                        if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            TempData["success"] = "Medicijn is succesvol verwijderd!";
+
+                        }
+                        else
+                        {
+                            TempData["error"] = "Medicijn kon niet worden verwijderd!";
+                        }
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Medicijn kon niet worden verwijderd!";
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
         // GET: MedicineController/CreateMedicineDoseUnit
-        public ActionResult CreateMedicineDoseUnitAsync()
+        public ActionResult CreateMedicineDoseUnit()
         {
             return View();
         }
@@ -138,34 +171,115 @@ namespace web.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: MedicineController/Delete/5
-        public async Task<ActionResult> DeleteAsync(int id)
+        // GET: MedicineController/CreateMedicineColor
+        public ActionResult CreateMedicineColor()
         {
-            if (id != 0)
+            return View();
+        }
+
+        // POST: MedicineController/CreateMedicineColor
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateMedicineColorAsync(string color)
+        {
+            try
             {
-                try
+                using (var client = new HttpClient())
                 {
-                    using (var client = new HttpClient())
+                    var uri = new Uri(_apiURL + "/MedicineColor");
+                    var result = await client.PostAsJsonAsync(uri, color);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        var uri = new Uri(_apiURL + "/Medicine/" + id);
-                        var result = await client.DeleteAsync(uri);
-
-                        if (result.StatusCode == System.Net.HttpStatusCode.OK)
-                        {
-                            TempData["success"] = "Medicijn is succesvol verwijderd!";
-
-                        }
-                        else
-                        {
-                            TempData["error"] = "Medicijn kon niet worden verwijderd!";
-                        }
+                        TempData["success"] = "Medicijn kleur aangemaakt!";
+                    }
+                    else
+                    {
+                        TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de medicijn kleur!";
                     }
                 }
-                catch
+
+            }
+            catch
+            {
+                TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de medicijn kleur!";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: MedicineController/CreateMedicineShape
+        public ActionResult CreateMedicineShape()
+        {
+            return View();
+        }
+
+        // POST: MedicineController/CreateMedicineShape
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateMedicineShapeAsync(string shape)
+        {
+            try
+            {
+                using (var client = new HttpClient())
                 {
-                    TempData["error"] = "Medicijn kon niet worden verwijderd!";
-                    return RedirectToAction("Index");
+                    var uri = new Uri(_apiURL + "/MedicineShape");
+                    var result = await client.PostAsJsonAsync(uri, shape);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        TempData["success"] = "Medicijn vorm aangemaakt!";
+                    }
+                    else
+                    {
+                        TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de medicijn vorm!";
+                    }
                 }
+
+            }
+            catch
+            {
+                TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de medicijn vorm!";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: MedicineController/CreateMedicineType
+        public ActionResult CreateMedicineType()
+        {
+            return View();
+        }
+
+        // POST: MedicineController/CreateMedicineType
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateMedicineTypeAsync(string type)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var uri = new Uri(_apiURL + "/MedicineType");
+                    var result = await client.PostAsJsonAsync(uri, type);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        TempData["success"] = "Medicijn type aangemaakt!";
+                    }
+                    else
+                    {
+                        TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de medicijn type!";
+                    }
+                }
+
+            }
+            catch
+            {
+                TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de medicijn type!";
+                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Index");
