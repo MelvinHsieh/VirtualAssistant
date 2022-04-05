@@ -23,7 +23,7 @@ namespace web.Controllers
                 var uri = new Uri(_apiURL + "/Medicine");
 
                 var response = client.GetAsync(uri).Result;
-               
+
                 string result = await response.Content.ReadAsStringAsync();
 
                 List<MedicineModel>? models = JsonConvert.DeserializeObject<List<MedicineModel>>(result);
@@ -31,16 +31,10 @@ namespace web.Controllers
             }
         }
 
-        // GET: MedicineController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: MedicineController/Create
         public async Task<ActionResult> CreateAsync()
         {
-            using(var client = new HttpClient())
+            using (var client = new HttpClient())
             {
                 var uri = new Uri(_apiURL + "/DoseUnit");
                 var response = client.GetAsync(uri).Result;
@@ -78,58 +72,65 @@ namespace web.Controllers
         // POST: MedicineController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(MedicineModel model)
+        public async Task<ActionResult> CreateAsync(MedicineModel model)
         {
             try
             {
-                return RedirectToAction(nameof(IndexAsync));
+                using (var client = new HttpClient())
+                {
+                    var uri = new Uri(_apiURL + "/Medicine");
+                    var result = await client.PostAsJsonAsync(uri, model);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        TempData["success"] = "Medicijn aangemaakt!";
+                    }
+                    else
+                    {
+                        TempData["error"] = "Er is iets fout gegaan bij het aanmaken van het medicijn!";
+                    }
+                }
+
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
-            }
-        }
-
-        // GET: MedicineController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: MedicineController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(IndexAsync));
-            }
-            catch
-            {
-                return View();
+                TempData["error"] = "Er is iets fout gegaan bij het aanmaken van het medicijn!";
+                return RedirectToAction("Index");
             }
         }
 
         // GET: MedicineController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            return View();
-        }
+            if (id != 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var uri = new Uri(_apiURL + "/Medicine/" + id);
+                        var result = await client.DeleteAsync(uri);
 
-        // POST: MedicineController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(IndexAsync));
+                        if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            TempData["success"] = "Medicijn is succesvol verwijderd!";
+
+                        }
+                        else
+                        {
+                            TempData["error"] = "Medicijn kon niet worden verwijderd!";
+                        }
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Medicijn kon niet worden verwijderd!";
+                    return RedirectToAction("Index");
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return RedirectToAction("Index");
         }
     }
 }
