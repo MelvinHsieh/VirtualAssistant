@@ -1,9 +1,20 @@
-﻿namespace web.Models
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
+
+namespace web.Models
 {
     public class PatientModel
     {
-        public string? PatientId { get; set; }
-        public string? Name { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public int Id { get; set; } = 0;
+
+        [JsonProperty(PropertyName = "name")]
+        [DisplayName("Naam")]
+        public string Name { get; set; } = string.Empty;
+
+        [JsonProperty(PropertyName = "mail")]
+        [DisplayName("E-mail")]
+        public string mail { get; set; } = string.Empty;
 
     }
 }
