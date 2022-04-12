@@ -41,7 +41,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> Confirm(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5257");
+            client.BaseAddress = new Uri("http://localhost:5257"); // TODO: In appsettings zetten, extraheren naar aparte business method en rekening houden met migratie van de dataservice naar docker container ipv lokaal gehost.
 
             Medicine medicine = JsonConvert.DeserializeObject<List<Medicine>>(await client.GetStringAsync("api/medicine")).FirstOrDefault(m => m.Name == (String) stepContext.Result);
 
