@@ -25,7 +25,7 @@ namespace dataservice.Controllers
                 }*/
 
         // GET api/<PatientIntakeController>/5
-        [HttpGet("/intake/{id}")]
+        [HttpGet("intake/{id}")]
         public IActionResult GetByIntakeId(int id)
         {
             var intake = _intakeRepo.GetIntakeById(id);
@@ -38,7 +38,7 @@ namespace dataservice.Controllers
         }
 
         // GET api/<PatientIntakeController>/5
-        [HttpGet("/patient/{id}")]
+        [HttpGet("patient/{id}")]
         public IActionResult GetByPatientId(int id)
         {
             var intake = _intakeRepo.GetIntakesByPatientId(id);

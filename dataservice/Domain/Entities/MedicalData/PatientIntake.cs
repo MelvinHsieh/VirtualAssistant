@@ -16,5 +16,7 @@ namespace Domain.Entities.MedicalData
         public TimeOnly IntakeEnd { get; set; }
 
         public int Amount { get; set; }
+
+        public virtual Medicine Medicine { get; set; }
     }
 }
