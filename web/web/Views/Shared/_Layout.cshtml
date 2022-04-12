@@ -26,7 +26,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Medicine" asp-action="Index">Medicijnen</a>
                         </li>
                     </ul>
                 </div>
@@ -35,6 +35,24 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["success"] != null)
+            {
+                @if (TempData.ContainsKey("success"))  
+                { 
+                    <div class="alert alert-success" role="alert">
+                        @TempData["success"]
+                    </div>
+                }
+            }
+            @if (TempData["error"] != null)
+            {
+                @if (TempData.ContainsKey("error"))  
+                { 
+                    <div class="alert alert-danger" role="alert">
+                        @TempData["error"]
+                    </div>
+                }
+            }
             @RenderBody()
         </main>
     </div>
