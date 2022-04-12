@@ -21,7 +21,7 @@ namespace dataservice.Controllers
         [HttpGet]
         public string Get()
         {
-            return "Cannot give out patient data";
+            return Ok(_patientRepo.GetAllPatiens());
         }
 
         // GET api/<PatientController>/5

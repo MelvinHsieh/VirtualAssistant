@@ -50,6 +50,11 @@ namespace Application.Repositories
             return _context.Patients.Find(id);
         }
 
+        public IEnumerable<Patient> GetAllPatients()
+        {
+            return _context.Patients;
+        }
+
         public Result RemovePatient(int id)
         {
             Patient? patient = GetPatient(id);
