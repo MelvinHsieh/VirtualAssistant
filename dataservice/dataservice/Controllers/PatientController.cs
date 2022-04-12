@@ -19,9 +19,9 @@ namespace dataservice.Controllers
 
         // GET: api/<PatientController>
         [HttpGet]
-        public string Get()
+        public IActionResult Get()
         {
-            return Ok(_patientRepo.GetAllPatiens());
+            return Ok(_patientRepo.GetAllPatients());
         }
 
         // GET api/<PatientController>/5
