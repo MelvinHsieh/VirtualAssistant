@@ -6,76 +6,80 @@
 
 <h1>Medicijn overzicht</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Nieuw medicijn aanmaken</a>
-    <a asp-action="CreateMedicineDoseUnit" class="btn btn-secondary">Nieuwe dosering eenheid aanmaken</a>
-    <a asp-action="CreateMedicineColor" class="btn btn-secondary">Nieuwe medicijn kleur aanmaken</a>
-    <a asp-action="CreateMedicineShape" class="btn btn-secondary">Nieuwe medicijn vorm aanmaken</a>
-    <a asp-action="CreateMedicineType" class="btn btn-secondary">Nieuw medicijn type aanmaken</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Indication)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dose)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DoseUnit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Shape)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Indication)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dose)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DoseUnit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Shape)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
-                @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
-                @Html.ActionLink("Verwijderen", "Delete", new {  id=item.Id  })
-            </td>
-        </tr>
+@if (Model != null)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Nieuw medicijn aanmaken</a>
+        <a asp-action="CreateMedicineDoseUnit" class="btn btn-secondary">Nieuwe dosering eenheid aanmaken</a>
+        <a asp-action="CreateMedicineColor" class="btn btn-secondary">Nieuwe medicijn kleur aanmaken</a>
+        <a asp-action="CreateMedicineShape" class="btn btn-secondary">Nieuwe medicijn vorm aanmaken</a>
+        <a asp-action="CreateMedicineType" class="btn btn-secondary">Nieuw medicijn type aanmaken</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Indication)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Dose)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DoseUnit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Shape)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Color)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Type)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Indication)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Dose)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DoseUnit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Shape)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Color)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
+                        @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
+                        @Html.ActionLink("Verwijderen", "Delete", new {  id=item.Id  })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>

@@ -21,13 +21,21 @@ namespace web.Controllers
             using (var client = new HttpClient())
             {
                 var uri = new Uri(_apiURL + "/Medicine");
-
+                try
+                {
                 var response = client.GetAsync(uri).Result;
 
                 string result = await response.Content.ReadAsStringAsync();
 
                 List<MedicineModel>? models = JsonConvert.DeserializeObject<List<MedicineModel>>(result);
                 return View(models);
+                } catch
+                {
+                    TempData["error"] = "De medicijnen konden niet opgehaald worden. Controleer de dataservice!";
+
+                    return View();
+                }
+
             }
         }
 
@@ -36,6 +44,7 @@ namespace web.Controllers
         {
             using (var client = new HttpClient())
             {
+                try { 
                 var uri = new Uri(_apiURL + "/DoseUnit");
                 var response = client.GetAsync(uri).Result;
                 string result = await response.Content.ReadAsStringAsync();
@@ -66,6 +75,11 @@ namespace web.Controllers
                 ViewBag.MedicineShapes = medicineShapes;
 
                 return View();
+                } catch
+                {
+                    TempData["error"] = "De medicijnengegevens konden niet opgehaald worden. Controleer de dataservice!";
+                    return RedirectToAction("Index");
+                }
             }
         }
 
