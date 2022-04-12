@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Dosering eenheid aanmaken";
+}
+
+<h4>Dosering eenheid aanmaken</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateMedicineDoseUnit">
+            <div class="form-group">
+                <label for="DoseUnit" class="control-label">Dosering eenheid</label>
+                <input name="DoseUnit" class="form-control" type="text" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Dosering eenheid aanmaken" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-2">
+    <a asp-action="Index">Terug naar medicijnoverzicht</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
