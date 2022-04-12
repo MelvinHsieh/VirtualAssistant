@@ -2,6 +2,7 @@
 using Application.Repositories.Interfaces;
 using Domain.Entities.MedicalData;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Repositories
 {
@@ -44,12 +45,12 @@ namespace Application.Repositories
 
         public PatientIntake? GetIntakeById(int intakeId)
         {
-            return _medicineDbContext.PatientIntakes.Find(intakeId);
+            return _medicineDbContext.PatientIntakes.Include(x => x.Medicine).First(x => x.Id == intakeId);
         }
 
         public IEnumerable<PatientIntake> GetIntakesByPatientId(int patientId)
         {
-            return _medicineDbContext.PatientIntakes.Where(x => x.PatientId == patientId);
+            return _medicineDbContext.PatientIntakes.Include(x => x.Medicine).Where(x => x.PatientId == patientId);
         }
 
         public Result RemoveIntake(int id)
