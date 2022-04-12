@@ -9,6 +9,8 @@ namespace Application.Repositories.Interfaces
 
         public Patient? GetPatient(int id);
 
+        public IEnumerable<Patient> GetAllPatients();
+
         public bool DoesPatientExist(int id);
 
         public Result RemovePatient(int id);
