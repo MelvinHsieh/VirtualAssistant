@@ -74,9 +74,30 @@ namespace web.Controllers
         }
 
         // GET: PatientController/Edit/id
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            if (id > 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var uri = new Uri(_apiURL + "/Patient/" + id);
+
+                        var response = client.GetAsync(uri).Result;
+
+                        string result = await response.Content.ReadAsStringAsync();
+
+                        PatientModel? model = JsonConvert.DeserializeObject<PatientModel>(result);
+                        return View(model);
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Ophalen van patiënt is mislukt!";
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: PatientController/Edit/id
@@ -84,13 +105,53 @@ namespace web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(int id)
         {
-            return View();
+            if (id > 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var uri = new Uri(_apiURL + "/Patient/" + id);
+                        var result = await client.DeleteAsync(uri);
+
+                        if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                            TempData["success"] = "Patiënt successvol verwijderd!";
+                        else
+                            TempData["error"] = "Patiënt kon niet worden verwijderd!";
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Verwijderen mislukt!";
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: PatientController/Delete/id
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            _ = DeleteAsync(id);
+            if (id > 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var uri = new Uri(_apiURL + "/Patient/" + id);
+
+                        var response = client.GetAsync(uri).Result;
+
+                        string result = await response.Content.ReadAsStringAsync();
+
+                        PatientModel? model = JsonConvert.DeserializeObject<PatientModel>(result);
+                        return View(model);
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Ophalen van patiënt is mislukt!";
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
 
