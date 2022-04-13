@@ -1,6 +1,8 @@
 ﻿using Application.Repositories.Interfaces;
 using dataservice.ViewModels;
+using Infrastructure.Utils;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,10 +13,13 @@ namespace dataservice.Controllers
     public class PatientIntakeController : ControllerBase
     {
         private IPatientIntakeRepo _intakeRepo;
+        private JsonSerializerOptions _jserOptions;
 
         public PatientIntakeController(IPatientIntakeRepo intakeRepo)
         {
             _intakeRepo = intakeRepo;
+            _jserOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+            _jserOptions.Converters.Add(new TimeOnlySerializer());
         }
 
         // GET: api/<PatientIntakeController>
@@ -28,26 +33,37 @@ namespace dataservice.Controllers
         [HttpGet("intake/{id}")]
         public IActionResult GetByIntakeId(int id)
         {
-            var intake = _intakeRepo.GetIntakeById(id);
-            if (intake == null)
-            {
-                return NotFound();
+            try { 
+                var intake = _intakeRepo.GetIntakeById(id);
+                if (intake == null)
+                {
+                    return NotFound();
+                }
+
+                var result = JsonSerializer.Serialize(intake, _jserOptions);
+
+                return Ok(result);
+            } catch(NotSupportedException ex) {
+                return BadRequest(ex);  
             }
 
-            return Ok(intake);
         }
 
         // GET api/<PatientIntakeController>/5
         [HttpGet("patient/{id}")]
         public IActionResult GetByPatientId(int id)
         {
-            var intake = _intakeRepo.GetIntakesByPatientId(id);
-            if (intake == null)
-            {
-                return NotFound();
-            }
+           
+                var intake = _intakeRepo.GetIntakesByPatientId(id);
+                if (intake == null)
+                {
+                    return NotFound();
+                }
 
-            return Ok(intake);
+                var result = JsonSerializer.Serialize(intake, _jserOptions);
+
+                return Ok(result);
+            
         }
 
         // POST api/<PatientIntakeController>
