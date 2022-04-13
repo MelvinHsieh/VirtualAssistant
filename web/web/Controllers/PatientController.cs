@@ -21,7 +21,7 @@ namespace web.Controllers
         {
             using (var client = new HttpClient())
             {
-                var uri = new Uri(_apiURL + "/Medicine");
+                var uri = new Uri(_apiURL + "/Patient");
 
                 var response = client.GetAsync(uri).Result;
 
@@ -47,58 +47,79 @@ namespace web.Controllers
         // POST: PatientController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> CreateAsync(PatientModel model)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                using (var client = new HttpClient())
+                {
+                    var uri = new Uri(_apiURL + "/Patient");
+                    var result = await client.PostAsJsonAsync(uri, model);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        TempData["success"] = "Patiënt aangemaakt!";
+                    }
+                    else
+                    {
+                        TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de Patiënt!";
+                    }
+                }
             }
             catch
             {
-                return View();
+                TempData["error"] = "Patiënt aanmaken mislukt!";
             }
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: PatientController/Edit/5
+        // GET: PatientController/Edit/id
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: PatientController/Edit/5
+        // POST: PatientController/Edit/id
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PatientController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> EditAsync(int id)
         {
             return View();
         }
 
-        // POST: PatientController/Delete/5
+        // GET: PatientController/Delete/id
+        public ActionResult Delete(int id)
+        {
+            _ = DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: PatientController/Delete/id
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            try
+            if (id > 0)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var uri = new Uri(_apiURL + "/Patient/" + id);
+                        var result = await client.DeleteAsync(uri);
+
+                        if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                            TempData["success"] = "Patiënt successvol verwijderd!";
+                        else
+                            TempData["error"] = "Patiënt kon niet worden verwijderd!";
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Verwijderen mislukt!";
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
