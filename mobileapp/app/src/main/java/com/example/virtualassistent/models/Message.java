@@ -83,4 +83,14 @@ public class Message {
 
         return jsonString;
     }
+
+    public JSONObject toJsonObject(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("text", this.text);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
 }
