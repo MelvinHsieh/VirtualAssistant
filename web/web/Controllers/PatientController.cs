@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using web.Models;
 
 namespace web.Controllers
@@ -27,8 +28,25 @@ namespace web.Controllers
 
                 string result = await response.Content.ReadAsStringAsync();
 
-                List<PatientModel>? models = JsonConvert.DeserializeObject<List<PatientModel>>(result);
-                return View(models);
+                try
+                {
+                    List<PatientModel>? models = JsonConvert.DeserializeObject<List<PatientModel>>(result);
+                    if (models != null)
+                        return View(models);
+                    else
+                    {
+                        TempData["error"] = "Model couldn't be converted or is just empty";
+                        return View();
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (IsValidJson(result))
+                        TempData["error"] = e.Message;
+                    else
+                        TempData["error"] = "Result was not valid JSON data, could be an SQL error";
+                    return View();
+                }
             }
         }
 
@@ -182,5 +200,37 @@ namespace web.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+
+        private bool IsValidJson(string strInput)
+        {//Using JSON.Net
+            if (string.IsNullOrWhiteSpace(strInput)) { return false; }
+            strInput = strInput.Trim();
+            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || //For object
+                (strInput.StartsWith("[") && strInput.EndsWith("]"))) //For array
+            {
+                try
+                {
+                    var obj = JToken.Parse(strInput);
+                    return true;
+                }
+                catch (JsonReaderException jex)
+                {
+                    //Exception in parsing json
+                    Console.WriteLine(jex.Message);
+                    return false;
+                }
+                catch (Exception ex) //some other exception
+                {
+                    Console.WriteLine(ex.ToString());
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }
