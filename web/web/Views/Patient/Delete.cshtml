@@ -55,6 +55,7 @@
     </dl>
     
     <form asp-action="Delete">
+        @Html.AntiForgeryToken()
         <input type="submit" value="Verwijder" class="btn btn-danger" /> |
         <a asp-action="Index">Terug naar overzicht</a>
     </form>
