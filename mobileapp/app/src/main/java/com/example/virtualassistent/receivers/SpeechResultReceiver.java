@@ -1,10 +1,10 @@
-package com.example.virtualassistent.recievers;
+package com.example.virtualassistent.receivers;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 
-public class SpeechResultReciever<T> extends ResultReceiver {
+public class SpeechResultReceiver<T> extends ResultReceiver {
 
     public static final int RESULT_CODE_OK = 1100;
     public static final int RESULT_CODE_ERROR = 666;
@@ -12,7 +12,7 @@ public class SpeechResultReciever<T> extends ResultReceiver {
     public static final String PARAM_RESULT = "result";
     private ResultReceiverCallBack mReceiver;
 
-    public SpeechResultReciever(Handler handler) {
+    public SpeechResultReceiver(Handler handler) {
         super(handler);
     }
     public void setReceiver(ResultReceiverCallBack<T> receiver) {
