@@ -6,12 +6,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.example.virtualassistent.bot.Bot;
 import com.example.virtualassistent.chat.MessageListAdapter;
 import com.example.virtualassistent.model.Message;
 import com.example.virtualassistent.receivers.RecognizeSpeechResultReceiver;
 import com.example.virtualassistent.services.SpeechIntentService;
+import com.example.virtualassistent.storage.AppDatabase;
 import com.example.virtualassistent.storage.MessageDAO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MessageListAdapter messageAdapter;
     private List<Message> messageList;
+    private RecyclerView messageRecycler;
     private MessageDAO msgDao;
     private Bot bot;
 
@@ -31,17 +34,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-//                AppDatabase.class, "message-history").build();
-//        msgDao = db.messageDao();
-//        List<Message> messages = msgDao.getAll();
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "message-history").build();
+        msgDao = db.messageDao();
 
         messageList = new LinkedList<>();
-//        messageList.addAll(messages);
 
-        RecyclerView messageRecycler = (RecyclerView) findViewById(R.id.recycler_gchat);
+        new Thread(() -> {
+            List<Message> messages = msgDao.getAll();
+
+            if(messages != null) {
+                messageList.addAll(messages);
+            }
+        }).start();
+
+
+        messageRecycler = (RecyclerView) findViewById(R.id.recycler_gchat);
         messageAdapter = new MessageListAdapter(messageList);
-        messageRecycler.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setStackFromEnd(true);
+        messageRecycler.setLayoutManager(llm);
         messageRecycler.setAdapter(messageAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -69,10 +81,14 @@ public class MainActivity extends AppCompatActivity {
         fab.setImageResource(R.drawable.mic_inactive);
         Message message = new Message(msg, isUser, Calendar.getInstance().getTimeInMillis());
         messageList.add(message);
-        messageAdapter.notifyItemInserted(messageList.size() - 1);
+        int pos = messageList.size() - 1;
+        messageAdapter.notifyItemInserted(pos);
+        messageRecycler.scrollToPosition(pos);
 
-        //Save new message to the database
-//        msgDao.insertAll(message);
+        // Save new message to the database
+        new Thread(() -> {
+            msgDao.insertAll(message);
+        }).start();
     }
 
     public Bot getBot() {return bot;}

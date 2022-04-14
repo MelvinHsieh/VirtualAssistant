@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 
-@Entity
+@Entity(tableName = "message")
 public class Message {
 
     public Message(String message, boolean isUser, long createdAt) {
@@ -14,7 +14,7 @@ public class Message {
         this.createdAt = createdAt;
     }
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public int uid;
 
     @ColumnInfo(name = "message")
