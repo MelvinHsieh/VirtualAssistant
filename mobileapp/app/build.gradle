@@ -7,6 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.virtualassistent"
+        vectorDrawables.useSupportLibrary = true
         minSdk 21
         targetSdk 31
         versionCode 1
