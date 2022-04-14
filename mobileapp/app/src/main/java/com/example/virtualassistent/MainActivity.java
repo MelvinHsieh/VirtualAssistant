@@ -44,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "message-history").build();
-        msgDao = db.messageDao();
-        List<Message> messages = msgDao.getAll();
+//        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+//                AppDatabase.class, "message-history").build();
+//        msgDao = db.messageDao();
+//        List<Message> messages = msgDao.getAll();
 
         messageList = new LinkedList<>();
-        messageList.addAll(messages);
+//        messageList.addAll(messages);
 
         messageRecycler = (RecyclerView) findViewById(R.id.recycler_gchat);
         messageAdapter = new MessageListAdapter(messageList);
