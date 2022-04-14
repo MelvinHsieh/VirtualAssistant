@@ -15,7 +15,7 @@ public class RecognizeSpeechResultReceiver implements SpeechResultReceiver.Resul
     public void onSuccess(String data) {
         if (activityRef.get() != null) {
             activityRef.get().showMessage(data, true);
-            activityRef.get().sendMessage(data);
+            activityRef.get().getBot().sendMessage(data);
         }
     }
 
