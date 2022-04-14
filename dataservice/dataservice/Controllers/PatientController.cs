@@ -29,7 +29,7 @@ namespace dataservice.Controllers
         public IActionResult Get(int id)
         {
             var patient = _patientRepo.GetPatient(id);
-            if (patient != null)
+            if (patient == null)
             {
                 return NotFound();
             }
