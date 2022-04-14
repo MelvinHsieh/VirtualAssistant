@@ -1,6 +1,5 @@
 package com.example.virtualassistent.chat;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import com.example.virtualassistent.R;
 import com.example.virtualassistent.model.Message;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 public class MessageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -36,7 +34,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemViewType(int position) {
         Message message = mMessageList.get(position);
 
-        if (message.isSender) {
+        if (message.isUser) {
             // If the current user is the sender of the message
             return VIEW_TYPE_MESSAGE_SENT;
         } else {

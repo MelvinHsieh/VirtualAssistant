@@ -8,9 +8,9 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Message {
 
-    public Message(String message, boolean isSender, long createdAt) {
+    public Message(String message, boolean isUser, long createdAt) {
         this.message = message;
-        this.isSender = isSender;
+        this.isUser = isUser;
         this.createdAt = createdAt;
     }
 
@@ -20,8 +20,8 @@ public class Message {
     @ColumnInfo(name = "message")
     public String message;
 
-    @ColumnInfo(name = "is_sender")
-    public boolean isSender;
+    @ColumnInfo(name = "is_user")
+    public boolean isUser;
 
     @ColumnInfo(name = "created_at")
     public long createdAt;

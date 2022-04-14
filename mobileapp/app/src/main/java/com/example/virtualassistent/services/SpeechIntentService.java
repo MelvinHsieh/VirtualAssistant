@@ -32,14 +32,6 @@ public class SpeechIntentService extends IntentService {
         super("SpeechIntentService");
     }
 
-
-    public static void startRecognize(Context context) {
-        Intent intent = new Intent(context, SpeechIntentService.class);
-        intent.setAction(ACTION_RECOGNIZE);
-        context.startService(intent);
-    }
-
-
     @Override
     protected void onHandleIntent(Intent intent) {
         ResultReceiver resultReceiver = intent.getParcelableExtra(RESULT_RECEIVER);

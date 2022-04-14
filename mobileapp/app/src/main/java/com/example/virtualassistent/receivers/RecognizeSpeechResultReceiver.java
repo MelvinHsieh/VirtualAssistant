@@ -1,0 +1,26 @@
+package com.example.virtualassistent.receivers;
+
+import com.example.virtualassistent.MainActivity;
+
+import java.lang.ref.WeakReference;
+
+public class RecognizeSpeechResultReceiver implements SpeechResultReceiver.ResultReceiverCallBack<String> {
+    private final WeakReference<MainActivity> activityRef;
+
+    public RecognizeSpeechResultReceiver(MainActivity activity) {
+        activityRef = new WeakReference<MainActivity>(activity);
+    }
+
+    @Override
+    public void onSuccess(String data) {
+        if (activityRef.get() != null) {
+            activityRef.get().showMessage(data, true);
+            activityRef.get().sendMessage(data);
+        }
+    }
+
+    @Override
+    public void onError(Exception exception) {
+        activityRef.get().showMessage("Account info failed", false);
+    }
+}

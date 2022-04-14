@@ -1,54 +1,46 @@
 package com.example.virtualassistent;
 
 import android.os.Bundle;
-import android.view.View;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.virtualassistent.bot.models.Activity;
-import com.example.virtualassistent.chat.MessageListAdapter;
-import com.example.virtualassistent.model.Message;
-import com.example.virtualassistent.receivers.SpeechResultReceiver;
-import com.example.virtualassistent.services.SpeechIntentService;
-import com.example.virtualassistent.storage.MessageDAO;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.virtualassistent.bot.models.Activity;
 import com.example.virtualassistent.bot.models.Conversation;
 import com.example.virtualassistent.bot.models.From;
-import com.example.virtualassistent.bot.models.MessageSet;
 import com.example.virtualassistent.bot.websocket.BotWebSocketClient;
+import com.example.virtualassistent.chat.MessageListAdapter;
+import com.example.virtualassistent.model.Message;
+import com.example.virtualassistent.receivers.RecognizeSpeechResultReceiver;
+import com.example.virtualassistent.services.SpeechIntentService;
+import com.example.virtualassistent.storage.MessageDAO;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView messageRecycler;
     private MessageListAdapter messageAdapter;
     private List<Message> messageList;
     private MessageDAO msgDao;
-    ExecutorService executorService = Executors.newFixedThreadPool(4);
     Conversation conversation = null;
     String secretCode = "xP92GZX8--c.Cx-sJT1V-hbGz2_nkSaC_5pQvPd4anvBpBm7mOwhmYc"; //TODO ergens opbergen in een kluisje
     RequestQueue queue = null;
@@ -68,63 +60,44 @@ public class MainActivity extends AppCompatActivity {
         messageList = new LinkedList<>();
 //        messageList.addAll(messages);
 
-        messageRecycler = (RecyclerView) findViewById(R.id.recycler_gchat);
+        RecyclerView messageRecycler = (RecyclerView) findViewById(R.id.recycler_gchat);
         messageAdapter = new MessageListAdapter(messageList);
         messageRecycler.setLayoutManager(new LinearLayoutManager(this));
         messageRecycler.setAdapter(messageAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Aan het luisteren...", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                fab.setImageResource(R.drawable.mic_active);
-                runSpeechRecognizer();
-            }
+        fab.setOnClickListener(view -> {
+            runSpeechRecognizer(fab);
         });
 
         queue = Volley.newRequestQueue(this);
-        startConversation();
+        startConversation(this);
+    }
+
+    public void runSpeechRecognizer() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        runSpeechRecognizer(fab);
     }
 
     /** Run the speech recognition service */
-    public void runSpeechRecognizer() {
+    public void runSpeechRecognizer(FloatingActionButton fab) {
+        Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
+        fab.setImageResource(R.drawable.mic_active);
         SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
     }
 
-    private void showMessage(String msg) {
+    public void showMessage(String msg, boolean isUser) {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setImageResource(R.drawable.mic_inactive);
-        Message message = new Message(msg, true, Calendar.getInstance().getTimeInMillis());
+        Message message = new Message(msg, isUser, Calendar.getInstance().getTimeInMillis());
         messageList.add(message);
         messageAdapter.notifyItemInserted(messageList.size() - 1);
 
         //Save new message to the database
-        msgDao.insertAll(message);
+//        msgDao.insertAll(message);
     }
 
-    private static class RecognizeSpeechResultReceiver implements SpeechResultReceiver.ResultReceiverCallBack<String> {
-        private final WeakReference<MainActivity> activityRef;
-
-        public RecognizeSpeechResultReceiver(MainActivity activity) {
-            activityRef = new WeakReference<MainActivity>(activity);
-        }
-
-        @Override
-        public void onSuccess(String data) {
-            if (activityRef.get() != null) {
-                activityRef.get().showMessage(data);
-            }
-        }
-
-        @Override
-        public void onError(Exception exception) {
-            activityRef.get().showMessage("Account info failed");
-        }
-    }
-
-    public void startConversation() {
+    public void startConversation(MainActivity mainActivity) {
         String conversationURL = "https://directline.botframework.com/v3/directline/conversations";
 
         JsonObjectRequest startConversationRequest = new JsonObjectRequest(Request.Method.POST, conversationURL, null, new Response.Listener<JSONObject>() {
@@ -133,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 conversation = gson.fromJson(response.toString(), Conversation.class);
                 try {
                     URI serverURI = new URI(conversation.streamUrl);
-                    BotWebSocketClient client = new BotWebSocketClient(serverURI);
+                    BotWebSocketClient client = new BotWebSocketClient(serverURI, mainActivity);
                     client.connect();
                     sendConversationUpdate();
                 } catch (URISyntaxException e) {
@@ -156,6 +129,10 @@ public class MainActivity extends AppCompatActivity {
     public void sendConversationUpdate() {
         Activity activity = new Activity();
         activity.type = "conversationUpdate";
+        activity.locale = "nl-NL";
+        activity.from = new From("eenID");
+        activity.text = "Update";
+        sendActivity(activity);
     }
 
     public void sendMessage(String message) {
@@ -164,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
         activity.text = message;
         activity.from = new From("eenID");
         activity.locale = "nl-NL";
+        sendActivity(activity);
     }
 
     public void sendActivity(Activity activity) {
@@ -174,14 +152,9 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 System.out.println("POST activity response: " + response);
             }
-        }, new Response.ErrorListener() {
+        }, error -> System.out.println("Error: " + error.toString())) {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println("Error: " + error.toString());
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Content-Type", "application/json");
                 params.put("Authorization", "Bearer " + secretCode);
@@ -195,40 +168,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return activity.ToJSON().getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    return null;
-                }
-            }
-        };
-
-        queue.add(messagePostRequest);
-    }
-
-    public void readMessage() {
-        MessageSet messageSet = null;
-        String messageSetPath = "https://directline.botframework.com/api/conversations/" + conversation.conversationId + "/messages/";
-
-        StringRequest messagePostRequest = new StringRequest(Request.Method.GET, messageSetPath, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                System.out.println(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println("Error: " + error.toString());
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
-                params.put("Authorization", "BotConnector " + secretCode);
-
-                return params;
+            public byte[] getBody() {
+                return activity.ToJSON().getBytes(StandardCharsets.UTF_8);
             }
         };
 
