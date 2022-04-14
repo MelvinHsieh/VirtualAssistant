@@ -1,4 +1,4 @@
-package com.example.virtualassistent.models;
+package com.example.virtualassistent.bot.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Message {
-    public Message() {}
+    public Message() {
+    }
 
     public Message(String jsonString) throws JSONException {
         this(new JSONObject(jsonString));
@@ -44,8 +45,6 @@ public class Message {
         if(json.isNull("eTag") == false) {
             this.eTag = json.getString("eTag");
         }
-
-        // TODO: Implement channelData, images, and attachments
     }
 
 
@@ -59,11 +58,11 @@ public class Message {
     public List<Attachment> attachments = null;
     public String eTag = null;
 
-    public String toJSON() {
-        String jsonString = "";
+    public JSONObject ToJSONObject() {
+        JSONObject json = new JSONObject();
 
         try {
-            JSONObject json = new JSONObject();
+
             json.put("id", this.id);
             json.put("conversationId", this.conversationId);
             if(this.created != null) {
@@ -73,24 +72,14 @@ public class Message {
             json.put("from", this.from);
             json.put("text", this.text);
             json.put("eTag", this.eTag);
-
-            // channelData, images, and attachments are never encoded to JSON by this object.
-
-            jsonString = json.toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return jsonString;
+        return json;
     }
 
-    public JSONObject toJsonObject(){
-        JSONObject json = new JSONObject();
-        try {
-            json.put("text", this.text);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return json;
+    public String ToJSON() {
+        return this.ToJSONObject().toString();
     }
 }

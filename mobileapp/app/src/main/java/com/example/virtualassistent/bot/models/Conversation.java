@@ -1,9 +1,11 @@
-package com.example.virtualassistent.models;
+package com.example.virtualassistent.bot.models;
 
 public class Conversation {
     public String conversationId;
     public String token;
     public int expires_in;
+    public String streamUrl;
+    public String referenceGrammarId;
 
     @Override
     public String toString() {

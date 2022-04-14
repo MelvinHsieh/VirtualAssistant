@@ -3,28 +3,33 @@ package com.example.virtualassistent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.virtualassistent.models.Conversation;
-import com.example.virtualassistent.models.Message;
+import com.example.virtualassistent.bot.models.Conversation;
+import com.example.virtualassistent.bot.models.Message;
+import com.example.virtualassistent.bot.models.MessageSet;
+import com.example.virtualassistent.bot.websocket.BotWebSocketClient;
 import com.example.virtualassistent.recievers.SpeechResultReciever;
 import com.example.virtualassistent.services.SpeechIntentService;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -84,61 +89,112 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startConversation() {
-        URL directLineUrl = null;
+        String conversationURL = "https://directline.botframework.com/v3/directline/conversations";
 
-        try {
-            directLineUrl = new URL("https://directline.botframework.com/api/conversations/");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, directLineUrl.toString(), null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest startConversationRequest = new JsonObjectRequest(Request.Method.POST, conversationURL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 conversation = gson.fromJson(response.toString(), Conversation.class);
-                sendMessage();
+                try {
+                    URI serverURI = new URI(conversation.streamUrl);
+                    BotWebSocketClient client = new BotWebSocketClient(serverURI);
+                    client.connect();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
             }
-        }, error -> System.out.println(error.toString())) { //????
+        }, error -> System.out.println(error.toString())) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", "BotConnector " + secretCode);
+                headers.put("Authorization", "Bearer " + secretCode);
                 headers.put("Content-Type", "application/json");
                 return headers;
             }
         };
 
-        queue.add(req);
+        queue.add(startConversationRequest);
     }
 
     public void sendMessage() {
         Message message = new Message();
         message.text = "[SOME TEXT TO SEND TO YOUR BOT]";
-        String botUrl = "https://directline.botframework.com/api/conversations/" + conversation.conversationId + "/messages/";
+        message.created = new Date(System.currentTimeMillis());
+        message.from = "Ryan";
+        message.conversationId = conversation.conversationId;
+
+        String messagePostURL = "https://directline.botframework.com/api/conversations/" + conversation.conversationId + "/messages/";
         boolean messageSent = false;
-        URL messageUrl = null;
 
-        try {
-            messageUrl = new URL(botUrl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, botUrl.toString(), message.toJsonObject(), new Response.Listener<JSONObject>() {
+        StringRequest messagePostRequest = new StringRequest(Request.Method.POST, messagePostURL, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
-                System.out.println("massage: " + response.toString());
+            public void onResponse(String response) {
+                readMessage();
             }
-        }, error -> System.out.println(error.toString())) { //????
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("Error: " + error.toString());
+            }
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", "BotConnector " + secretCode);
-                headers.put("Content-Type", "application/json");
-                return headers;
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Authorization", "BotConnector " + secretCode);
+
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return message.ToJSON().getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    return null;
+                }
+            }
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                System.out.println(response.statusCode);
+                return super.parseNetworkResponse(response);
             }
         };
 
-        queue.add(req);
+        queue.add(messagePostRequest);
+    }
+
+    public void readMessage() {
+        MessageSet messageSet = null;
+        String messageSetPath = "https://directline.botframework.com/api/conversations/" + conversation.conversationId + "/messages/";
+
+        StringRequest messagePostRequest = new StringRequest(Request.Method.GET, messageSetPath, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                System.out.println(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("Error: " + error.toString());
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Authorization", "BotConnector " + secretCode);
+
+                return params;
+            }
+        };
+
+        queue.add(messagePostRequest);
     }
 }

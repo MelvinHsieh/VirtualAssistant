@@ -1,4 +1,4 @@
-package com.example.virtualassistent.models;
+package com.example.virtualassistent.bot.models;
 
 public class Attachment
 {
