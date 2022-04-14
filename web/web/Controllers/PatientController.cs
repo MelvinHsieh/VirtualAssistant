@@ -20,33 +20,40 @@ namespace web.Controllers
         // GET: PatientController
         public async Task<ActionResult> IndexAsync()
         {
-            using (var client = new HttpClient())
+            try
             {
-                var uri = new Uri(_apiURL + "/Patient");
-
-                var response = client.GetAsync(uri).Result;
-
-                string result = await response.Content.ReadAsStringAsync();
-
-                try
+                using (var client = new HttpClient())
                 {
-                    List<PatientModel>? models = JsonConvert.DeserializeObject<List<PatientModel>>(result);
-                    if (models != null)
-                        return View(models);
-                    else
+                    var uri = new Uri(_apiURL + "/Patient");
+
+                    var response = client.GetAsync(uri).Result;
+
+                    string result = await response.Content.ReadAsStringAsync();
+
+                    try
                     {
-                        TempData["error"] = "Response: " + response.StatusCode;
+                        List<PatientModel>? models = JsonConvert.DeserializeObject<List<PatientModel>>(result);
+                        if (models != null)
+                            return View(models);
+                        else
+                        {
+                            TempData["error"] = "Response: " + response.StatusCode;
+                            return View();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        if (IsValidJson(result))
+                            TempData["error"] = e.Message;
+                        else
+                            TempData["error"] = "Result was not valid JSON data, could be an SQL error";
                         return View();
                     }
                 }
-                catch (Exception e)
-                {
-                    if (IsValidJson(result))
-                        TempData["error"] = e.Message;
-                    else
-                        TempData["error"] = "Result was not valid JSON data, could be an SQL error";
-                    return View();
-                }
+            } catch
+            {
+                TempData["error"] = "Geen connectie kon gemaakt worden met de Dataservice.";
+                return View();
             }
         }
 
