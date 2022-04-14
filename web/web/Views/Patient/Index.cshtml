@@ -63,7 +63,7 @@
                         @Html.DisplayFor(modelItem => item.PhoneNumber)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.BirthDate)
+                        @Convert.ToDateTime(item.BirthDate).ToString("dd/MM/yyyy")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.PostalCode)
@@ -72,8 +72,8 @@
                         @Html.DisplayFor(modelItem => item.HomeNumber)
                     </td>
                     <td>
-                        @Html.ActionLink("Aanpassen", "Edit", new { id=item.Id }) 
-                        @Html.ActionLink("Verwijderen", "Delete", new {  id=item.Id  })
+                        @Html.ActionLink("Aanpassen", "Edit", new { id=item.Id }, new { @class= "btn btn-primary" }) 
+                        @Html.ActionLink("Verwijderen", "Delete", new {  id=item.Id  }, new { @class= "btn btn-danger" })
                     </td>
                 </tr>
             }
