@@ -38,7 +38,7 @@ namespace web.Models
         public string BirthDate { get; set; } = string.Empty;
 
         [Required]
-        [RegularExpression("/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i")]
+        /*[RegularExpression("^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$")] <-- this regex is not working for some reason*/
         [JsonProperty(PropertyName = "postalCode")]
         [DisplayName("Postcode")]
         public string PostalCode { get; set; } = string.Empty;

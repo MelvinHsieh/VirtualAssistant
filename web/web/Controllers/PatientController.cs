@@ -35,7 +35,7 @@ namespace web.Controllers
                         return View(models);
                     else
                     {
-                        TempData["error"] = "Model couldn't be converted or is just empty";
+                        TempData["error"] = "Response: " + response.StatusCode;
                         return View();
                     }
                 }
