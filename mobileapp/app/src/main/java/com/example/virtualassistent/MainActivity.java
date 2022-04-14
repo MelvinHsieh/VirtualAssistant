@@ -3,6 +3,7 @@ package com.example.virtualassistent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +16,8 @@ import com.example.virtualassistent.chat.MessageListAdapter;
 import com.example.virtualassistent.model.Message;
 import com.example.virtualassistent.recievers.SpeechResultReciever;
 import com.example.virtualassistent.services.SpeechIntentService;
+import com.example.virtualassistent.storage.AppDatabase;
+import com.example.virtualassistent.storage.MessageDAO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView messageRecycler;
     private MessageListAdapter messageAdapter;
     private List<Message> messageList;
+    private MessageDAO msgDao;
     ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     @Override
@@ -40,9 +44,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "message-history").build();
+        msgDao = db.messageDao();
+        List<Message> messages = msgDao.getAll();
+
         messageList = new LinkedList<>();
-        messageList.add(new Message("Hey, hoe kan ik je helpen?", false, Calendar.getInstance().getTimeInMillis()));
-        messageList.add(new Message("Niet, hou je bek nou eens", true, Calendar.getInstance().getTimeInMillis() + 1000));
+        messageList.addAll(messages);
 
         messageRecycler = (RecyclerView) findViewById(R.id.recycler_gchat);
         messageAdapter = new MessageListAdapter(messageList);
@@ -76,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         Message message = new Message(msg, true, Calendar.getInstance().getTimeInMillis());
         messageList.add(message);
         messageAdapter.notifyItemInserted(messageList.size() - 1);
+
+        //Save new message to the database
+        msgDao.insertAll(message);
     }
 
     private static class RecognizeSpeechResultReceiver implements SpeechResultReciever.ResultReceiverCallBack<String> {
