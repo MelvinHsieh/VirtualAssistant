@@ -17,15 +17,15 @@ public class Message {
     }
 
     public Message(JSONObject json) throws JSONException {
-        if(json.isNull("id") == false) {
+        if(!json.isNull("id")) {
             this.id = json.getString("id");
         }
 
-        if(json.isNull("conversationId") == false) {
+        if(!json.isNull("conversationId")) {
             this.conversationId = json.getString("conversationId");
         }
 
-        if(json.isNull("created") == false) {
+        if(!json.isNull("created")) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             try {
                 this.created = dateFormat.parse(json.getString("created"));
@@ -34,15 +34,15 @@ public class Message {
             }
         }
 
-        if(json.isNull("from") == false) {
+        if(!json.isNull("from")) {
             this.from = json.getString("from");
         }
 
-        if(json.isNull("text") == false) {
+        if(!json.isNull("text")) {
             this.text = json.getString("text");
         }
 
-        if(json.isNull("eTag") == false) {
+        if(!json.isNull("eTag")) {
             this.eTag = json.getString("eTag");
         }
     }

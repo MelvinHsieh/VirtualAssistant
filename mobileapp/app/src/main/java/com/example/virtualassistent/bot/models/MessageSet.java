@@ -15,15 +15,15 @@ public class MessageSet {
     }
 
     public MessageSet(JSONObject json) throws JSONException {
-        if (json.isNull("watermark") == false) {
+        if (!json.isNull("watermark")) {
             this.watermark = json.getString("watermark");
         }
 
-        if (json.isNull("eTag") == false) {
+        if (!json.isNull("eTag")) {
             this.eTag = json.getString("eTag");
         }
 
-        if (json.isNull("messages") == false) {
+        if (!json.isNull("messages")) {
             JSONArray array = json.getJSONArray("messages");
 
             if (array.length() > 0) {
