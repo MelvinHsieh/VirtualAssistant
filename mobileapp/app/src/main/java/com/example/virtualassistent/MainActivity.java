@@ -71,11 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Run the speech recognition service */
     public void runSpeechRecognizer() {
-//        TextView listenedText = findViewById(R.id.listenedText);
-//        String message = listenedText.getText().toString();
         SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
-//        SpeechIntentService.startRecognize(view.getContext());
-
     }
 
     private void showMessage(String msg) {
