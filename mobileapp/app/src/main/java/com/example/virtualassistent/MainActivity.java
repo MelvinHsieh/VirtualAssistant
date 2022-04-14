@@ -15,7 +15,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.virtualassistent.bot.models.Activity;
 import com.example.virtualassistent.bot.models.Conversation;
+import com.example.virtualassistent.bot.models.From;
 import com.example.virtualassistent.bot.models.Message;
 import com.example.virtualassistent.bot.models.MessageSet;
 import com.example.virtualassistent.bot.websocket.BotWebSocketClient;
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     URI serverURI = new URI(conversation.streamUrl);
                     BotWebSocketClient client = new BotWebSocketClient(serverURI);
                     client.connect();
+                    sendConversationUpdate();
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -116,20 +119,26 @@ public class MainActivity extends AppCompatActivity {
         queue.add(startConversationRequest);
     }
 
-    public void sendMessage() {
-        Message message = new Message();
-        message.text = "[SOME TEXT TO SEND TO YOUR BOT]";
-        message.created = new Date(System.currentTimeMillis());
-        message.from = "Ryan";
-        message.conversationId = conversation.conversationId;
+    public void sendConversationUpdate() {
+        Activity activity = new Activity();
+        activity.type = "conversationUpdate";
+    }
 
-        String messagePostURL = "https://directline.botframework.com/api/conversations/" + conversation.conversationId + "/messages/";
-        boolean messageSent = false;
+    public void sendMessage(String message) {
+        Activity activity = new Activity();
+        activity.type = "message";
+        activity.text = message;
+        activity.from = new From("eenID");
+        activity.locale = "nl-NL";
+    }
 
-        StringRequest messagePostRequest = new StringRequest(Request.Method.POST, messagePostURL, new Response.Listener<String>() {
+    public void sendActivity(Activity activity) {
+        String postActivityURL = "https://directline.botframework.com/v3/directline/conversations/" + conversation.conversationId + "/activities";
+
+        StringRequest messagePostRequest = new StringRequest(Request.Method.POST, postActivityURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                readMessage();
+                System.out.println("POST activity response: " + response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -141,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Content-Type", "application/json");
-                params.put("Authorization", "BotConnector " + secretCode);
+                params.put("Authorization", "Bearer " + secretCode);
 
                 return params;
             }
@@ -154,16 +163,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public byte[] getBody() throws AuthFailureError {
                 try {
-                    return message.ToJSON().getBytes("utf-8");
+                    return activity.ToJSON().getBytes("utf-8");
                 } catch (UnsupportedEncodingException uee) {
                     return null;
                 }
-            }
-
-            @Override
-            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                System.out.println(response.statusCode);
-                return super.parseNetworkResponse(response);
             }
         };
 
