@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using CoreBot;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot.Builder;
@@ -24,6 +25,7 @@ namespace Microsoft.BotBuilderSamples
             services.AddSingleton<UserState>();
             services.AddSingleton<ConversationState>();
             services.AddSingleton<MedicineRecognizer>();
+            services.AddSingleton<DataServiceConnection>();
 
             services.AddSingleton<IBot, DialogBot>();
         }

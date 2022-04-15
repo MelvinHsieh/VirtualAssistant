@@ -1,29 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoreBot.Models;
+using CoreBot;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
-using Microsoft.Extensions.Logging;
-using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
-    public class LUISComponentDialogDemo : ComponentDialog
+    public class AssistanceDialog : ComponentDialog
     {
         private MedicineRecognizer _medicineRecognizer;
 
-        public LUISComponentDialogDemo(MedicineRecognizer medicineRecognizer)
-            : base(nameof(LUISComponentDialogDemo))
+        public AssistanceDialog(MedicineRecognizer medicineRecognizer, DataServiceConnection connection)
+            : base(nameof(AssistanceDialog))
         {
             _medicineRecognizer = medicineRecognizer;
 
-            AddDialog(new LUISScheduleDialog());
-            AddDialog(new LUISDoseDialog());
-            AddDialog(new TextPrompt(nameof(TextPrompt))); // We voegen de text prompt dialog toe aan de component dialog, zodat we deze kunnen gebruiken tijdens hierop volgende dialogs.
+            AddDialog(new FindScheduleDialog(connection));
+            AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 OfferHelpAsync,
@@ -49,10 +44,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             switch (intent)
             {
-                case nameof(Intents.findSchedule):
-                    return await stepContext.BeginDialogAsync(nameof(LUISScheduleDialog), null, cancellationToken);
-                case nameof(Intents.findMedicineDose):
-                    return await stepContext.BeginDialogAsync(nameof(LUISDoseDialog), null, cancellationToken);
+                case nameof(Intents.Medicine_FindSchedule):
+                    return await stepContext.BeginDialogAsync(nameof(FindScheduleDialog), null, cancellationToken);
                 default:
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text("Mijn excuses, ik heb de hulpvraag niet begrepen."));
                     return await stepContext.EndDialogAsync(null, cancellationToken);
@@ -62,7 +55,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
     public enum Intents
     {
-        findMedicineDose,
-        findSchedule
+        Medicine_ConfirmMedicine,
+        Medicine_FindDose,
+        Medicine_FindMedicineByAttributes,
+        Medicine_FindSchedule,
+        Medicine_GetMedicineInfo
     }
 }

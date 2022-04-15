@@ -12,13 +12,13 @@ namespace Microsoft.BotBuilderSamples
 
         public MedicineRecognizer(IConfiguration configuration)
         {
-            var luisIsConfigured = !string.IsNullOrEmpty(configuration["LuisAppId"]) && !string.IsNullOrEmpty(configuration["LuisAPIKey"]) && !string.IsNullOrEmpty(configuration["LuisAPIHostName"]);
+            var luisIsConfigured = !string.IsNullOrEmpty(configuration["LuisAppId"]) && !string.IsNullOrEmpty(configuration["LuisApiKey"]) && !string.IsNullOrEmpty(configuration["LuisApiEndpoint"]);
             if (luisIsConfigured)
             {
                 var luisApplication = new LuisApplication(
                     configuration["LuisAppId"],
-                    configuration["LuisAPIKey"],
-                    "https://" + configuration["LuisAPIHostName"]);
+                    configuration["LuisApiKey"],
+                    configuration["LuisApiEndpoint"]);
 
                 var recognizerOptions = new LuisRecognizerOptionsV3(luisApplication)
                 {

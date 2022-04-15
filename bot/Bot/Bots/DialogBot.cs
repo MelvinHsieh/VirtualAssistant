@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot;
 using CoreBot.Models;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
@@ -25,7 +26,7 @@ namespace Microsoft.BotBuilderSamples.Bots
         protected readonly BotState UserState;
         protected readonly ILogger Logger;
 
-        public DialogBot(ConversationState conversationState, UserState userState, MedicineRecognizer medicineRecognizer)
+        public DialogBot(ConversationState conversationState, UserState userState, MedicineRecognizer medicineRecognizer, DataServiceConnection connection)
         {
             ConversationState = conversationState;
             UserState = userState;
@@ -34,9 +35,7 @@ namespace Microsoft.BotBuilderSamples.Bots
             var userStateAccessor = UserState.CreateProperty<UserProfile>(nameof(UserProfile));
 
             Dialogs = new DialogSet(dialogStateAccessor);
-            Dialogs.Add(new WaterfallDialogDemo(userStateAccessor));
-            Dialogs.Add(new ComponentDialogDemo());
-            Dialogs.Add(new LUISComponentDialogDemo(medicineRecognizer));
+            Dialogs.Add(new AssistanceDialog(medicineRecognizer, connection));
         }
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
@@ -49,7 +48,7 @@ namespace Microsoft.BotBuilderSamples.Bots
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            await Dialogs.Find(nameof(LUISComponentDialogDemo)).RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
+            await Dialogs.Find(nameof(AssistanceDialog)).RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
         }
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
@@ -58,8 +57,8 @@ namespace Microsoft.BotBuilderSamples.Bots
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync("Welkom bij de demonstratie van Bot Framework SDK!");
-                    await Dialogs.Find(nameof(LUISComponentDialogDemo)).RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
+                    await turnContext.SendActivityAsync("Welkom!");
+                    await Dialogs.Find(nameof(AssistanceDialog)).RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
                 }
             }
         }
