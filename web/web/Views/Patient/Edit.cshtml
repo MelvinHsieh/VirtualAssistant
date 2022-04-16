@@ -13,37 +13,79 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" value="@Model.FirstName"/>
+                @if (Model != null)
+                {
+                    <input asp-for="FirstName" class="form-control" value="@Model.FirstName"/>
+                } else
+                {
+                    <input asp-for="FirstName" class="form-control" value=""/>
+                }
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" value="@Model.LastName"/>
+                @if (Model != null)
+                {
+                    <input asp-for="LastName" class="form-control" value="@Model.LastName"/>
+                } else
+                {
+                    <input asp-for="LastName" class="form-control" value=""/>
+                }
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" value="@Model.Email"/>
+                @if (Model != null)
+                {
+                    <input asp-for="Email" class="form-control" value="@Model.Email"/>
+                } else
+                {
+                    <input asp-for="Email" class="form-control" value=""/>
+                }
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" value="@Model.PhoneNumber"/>
+                @if (Model != null)
+                {
+                    <input asp-for="PhoneNumber" class="form-control" value="@Model.PhoneNumber"/>
+                } else
+                {
+                    <input asp-for="PhoneNumber" class="form-control" value=""/>
+                }
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" class="form-control" value="@Convert.ToDateTime(@Model.BirthDate).ToString("yyyy-MM-dd")"/>
+                @if (Model != null)
+                {
+                    <input asp-for="BirthDate" class="form-control" value="@Convert.ToDateTime(@Model.BirthDate).ToString("yyyy-MM-dd")"/>
+                } else
+                {
+                    <input asp-for="BirthDate" class="form-control" value=""/>
+                }
                 <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PostalCode" class="control-label"></label>
-                <input asp-for="PostalCode" class="form-control" value="@Model.PostalCode"/>
+                @if (Model != null)
+                {
+                    <input asp-for="PostalCode" class="form-control" value="@Model.PostalCode"/>
+                } else
+                {
+                    <input asp-for="PostalCode" class="form-control" value=""/>
+                }
                 <span asp-validation-for="PostalCode" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HomeNumber" class="control-label"></label>
-                <input asp-for="HomeNumber" class="form-control" value="@Model.HomeNumber"/>
+                @if (Model != null)
+                {
+                    <input asp-for="HomeNumber" class="form-control" value="@Model.HomeNumber"/>
+                } else
+                {
+                    <input asp-for="HomeNumber" class="form-control" value=""/>
+                }
                 <span asp-validation-for="HomeNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
