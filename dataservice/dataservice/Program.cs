@@ -1,4 +1,6 @@
 using Application;
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -31,6 +33,15 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    // migrate any database changes on startup (includes initial db creation)
+    using (var scope = app.Services.CreateScope())
+    {
+        var patientContext = scope.ServiceProvider.GetRequiredService<PatientDbContext>();
+        var medicineContext = scope.ServiceProvider.GetRequiredService<MedicineDbContext>();
+        patientContext.Database.Migrate();
+        medicineContext.Database.Migrate();
+    }
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }

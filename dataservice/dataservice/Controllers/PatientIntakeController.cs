@@ -33,7 +33,8 @@ namespace dataservice.Controllers
         [HttpGet("intake/{id}")]
         public IActionResult GetByIntakeId(int id)
         {
-            try { 
+            try
+            {
                 var intake = _intakeRepo.GetIntakeById(id);
                 if (intake == null)
                 {
@@ -43,8 +44,10 @@ namespace dataservice.Controllers
                 var result = JsonSerializer.Serialize(intake, _jserOptions);
 
                 return Ok(result);
-            } catch(NotSupportedException ex) {
-                return BadRequest(ex);  
+            }
+            catch (NotSupportedException ex)
+            {
+                return BadRequest(ex);
             }
 
         }
@@ -53,17 +56,17 @@ namespace dataservice.Controllers
         [HttpGet("patient/{id}")]
         public IActionResult GetByPatientId(int id)
         {
-           
-                var intake = _intakeRepo.GetIntakesByPatientId(id);
-                if (intake == null)
-                {
-                    return NotFound();
-                }
 
-                var result = JsonSerializer.Serialize(intake, _jserOptions);
+            var intake = _intakeRepo.GetIntakesByPatientId(id);
+            if (intake == null)
+            {
+                return NotFound();
+            }
 
-                return Ok(result);
-            
+            var result = JsonSerializer.Serialize(intake, _jserOptions);
+
+            return Ok(result);
+
         }
 
         // POST api/<PatientIntakeController>
