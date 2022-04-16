@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CoreBot;
+using CoreBot.Dialogs.Assistance.SubDialogs;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
@@ -46,6 +47,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 case nameof(Intents.Medicine_FindSchedule):
                     return await stepContext.BeginDialogAsync(nameof(FindScheduleDialog), null, cancellationToken);
+                case nameof(Intents.Medicine_FindMedicineByAttributes):
+                    return await stepContext.BeginDialogAsync(nameof(FindMedicineByAttributesDialog), intent, cancellationToken);
                 default:
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text("Mijn excuses, ik heb de hulpvraag niet begrepen."));
                     return await stepContext.EndDialogAsync(null, cancellationToken);
