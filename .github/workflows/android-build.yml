@@ -1,8 +1,8 @@
 name: Android Build
 
 defaults:
-    run:
-      working-directory: './mobileapp'
+  run:
+    working-directory: './mobileapp'
 on:
   push:
     tags:
