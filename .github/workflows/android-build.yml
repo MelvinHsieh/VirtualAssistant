@@ -5,8 +5,8 @@ defaults:
     working-directory: './mobileapp'
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+    - android-release
 jobs:
   Build:
     name: Build/Sign APK
