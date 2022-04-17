@@ -4,7 +4,7 @@
 
 namespace Infrastructure.Migrations.MedicineDbMigrations
 {
-    public partial class Added_MedicineProperties : Migration
+    public partial class Added_Medicine_Attribute_Seed : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,7 +48,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                 keyColumn: "Id",
                 keyValue: 6,
                 columns: new[] { "Color", "Shape" },
-                values: new object[] { "Roze", "Rond" });
+                values: new object[] { "Groen", "Rond" });
 
             migrationBuilder.UpdateData(
                 table: "Medicine",
@@ -62,7 +62,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                 keyColumn: "Id",
                 keyValue: 8,
                 columns: new[] { "Color", "Shape" },
-                values: new object[] { "Wit", "Rond" });
+                values: new object[] { "Zwart", "Rond" });
 
             migrationBuilder.UpdateData(
                 table: "Medicine",

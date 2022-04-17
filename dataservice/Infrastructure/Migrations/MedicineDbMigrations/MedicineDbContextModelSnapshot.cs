@@ -145,7 +145,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                         new
                         {
                             Id = 6,
-                            Color = "Roze",
+                            Color = "Groen",
                             Dose = 10.0,
                             DoseUnit = "mg",
                             Indication = "Somberheid",
@@ -167,7 +167,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                         new
                         {
                             Id = 8,
-                            Color = "Wit",
+                            Color = "Zwart",
                             Dose = 5.0,
                             DoseUnit = "mg",
                             Indication = "Nycturie",

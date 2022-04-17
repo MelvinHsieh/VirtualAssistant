@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations.MedicineDbMigrations
 {
     [DbContext(typeof(MedicineDbContext))]
-    [Migration("20220416125929_Added_MedicineProperties")]
-    partial class Added_MedicineProperties
+    [Migration("20220417083543_Added_Medicine_Attribute_Seed")]
+    partial class Added_Medicine_Attribute_Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -147,7 +147,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                         new
                         {
                             Id = 6,
-                            Color = "Roze",
+                            Color = "Groen",
                             Dose = 10.0,
                             DoseUnit = "mg",
                             Indication = "Somberheid",
@@ -169,7 +169,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                         new
                         {
                             Id = 8,
-                            Color = "Wit",
+                            Color = "Zwart",
                             Dose = 5.0,
                             DoseUnit = "mg",
                             Indication = "Nycturie",

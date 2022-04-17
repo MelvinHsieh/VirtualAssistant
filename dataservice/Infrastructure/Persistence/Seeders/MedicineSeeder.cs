@@ -13,9 +13,9 @@ namespace Infrastructure.Persistence.Seeders
                 new Medicine() { Id = 3, Name = "Metformine", Indication = "Diabetes Mellitus type 2", Dose = 500, DoseUnit = "mg", Type = "Tablet", Shape = "Vierkant", Color = "Wit" },
                 new Medicine() { Id = 4, Name = "Pantroprazol msr", Indication = "Maagbeschermer", Dose = 80, DoseUnit = "mg", Type = "Tablet", Shape = "Vierkant", Color = "Blauw" },
                 new Medicine() { Id = 5, Name = "Nitrofurantione", Indication = "Antibiotica (Urineweginfectie)", Dose = 50, DoseUnit = "mg", Type = "Tablet", Shape = "Vierkant", Color = "Wit" },
-                new Medicine() { Id = 6, Name = "Temazepam", Indication = "Somberheid", Dose = 10, DoseUnit = "mg", Type = "Tablet", Shape = "Rond", Color = "Roze" },
+                new Medicine() { Id = 6, Name = "Temazepam", Indication = "Somberheid", Dose = 10, DoseUnit = "mg", Type = "Tablet", Shape = "Rond", Color = "Groen" },
                 new Medicine() { Id = 7, Name = "Furosemide", Indication = "Hartfalen", Dose = 40, DoseUnit = "mg", Type = "Tablet", Shape = "Hexagonaal", Color = "Wit" },
-                new Medicine() { Id = 8, Name = "Finasteride", Indication = "Nycturie", Dose = 5, DoseUnit = "mg", Type = "Capsule", Shape = "Rond", Color = "Wit" },
+                new Medicine() { Id = 8, Name = "Finasteride", Indication = "Nycturie", Dose = 5, DoseUnit = "mg", Type = "Capsule", Shape = "Rond", Color = "Zwart" },
                 new Medicine() { Id = 9, Name = "Oxazepam", Indication = "Slaapproblemen", Dose = 10, DoseUnit = "mg", Type = "Tablet", Shape = "Vierkant", Color = "Wit" }
                 );
         }
