@@ -1,0 +1,89 @@
+﻿@model IEnumerable<web.Models.PatientModel>
+
+@{
+    ViewData["Title"] = "Overzicht Patiënten";
+}
+
+<h1>Patiënt Index</h1>
+<hr />
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nieuwe Patiënt</a>
+</p>
+
+@if (Model != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BirthDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PostalCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HomeNumber)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @Convert.ToDateTime(item.BirthDate).ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PostalCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HomeNumber)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Aanpassen", "Edit", new { id=item.Id }, new { @class= "btn btn-primary" }) 
+                        @Html.ActionLink("Verwijderen", "Delete", new {  id=item.Id  }, new { @class= "btn btn-danger" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+} else
+{
+    <p>Geen patiënten gevonden.</p>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
