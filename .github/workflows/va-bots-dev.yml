@@ -2,7 +2,7 @@ name: Build and deploy .NET Core app to Windows WebApp va-bots-dev
 on:
   push:
     branches:
-    - dev
+    - feature-medicine-attributes
 env:
   AZURE_WEBAPP_NAME: va-bots-dev
   AZURE_WEBAPP_PACKAGE_PATH: Bot/publish
