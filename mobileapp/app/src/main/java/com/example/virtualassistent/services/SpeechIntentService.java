@@ -9,9 +9,8 @@ import android.os.ResultReceiver;
 
 import androidx.annotation.NonNull;
 
-import com.example.virtualassistent.recievers.SpeechResultReciever;
+import com.example.virtualassistent.receivers.SpeechResultReceiver;
 import com.microsoft.cognitiveservices.speech.CancellationDetails;
-import com.microsoft.cognitiveservices.speech.CancellationReason;
 import com.microsoft.cognitiveservices.speech.ResultReason;
 import com.microsoft.cognitiveservices.speech.SpeechConfig;
 import com.microsoft.cognitiveservices.speech.SpeechRecognitionResult;
@@ -32,14 +31,6 @@ public class SpeechIntentService extends IntentService {
     public SpeechIntentService() {
         super("SpeechIntentService");
     }
-
-
-    public static void startRecognize(Context context) {
-        Intent intent = new Intent(context, SpeechIntentService.class);
-        intent.setAction(ACTION_RECOGNIZE);
-        context.startService(intent);
-    }
-
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -71,23 +62,23 @@ public class SpeechIntentService extends IntentService {
         SpeechRecognitionResult speechRecognitionResult = task.get();
 
         if (speechRecognitionResult.getReason() == ResultReason.RecognizedSpeech) {
-            bundle.putSerializable(SpeechResultReciever.PARAM_RESULT, speechRecognitionResult.getText());
+            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, speechRecognitionResult.getText());
         }
         else if (speechRecognitionResult.getReason() == ResultReason.NoMatch) {
-            bundle.putSerializable(SpeechResultReciever.PARAM_RESULT, "NOMATCH: Speech could not be recognized.");
+            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "NOMATCH: Speech could not be recognized.");
         }
         else if (speechRecognitionResult.getReason() == ResultReason.Canceled) {
             CancellationDetails cancellation = CancellationDetails.fromResult(speechRecognitionResult);
-            bundle.putSerializable(SpeechResultReciever.PARAM_RESULT, "CANCELED: Reason=" + cancellation.getReason());
+            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "CANCELED: Reason=" + cancellation.getReason());
         }
 
         if(resultReceiver != null){
-            resultReceiver.send(SpeechResultReciever.RESULT_CODE_OK, bundle);
+            resultReceiver.send(SpeechResultReceiver.RESULT_CODE_OK, bundle);
         }
     }
 
-    public static void startServiceForRecognizer(@NonNull Context context, SpeechResultReciever.ResultReceiverCallBack resultReceiverCallBack){
-        SpeechResultReciever speechResultReceiver = new SpeechResultReciever(new Handler(context.getMainLooper()));
+    public static void startServiceForRecognizer(@NonNull Context context, SpeechResultReceiver.ResultReceiverCallBack resultReceiverCallBack){
+        SpeechResultReceiver speechResultReceiver = new SpeechResultReceiver(new Handler(context.getMainLooper()));
         speechResultReceiver.setReceiver(resultReceiverCallBack);
 
         Intent intent = new Intent(context, SpeechIntentService.class);
