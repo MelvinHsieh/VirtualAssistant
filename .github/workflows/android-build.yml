@@ -30,7 +30,7 @@ jobs:
       run: bash ./gradlew assembleRelease
 
     - name: Sign APK
-      uses: Tlaster/android-sign@v1
+      uses: Tlaster/android-sign@v1.2.2
       with:
         releaseDirectory: |
           ./mobileapp/app/build/outputs/apk/release
