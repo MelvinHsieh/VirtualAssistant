@@ -6,6 +6,7 @@ using CoreBot.Dialogs.Assistance.SubDialogs;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -19,6 +20,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             _medicineRecognizer = medicineRecognizer;
 
             AddDialog(new FindScheduleDialog(connection));
+            AddDialog(new FindMedicineByAttributesDialog(connection));
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
@@ -48,7 +50,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 case nameof(Intents.Medicine_FindSchedule):
                     return await stepContext.BeginDialogAsync(nameof(FindScheduleDialog), null, cancellationToken);
                 case nameof(Intents.Medicine_FindMedicineByAttributes):
-                    return await stepContext.BeginDialogAsync(nameof(FindMedicineByAttributesDialog), intent, cancellationToken);
+                    return await stepContext.BeginDialogAsync(nameof(FindMedicineByAttributesDialog), luisResult.Entities, cancellationToken);
                 default:
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text("Mijn excuses, ik heb de hulpvraag niet begrepen."));
                     return await stepContext.EndDialogAsync(null, cancellationToken);
