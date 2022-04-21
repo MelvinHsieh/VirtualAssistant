@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/dataservicedbserver/databases/userdatadb",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:PatientConnection"
+    },
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/dataservicedbserver/databases/generaldatadb",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:MedicineConnection"
+    }
+  }
+}
