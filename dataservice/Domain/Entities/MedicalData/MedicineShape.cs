@@ -11,5 +11,6 @@ namespace Domain.Entities.MedicalData
 
         [Key]
         public string Shape { get; set; }
+        public string Status { get; set; } = EntityStatus.Active.ToString().ToLower();
     }
 }

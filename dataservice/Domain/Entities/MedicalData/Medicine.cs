@@ -17,6 +17,6 @@ namespace Domain.Entities.MedicalData
         public string? Color { get; set; }
         [Required]
         public string? Type { get; set; }
-
+        public string Status { get; set; } = EntityStatus.Active.ToString().ToLower();
     }
 }

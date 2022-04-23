@@ -39,7 +39,7 @@ namespace Application.Repositories
 
         public IEnumerable<MedicineColor> GetColors()
         {
-            return _context.Medicine_Colors;
+            return _context.Medicine_Colors.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower().ToString().ToLower());
         }
 
         public Result RemoveColor(string color)
@@ -50,7 +50,8 @@ namespace Application.Repositories
                 return new Result(false, "No color by the given name has been found");
             }
 
-            _context.Medicine_Colors.Remove(medicineColor);
+            medicineColor.Status = Domain.EntityStatus.Archived.ToString().ToLower().ToString().ToLower(); //Soft-Delete
+            _context.Medicine_Colors.Update(medicineColor);
             _context.SaveChanges();
             return new Result(true);
         }
