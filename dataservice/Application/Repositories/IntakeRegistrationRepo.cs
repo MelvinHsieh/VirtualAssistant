@@ -8,25 +8,47 @@ namespace Application.Repositories
     public class IntakeRegistrationRepo : IIntakeRegistrationRepo
     {
         private MedicineDbContext _context;
+        private MedicineRepo _medicineRepo;
 
-        public IntakeRegistrationRepo(MedicineDbContext context)
+        public IntakeRegistrationRepo(MedicineRepo medicineRepo, MedicineDbContext context)
         {
+            this._medicineRepo = medicineRepo;
             this._context = context;
         }
 
         public Result AddIntakeRegistration(DateOnly date, int patientIntakeId)
         {
-            throw new NotImplementedException();
+            IntakeRegistration registration = new IntakeRegistration()
+            {
+                Date = date,
+                Id = patientIntakeId
+            };
+
+            Result result = ValidateIntakeRegistration(registration);
+
+            if (result.Success == false)
+            {
+                return result;
+            }
+
+            _context.IntakeRegistrations.Add(registration);
+            _context.SaveChanges();
+
+            return new Result(true);
         }
 
         public IntakeRegistration? GetIntakeRegistration(int id)
         {
-            throw new NotImplementedException();
+            return _context.IntakeRegistrations.Include(x => x.PatientIntake).First(x => x.Id == id);
         }
 
-        public IEnumerable<IntakeRegistration> GetIntakeRegistrationForDate()
+        public IEnumerable<IntakeRegistration> GetPatientIntakeRegistrationForDate(int patientId, DateOnly date)
         {
-            throw new NotImplementedException();
+            return _context.IntakeRegistrations
+                .Include(x => x.PatientIntake)
+                .Where(x => x.PatientIntake.PatientId == patientId)
+                .Where(x => x.Date == date)
+                .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
         }
 
         public Result RemoveIntakeRegistration(int id)
@@ -45,7 +67,17 @@ namespace Application.Repositories
 
         public Result ValidateIntakeRegistration(IntakeRegistration intakeRegistration)
         {
-            throw new NotImplementedException();
+            if (_medicineRepo.GetMedicine(intakeRegistration.IntakeId) == null)
+            {
+                return new Result(false, "The given intake id does not exist");
+            }
+
+            if (intakeRegistration.Date < DateOnly.FromDateTime(DateTime.Now))
+            {
+                return new Result(false, "The intake date should not be in the past");
+            }
+
+            return new Result(true);
         }
     }
 }

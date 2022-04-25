@@ -50,7 +50,7 @@ namespace Application.Repositories
 
         public IEnumerable<PatientIntake> GetIntakesByPatientId(int patientId)
         {
-            return _medicineDbContext.PatientIntakes.Include(x => x.Medicine).Where(x => x.PatientId == patientId).Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()); ;
+            return _medicineDbContext.PatientIntakes.Include(x => x.Medicine).Where(x => x.PatientId == patientId).Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
         }
 
         public Result RemoveIntake(int id)

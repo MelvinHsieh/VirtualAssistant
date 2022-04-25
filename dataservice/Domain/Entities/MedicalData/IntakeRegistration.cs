@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities.MedicalData
 {
@@ -17,5 +12,7 @@ namespace Domain.Entities.MedicalData
         public int IntakeId { get; set; }
         [Required]
         public string Status { get; set; } = EntityStatus.Active.ToString().ToLower();
+
+        public virtual PatientIntake PatientIntake { get; set; }
     }
 }
