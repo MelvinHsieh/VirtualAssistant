@@ -97,3 +97,4 @@ namespace dataservice.Controllers
             _registrationRepo.RemoveIntakeRegistration(id);
         }
     }
+}
