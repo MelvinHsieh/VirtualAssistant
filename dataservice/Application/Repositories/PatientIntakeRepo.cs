@@ -50,7 +50,7 @@ namespace Application.Repositories
 
         public IEnumerable<PatientIntake> GetIntakesByPatientId(int patientId)
         {
-            return _medicineDbContext.PatientIntakes.Include(x => x.Medicine).Where(x => x.PatientId == patientId);
+            return _medicineDbContext.PatientIntakes.Include(x => x.Medicine).Where(x => x.PatientId == patientId).Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()); ;
         }
 
         public Result RemoveIntake(int id)
@@ -61,7 +61,8 @@ namespace Application.Repositories
                 return new Result(false, "No intake with given id exists");
             }
 
-            _medicineDbContext.Remove(foundIntake);
+            foundIntake.Status = Domain.EntityStatus.Archived.ToString().ToLower(); //Soft-Delete
+            _medicineDbContext.PatientIntakes.Update(foundIntake);
             _medicineDbContext.SaveChanges();
             return new Result(true);
         }

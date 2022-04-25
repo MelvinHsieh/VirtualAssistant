@@ -56,14 +56,15 @@ namespace Application.Repositories
                 return new Result(false, "No medicine with given Id exists.");
             }
 
-            _context.Medicine.Remove(medicine);
+            medicine.Status = Domain.EntityStatus.Archived.ToString().ToLower(); //Soft-Delete
+            _context.Medicine.Update(medicine);
             _context.SaveChanges();
             return new Result(true);
         }
 
         public IEnumerable<Medicine> GetAllMedicine()
         {
-            return _context.Medicine;
+            return _context.Medicine.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()); ;
         }
 
         public Medicine? GetMedicine(int id)

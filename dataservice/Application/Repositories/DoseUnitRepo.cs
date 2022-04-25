@@ -39,7 +39,7 @@ namespace Application.Repositories
 
         public IEnumerable<DoseUnit> GetDoseUnits()
         {
-            return _context.DoseUnits;
+            return _context.DoseUnits.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()); ;
         }
 
         public Result RemoveDoseUnit(string unit)
@@ -50,7 +50,8 @@ namespace Application.Repositories
                 return new Result(false, "No dose unit by the given name has been found");
             }
 
-            _context.DoseUnits.Remove(doseUnit);
+            doseUnit.Status = Domain.EntityStatus.Archived.ToString().ToLower(); //Soft-Delete
+            _context.DoseUnits.Update(doseUnit);
             _context.SaveChanges();
             return new Result(true);
         }

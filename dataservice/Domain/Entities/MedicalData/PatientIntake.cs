@@ -18,5 +18,6 @@ namespace Domain.Entities.MedicalData
         public int Amount { get; set; }
 
         public virtual Medicine Medicine { get; set; }
+        public string Status { get; set; } = EntityStatus.Active.ToString().ToLower();
     }
 }

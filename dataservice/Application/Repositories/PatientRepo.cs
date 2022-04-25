@@ -52,7 +52,7 @@ namespace Application.Repositories
 
         public IEnumerable<Patient> GetAllPatients()
         {
-            return _context.Patients;
+            return _context.Patients.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()); ;
         }
 
         public Result RemovePatient(int id)
@@ -63,7 +63,8 @@ namespace Application.Repositories
                 return new Result(false, "No patient with given id has been found");
             }
 
-            _context.Remove(patient);
+            patient.Status = Domain.EntityStatus.Archived.ToString().ToLower(); //Soft-Delete
+            _context.Patients.Update(patient);
             _context.SaveChanges();
             return new Result(true);
         }

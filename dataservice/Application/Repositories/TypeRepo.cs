@@ -39,7 +39,7 @@ namespace Application.Repositories
 
         public IEnumerable<MedicineType> GetTypes()
         {
-            return _context.Medicine_Types;
+            return _context.Medicine_Types.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()); ;
         }
 
         public Result RemoveType(string type)
@@ -50,7 +50,8 @@ namespace Application.Repositories
                 return new Result(false, "No type by the given name has been found");
             }
 
-            _context.Medicine_Types.Remove(medicineType);
+            medicineType.Status = Domain.EntityStatus.Archived.ToString().ToLower(); //Soft-Delete
+            _context.Medicine_Types.Update(medicineType);
             _context.SaveChanges();
             return new Result(true);
         }
