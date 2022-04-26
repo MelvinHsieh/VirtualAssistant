@@ -1,4 +1,4 @@
-name: Build and deploy .NET Core app to Windows WebApp va-bots-dev
+name: Build and deploy .NET Core app to Windows dataservice-deploy
 on:
   push:
     branches:
@@ -9,7 +9,7 @@ env:
   AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.DATASERVICEPUBLISHPROFILE }}
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 5.0.x
-  WORKING_DIRECTORY: dataservice
+  WORKING_DIRECTORY: dataservice/dataservice
 jobs:
   build-and-deploy:
     runs-on: windows-latest
