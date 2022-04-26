@@ -2,7 +2,7 @@ name: Build and deploy .NET Core app to Windows dataservice-deploy
 on:
   push:
     branches:
-    - dataserviceToAzure
+    - dev
 env:
   AZURE_WEBAPP_NAME: dataservice-deploy
   AZURE_WEBAPP_PACKAGE_PATH: dataservice/publish
