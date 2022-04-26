@@ -48,6 +48,31 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.MedicalData.IntakeRegistration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PatientIntakeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientIntakeId");
+
+                    b.ToTable("IntakeRegistrations");
+                });
+
             modelBuilder.Entity("Domain.Entities.MedicalData.Medicine", b =>
                 {
                     b.Property<int>("Id")
@@ -436,6 +461,17 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             PatientId = 1,
                             Status = "active"
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.MedicalData.IntakeRegistration", b =>
+                {
+                    b.HasOne("Domain.Entities.MedicalData.PatientIntake", "PatientIntake")
+                        .WithMany()
+                        .HasForeignKey("PatientIntakeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PatientIntake");
                 });
 
             modelBuilder.Entity("Domain.Entities.MedicalData.Medicine", b =>

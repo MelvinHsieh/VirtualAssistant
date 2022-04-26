@@ -2,15 +2,16 @@
 using Application.Repositories.Interfaces;
 using Domain.Entities.MedicalData;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Repositories
 {
     public class IntakeRegistrationRepo : IIntakeRegistrationRepo
     {
         private MedicineDbContext _context;
-        private MedicineRepo _medicineRepo;
+        private IMedicineRepo _medicineRepo;
 
-        public IntakeRegistrationRepo(MedicineRepo medicineRepo, MedicineDbContext context)
+        public IntakeRegistrationRepo(IMedicineRepo medicineRepo, MedicineDbContext context)
         {
             this._medicineRepo = medicineRepo;
             this._context = context;
@@ -21,7 +22,7 @@ namespace Application.Repositories
             IntakeRegistration registration = new IntakeRegistration()
             {
                 Date = date,
-                Id = patientIntakeId
+                PatientIntakeId = patientIntakeId
             };
 
             Result result = ValidateIntakeRegistration(registration);
@@ -39,16 +40,31 @@ namespace Application.Repositories
 
         public IntakeRegistration? GetIntakeRegistration(int id)
         {
-            return _context.IntakeRegistrations.Include(x => x.PatientIntake).First(x => x.Id == id);
+            return  _context.IntakeRegistrations
+                .Where(x => x.Id == id)
+                .Include(x => x.PatientIntake)
+                .Include(x => x.PatientIntake.Medicine)
+                .FirstOrDefault();
         }
 
-        public IEnumerable<IntakeRegistration> GetPatientIntakeRegistrationForDate(int patientId, DateOnly date)
+        public IEnumerable<IntakeRegistration> GetIntakeRegistrationForDate(int patientId, DateOnly date)
         {
             return _context.IntakeRegistrations
                 .Include(x => x.PatientIntake)
+                .Include(x => x.PatientIntake.Medicine)
                 .Where(x => x.PatientIntake.PatientId == patientId)
                 .Where(x => x.Date == date)
                 .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
+        }
+
+        public IEnumerable<IntakeRegistration> GetIntakeRegistrationForPatient(int patientId)
+        {
+            return _context.IntakeRegistrations
+                .Include(x => x.PatientIntake)
+                .Include(x => x.PatientIntake.Medicine)
+                .Where(x => x.PatientIntake.PatientId == patientId)
+                .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
+                
         }
 
         public Result RemoveIntakeRegistration(int id)
@@ -67,7 +83,7 @@ namespace Application.Repositories
 
         public Result ValidateIntakeRegistration(IntakeRegistration intakeRegistration)
         {
-            if (_medicineRepo.GetMedicine(intakeRegistration.IntakeId) == null)
+            if (_medicineRepo.GetMedicine(intakeRegistration.PatientIntakeId) == null)
             {
                 return new Result(false, "The given intake id does not exist");
             }

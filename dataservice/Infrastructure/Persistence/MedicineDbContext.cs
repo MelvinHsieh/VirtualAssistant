@@ -13,6 +13,7 @@ namespace Infrastructure.Persistence
         public DbSet<MedicineType> Medicine_Types { get; set; }
         public DbSet<DoseUnit> DoseUnits { get; set; }
         public DbSet<PatientIntake> PatientIntakes { get; set; }
+        public DbSet<IntakeRegistration> IntakeRegistrations { get; set; }
 
         public MedicineDbContext(DbContextOptions<MedicineDbContext> options)
             : base(options)
@@ -30,6 +31,13 @@ namespace Infrastructure.Persistence
 
                 builder.Property(x => x.IntakeEnd)
                     .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
+            });
+
+            //Allow the use of dateonly object
+            modelBuilder.Entity<IntakeRegistration>(builder =>
+            {
+                builder.Property(x => x.Date)
+                    .HasConversion<DateOnlyConverter, DateOnlyComparer>();
             });
 
             //Lay the lookup table keys

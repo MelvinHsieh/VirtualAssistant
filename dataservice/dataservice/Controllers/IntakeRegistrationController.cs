@@ -1,5 +1,6 @@
 ﻿using Application.Repositories.Interfaces;
 using dataservice.ViewModels;
+using Domain.Entities.MedicalData;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -20,17 +21,11 @@ namespace dataservice.Controllers
             _registrationRepo = repo;
             _jserOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
             _jserOptions.Converters.Add(new DateOnlySerializer());
+            _jserOptions.Converters.Add(new TimeOnlySerializer());
         }
 
-        // GET: api/<PatientIntakeController>
-        /*        [HttpGet]
-                public IEnumerable<string> Get()
-                {
-                    return new string[] { "value1", "value2" };
-                }*/
-
-        // GET api/<PatientIntakeController>/5
-        [HttpGet("intake/{id}")]
+        // GET api/<IntakeRegistrationController>/5
+        [HttpGet("{id}")]
         public IActionResult GetByRegistrationId(int id)
         {
             try
@@ -52,24 +47,34 @@ namespace dataservice.Controllers
 
         }
 
-        // GET api/<PatientIntakeController>/5
-        /*[HttpGet("patient/{id}")] TODO
-        public IActionResult GetByPatientId(int id)
+        // GET api/<PatientIntakeController>/patient/5?date=21/04/2012
+        [HttpGet("patient/{patientId}")] 
+        public IActionResult GetByPatientId(int patientId, [FromQuery] string? date)
         {
-
-            var intake = _registrationRepo.GetIntakeRegistrationForDate(id);
-            if (intake == null)
+            IEnumerable<IntakeRegistration> intake;
+            if (date != null)
             {
-                return NotFound();
+                DateOnly parseDate;
+                if (DateOnly.TryParse(date, out parseDate))
+                {
+                    intake = _registrationRepo.GetIntakeRegistrationForDate(patientId, parseDate);
+                } else
+                {
+                    intake = _registrationRepo.GetIntakeRegistrationForPatient(patientId);
+                }
+            } else
+            {
+                intake = _registrationRepo.GetIntakeRegistrationForPatient(patientId);                
             }
 
             var result = JsonSerializer.Serialize(intake, _jserOptions);
 
             return Ok(result);
 
-        }*/
+        }
 
-        // POST api/<PatientIntakeController>
+
+        // POST api/<IntakeRegistrationController>
         [HttpPost]
         public void Post([FromBody] IntakeRegistrationDto data)
         {
@@ -78,19 +83,19 @@ namespace dataservice.Controllers
                 DateOnly date;
                 if (DateOnly.TryParse(data.Date, out date))
                 {
-                    _registrationRepo.AddIntakeRegistration(date, data.IntakeId);
+                    _registrationRepo.AddIntakeRegistration(date, data.PatientIntakeId);
                 }
             }
         }
 
-        // PUT api/<PatientIntakeController>/5 NO EDIT FUNTIONALITY YET
+        // PUT api/<IntakeRegistrationController>/5 NO EDIT FUNTIONALITY YET
 
         /*        [HttpPut("{id}")]
                 public void Put(int id, [FromBody] string value)
                 {
                 }*/
 
-        // DELETE api/<PatientIntakeController>/5
+        // DELETE api/<IntakeRegistrationController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

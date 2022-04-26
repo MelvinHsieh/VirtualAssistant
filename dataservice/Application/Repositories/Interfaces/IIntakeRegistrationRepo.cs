@@ -9,7 +9,9 @@ namespace Application.Repositories.Interfaces
 
         public IntakeRegistration? GetIntakeRegistration(int id);
 
-        public IEnumerable<IntakeRegistration> GetIntakeRegistrationForDate(); //For a patient
+        public IEnumerable<IntakeRegistration> GetIntakeRegistrationForPatient(int patientId); //For a patient
+
+        public IEnumerable<IntakeRegistration> GetIntakeRegistrationForDate(int patientId, DateOnly date); //For a patient
 
         public Result RemoveIntakeRegistration(int id);
 

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations.MedicineDbMigrations
 {
     [DbContext(typeof(MedicineDbContext))]
-    [Migration("20220425101740_Add_IntakeRegistration")]
+    [Migration("20220426115912_Add_IntakeRegistration")]
     partial class Add_IntakeRegistration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,7 +61,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IntakeId")
+                    b.Property<int>("PatientIntakeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -69,6 +69,8 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PatientIntakeId");
 
                     b.ToTable("IntakeRegistrations");
                 });
@@ -461,6 +463,17 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             PatientId = 1,
                             Status = "active"
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.MedicalData.IntakeRegistration", b =>
+                {
+                    b.HasOne("Domain.Entities.MedicalData.PatientIntake", "PatientIntake")
+                        .WithMany()
+                        .HasForeignKey("PatientIntakeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PatientIntake");
                 });
 
             modelBuilder.Entity("Domain.Entities.MedicalData.Medicine", b =>

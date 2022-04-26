@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public string Date { get; set; }
-        public int IntakeId { get; set; }
+        public int PatientIntakeId { get; set; }
     }
 }
