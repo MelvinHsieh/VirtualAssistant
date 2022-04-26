@@ -70,31 +70,10 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                 keyValue: 9,
                 columns: new[] { "Color", "Shape" },
                 values: new object[] { "Wit", "Vierkant" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PatientIntakes_MedicineId",
-                table: "PatientIntakes",
-                column: "MedicineId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PatientIntakes_Medicine_MedicineId",
-                table: "PatientIntakes",
-                column: "MedicineId",
-                principalTable: "Medicine",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_PatientIntakes_Medicine_MedicineId",
-                table: "PatientIntakes");
-
-            migrationBuilder.DropIndex(
-                name: "IX_PatientIntakes_MedicineId",
-                table: "PatientIntakes");
-
             migrationBuilder.UpdateData(
                 table: "Medicine",
                 keyColumn: "Id",
