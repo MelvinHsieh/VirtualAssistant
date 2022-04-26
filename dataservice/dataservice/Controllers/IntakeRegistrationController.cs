@@ -48,7 +48,7 @@ namespace dataservice.Controllers
         }
 
         // GET api/<PatientIntakeController>/patient/5?date=21/04/2012
-        [HttpGet("patient/{patientId}")] 
+        [HttpGet("patient/{patientId}")]
         public IActionResult GetByPatientId(int patientId, [FromQuery] string? date)
         {
             IEnumerable<IntakeRegistration> intake;
@@ -58,13 +58,15 @@ namespace dataservice.Controllers
                 if (DateOnly.TryParse(date, out parseDate))
                 {
                     intake = _registrationRepo.GetIntakeRegistrationForDate(patientId, parseDate);
-                } else
+                }
+                else
                 {
                     intake = _registrationRepo.GetIntakeRegistrationForPatient(patientId);
                 }
-            } else
+            }
+            else
             {
-                intake = _registrationRepo.GetIntakeRegistrationForPatient(patientId);                
+                intake = _registrationRepo.GetIntakeRegistrationForPatient(patientId);
             }
 
             var result = JsonSerializer.Serialize(intake, _jserOptions);

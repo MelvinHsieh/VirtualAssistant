@@ -40,7 +40,7 @@ namespace Application.Repositories
 
         public IntakeRegistration? GetIntakeRegistration(int id)
         {
-            return  _context.IntakeRegistrations
+            return _context.IntakeRegistrations
                 .Where(x => x.Id == id)
                 .Include(x => x.PatientIntake)
                 .Include(x => x.PatientIntake.Medicine)
@@ -64,7 +64,7 @@ namespace Application.Repositories
                 .Include(x => x.PatientIntake.Medicine)
                 .Where(x => x.PatientIntake.PatientId == patientId)
                 .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
-                
+
         }
 
         public Result RemoveIntakeRegistration(int id)
