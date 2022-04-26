@@ -3,18 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using web.Models;
+using System.Diagnostics;
 
 namespace web.Controllers
 {
     public class PatientController : Controller
     {
-
+        private readonly ILogger<HomeController> _logger;
         private readonly string _apiURL;
 
-        public PatientController(IConfiguration configuration)
+        public PatientController(IConfiguration configuration, ILogger<HomeController> logger)
         {
             _apiURL = configuration.GetValue<String>("DataServiceURL");
-            Console.WriteLine(_apiURL);
+            _logger = logger;
         }
 
         // GET: PatientController
@@ -239,5 +240,10 @@ namespace web.Controllers
             }
         }
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }
