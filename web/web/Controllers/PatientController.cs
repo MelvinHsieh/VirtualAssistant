@@ -9,10 +9,10 @@ namespace web.Controllers
 {
     public class PatientController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<PatientController> _logger;
         private readonly string _apiURL;
 
-        public PatientController(IConfiguration configuration, ILogger<HomeController> logger)
+        public PatientController(IConfiguration configuration, ILogger<PatientController> logger)
         {
             _apiURL = configuration.GetValue<String>("DataServiceURL");
             _logger = logger;
