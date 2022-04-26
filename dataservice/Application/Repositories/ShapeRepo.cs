@@ -39,7 +39,7 @@ namespace Application.Repositories
 
         public IEnumerable<MedicineShape> GetShapes()
         {
-            return _context.Medicine_Shapes;
+            return _context.Medicine_Shapes.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()); ;
         }
 
         public Result RemoveShape(string shape)
@@ -50,7 +50,8 @@ namespace Application.Repositories
                 return new Result(false, "No shape by the given name has been found");
             }
 
-            _context.Medicine_Shapes.Remove(medicineShape);
+            medicineShape.Status = Domain.EntityStatus.Archived.ToString().ToLower(); //Soft-Delete
+            _context.Medicine_Shapes.Update(medicineShape);
             _context.SaveChanges();
             return new Result(true);
         }
