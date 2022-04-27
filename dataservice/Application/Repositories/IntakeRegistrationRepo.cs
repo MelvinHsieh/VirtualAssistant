@@ -17,11 +17,11 @@ namespace Application.Repositories
             this._context = context;
         }
 
-        public Result AddIntakeRegistration(DateOnly date, int patientIntakeId)
+        public Result AddIntakeRegistration(DateTime date, int patientIntakeId)
         {
             IntakeRegistration registration = new IntakeRegistration()
             {
-                Date = date,
+                TakenOn = date,
                 PatientIntakeId = patientIntakeId
             };
 
@@ -53,7 +53,7 @@ namespace Application.Repositories
                 .Include(x => x.PatientIntake)
                 .Include(x => x.PatientIntake.Medicine)
                 .Where(x => x.PatientIntake.PatientId == patientId)
-                .Where(x => x.Date == date)
+                .Where(x => x.TakenOn.Date == date.ToDateTime(TimeOnly.MinValue).Date)
                 .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
         }
 
@@ -88,7 +88,7 @@ namespace Application.Repositories
                 return new Result(false, "The given intake id does not exist");
             }
 
-            if (intakeRegistration.Date < DateOnly.FromDateTime(DateTime.Now))
+            if (intakeRegistration.TakenOn < DateTime.Now.Date)
             {
                 return new Result(false, "The intake date should not be in the past");
             }

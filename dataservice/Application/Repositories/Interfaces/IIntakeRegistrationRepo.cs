@@ -5,7 +5,7 @@ namespace Application.Repositories.Interfaces
 {
     public interface IIntakeRegistrationRepo
     {
-        public Result AddIntakeRegistration(DateOnly date, int patientIntakeId);
+        public Result AddIntakeRegistration(DateTime date, int patientIntakeId);
 
         public IntakeRegistration? GetIntakeRegistration(int id);
 

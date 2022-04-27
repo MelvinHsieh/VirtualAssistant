@@ -51,17 +51,13 @@ namespace dataservice.Controllers
         [HttpGet("patient/{patientId}")]
         public IActionResult GetByPatientId(int patientId, [FromQuery] string? date)
         {
-            IEnumerable<IntakeRegistration> intake;
+            IEnumerable<IntakeRegistration> intake = new List<IntakeRegistration>();
             if (date != null)
             {
                 DateOnly parseDate;
                 if (DateOnly.TryParse(date, out parseDate))
                 {
                     intake = _registrationRepo.GetIntakeRegistrationForDate(patientId, parseDate);
-                }
-                else
-                {
-                    intake = _registrationRepo.GetIntakeRegistrationForPatient(patientId);
                 }
             }
             else
@@ -82,8 +78,8 @@ namespace dataservice.Controllers
         {
             if (data != null)
             {
-                DateOnly date;
-                if (DateOnly.TryParse(data.Date, out date))
+                DateTime date;
+                if (DateTime.TryParse(data.Date, out date))
                 {
                     _registrationRepo.AddIntakeRegistration(date, data.PatientIntakeId);
                 }

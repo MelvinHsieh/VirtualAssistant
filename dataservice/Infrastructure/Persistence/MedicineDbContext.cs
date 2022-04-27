@@ -33,13 +33,6 @@ namespace Infrastructure.Persistence
                     .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
             });
 
-            //Allow the use of dateonly object
-            modelBuilder.Entity<IntakeRegistration>(builder =>
-            {
-                builder.Property(x => x.Date)
-                    .HasConversion<DateOnlyConverter, DateOnlyComparer>();
-            });
-
             //Lay the lookup table keys
             modelBuilder.Entity<Medicine>()
                 .HasOne<MedicineColor>()

@@ -56,15 +56,15 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("PatientIntakeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TakenOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

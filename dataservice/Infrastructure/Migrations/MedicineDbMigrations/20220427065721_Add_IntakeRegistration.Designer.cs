@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations.MedicineDbMigrations
 {
     [DbContext(typeof(MedicineDbContext))]
-    [Migration("20220426115912_Add_IntakeRegistration")]
+    [Migration("20220427065721_Add_IntakeRegistration")]
     partial class Add_IntakeRegistration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,15 +58,15 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("PatientIntakeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TakenOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

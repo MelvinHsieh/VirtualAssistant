@@ -14,7 +14,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TakenOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PatientIntakeId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },

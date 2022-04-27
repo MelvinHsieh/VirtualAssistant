@@ -8,7 +8,7 @@ namespace Domain.Entities.MedicalData
         [Key]
         public int Id { get; set; }
         [Required]
-        public DateOnly Date { get; set; }
+        public DateTime TakenOn { get; set; }
         [Required]
         public int PatientIntakeId { get; set; }
         [Required]
