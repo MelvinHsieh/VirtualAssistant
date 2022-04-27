@@ -53,9 +53,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 var intents = luisResult.Intents.OrderByDescending(i => i.Value.Score);
                 var intent = intents.First().Key;
 
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Recognizer object: {JsonConvert.SerializeObject(_medicineRecognizer)}\nLuis result: {JsonConvert.SerializeObject(luisResult)}\nIntents: {JsonConvert.SerializeObject(intents)}"));
-                return await stepContext.EndDialogAsync(null, cancellationToken);
-
                 switch (intent)
                 {
                     case nameof(Intents.Medicine_FindSchedule):
