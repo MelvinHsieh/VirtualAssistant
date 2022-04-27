@@ -6,6 +6,7 @@ using CoreBot.Dialogs.Assistance.SubDialogs;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
@@ -51,6 +52,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 var luisResult = await _medicineRecognizer.RecognizeAsync(stepContext.Context, cancellationToken);
                 var intents = luisResult.Intents.OrderByDescending(i => i.Value.Score);
                 var intent = intents.First().Key;
+
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Recognizer object: {JsonConvert.SerializeObject(_medicineRecognizer)}\nLuis result: {JsonConvert.SerializeObject(luisResult)}\nIntents: {JsonConvert.SerializeObject(intents)}"));
+                return await stepContext.EndDialogAsync(null, cancellationToken);
 
                 switch (intent)
                 {
