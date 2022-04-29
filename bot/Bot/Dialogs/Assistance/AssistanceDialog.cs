@@ -2,9 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CoreBot;
+using CoreBot.Dialogs.Assistance.SubDialogs;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Dialogs
 {
@@ -18,6 +21,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             _medicineRecognizer = medicineRecognizer;
 
             AddDialog(new FindScheduleDialog(connection));
+            AddDialog(new FindMedicineByAttributesDialog(connection));
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
@@ -38,17 +42,27 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private async Task<DialogTurnResult> ProcessQuestionAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var luisResult = await _medicineRecognizer.RecognizeAsync(stepContext.Context, cancellationToken);
-            var intents = luisResult.Intents.OrderByDescending(i => i.Value.Score);
-            var intent = intents.First().Key;
-
-            switch (intent)
+            if (!_medicineRecognizer.IsConfigured)
             {
-                case nameof(Intents.Medicine_FindSchedule):
-                    return await stepContext.BeginDialogAsync(nameof(FindScheduleDialog), null, cancellationToken);
-                default:
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text("Mijn excuses, ik heb de hulpvraag niet begrepen."));
-                    return await stepContext.EndDialogAsync(null, cancellationToken);
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik mis op dit moment de verbinding met de technologie die mij helpt om je te begrijpen, probeer het op een later moment nog een keer!."));
+                return await stepContext.EndDialogAsync(null, cancellationToken);
+            }
+            else
+            {
+                var luisResult = await _medicineRecognizer.RecognizeAsync(stepContext.Context, cancellationToken);
+                var intents = luisResult.Intents.OrderByDescending(i => i.Value.Score);
+                var intent = intents.First().Key;
+
+                switch (intent)
+                {
+                    case nameof(Intents.Medicine_FindSchedule):
+                        return await stepContext.BeginDialogAsync(nameof(FindScheduleDialog), null, cancellationToken);
+                    case nameof(Intents.Medicine_FindMedicineByAttributes):
+                        return await stepContext.BeginDialogAsync(nameof(FindMedicineByAttributesDialog), luisResult.Entities, cancellationToken);
+                    default:
+                        await stepContext.Context.SendActivityAsync(MessageFactory.Text("Mijn excuses, ik heb de hulpvraag niet begrepen."));
+                        return await stepContext.EndDialogAsync(null, cancellationToken);
+                }
             }
         }
     }
