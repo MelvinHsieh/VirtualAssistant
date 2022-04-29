@@ -13,7 +13,7 @@ namespace CoreBot
         public DataServiceConnection(IConfiguration configuration)
         {
             this.httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri($"https://{configuration["DataServiceHostName"]}:{configuration["DataServicePort"]}/api/");
+            httpClient.BaseAddress = new Uri($"https://{configuration["DataServiceHostName"]}/api/");
         }
 
         public async Task<string> GetRequest(string endpoint)

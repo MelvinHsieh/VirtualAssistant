@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations.MedicineDbMigrations
 {
     [DbContext(typeof(MedicineDbContext))]
-    partial class MedicineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220417083543_Added_Medicine_Attribute_Seed")]
+    partial class Added_Medicine_Attribute_Seed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,10 +29,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Unit");
 
                     b.ToTable("DoseUnits");
@@ -38,39 +36,12 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.HasData(
                         new
                         {
-                            Unit = "mg",
-                            Status = "active"
+                            Unit = "mg"
                         },
                         new
                         {
-                            Unit = "µg",
-                            Status = "active"
+                            Unit = "µg"
                         });
-                });
-
-            modelBuilder.Entity("Domain.Entities.MedicalData.IntakeRegistration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("PatientIntakeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TakenOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientIntakeId");
-
-                    b.ToTable("IntakeRegistrations");
                 });
 
             modelBuilder.Entity("Domain.Entities.MedicalData.Medicine", b =>
@@ -101,10 +72,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.Property<string>("Shape")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -131,7 +98,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Indication = "Hypercholesterolemie",
                             Name = "Rosuvastatine",
                             Shape = "Vierkant",
-                            Status = "active",
                             Type = "Tablet"
                         },
                         new
@@ -143,7 +109,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Indication = "Hypertensei",
                             Name = "Hydrochloorthiazide",
                             Shape = "Rond",
-                            Status = "active",
                             Type = "Tablet"
                         },
                         new
@@ -155,7 +120,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Indication = "Diabetes Mellitus type 2",
                             Name = "Metformine",
                             Shape = "Vierkant",
-                            Status = "active",
                             Type = "Tablet"
                         },
                         new
@@ -167,7 +131,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Indication = "Maagbeschermer",
                             Name = "Pantroprazol msr",
                             Shape = "Vierkant",
-                            Status = "active",
                             Type = "Tablet"
                         },
                         new
@@ -179,7 +142,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Indication = "Antibiotica (Urineweginfectie)",
                             Name = "Nitrofurantione",
                             Shape = "Vierkant",
-                            Status = "active",
                             Type = "Tablet"
                         },
                         new
@@ -191,7 +153,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Indication = "Somberheid",
                             Name = "Temazepam",
                             Shape = "Rond",
-                            Status = "active",
                             Type = "Tablet"
                         },
                         new
@@ -203,7 +164,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Indication = "Hartfalen",
                             Name = "Furosemide",
                             Shape = "Hexagonaal",
-                            Status = "active",
                             Type = "Tablet"
                         },
                         new
@@ -215,7 +175,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Indication = "Nycturie",
                             Name = "Finasteride",
                             Shape = "Rond",
-                            Status = "active",
                             Type = "Capsule"
                         },
                         new
@@ -227,7 +186,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Indication = "Slaapproblemen",
                             Name = "Oxazepam",
                             Shape = "Vierkant",
-                            Status = "active",
                             Type = "Tablet"
                         });
                 });
@@ -237,10 +195,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Color");
 
                     b.ToTable("Medicine_Colors");
@@ -248,33 +202,27 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.HasData(
                         new
                         {
-                            Color = "Rood",
-                            Status = "active"
+                            Color = "Rood"
                         },
                         new
                         {
-                            Color = "Wit",
-                            Status = "active"
+                            Color = "Wit"
                         },
                         new
                         {
-                            Color = "Blauw",
-                            Status = "active"
+                            Color = "Blauw"
                         },
                         new
                         {
-                            Color = "Geel",
-                            Status = "active"
+                            Color = "Geel"
                         },
                         new
                         {
-                            Color = "Groen",
-                            Status = "active"
+                            Color = "Groen"
                         },
                         new
                         {
-                            Color = "Zwart",
-                            Status = "active"
+                            Color = "Zwart"
                         });
                 });
 
@@ -283,10 +231,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.Property<string>("Shape")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Shape");
 
                     b.ToTable("Medicine_Shapes");
@@ -294,18 +238,15 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.HasData(
                         new
                         {
-                            Shape = "Vierkant",
-                            Status = "active"
+                            Shape = "Vierkant"
                         },
                         new
                         {
-                            Shape = "Hexagonaal",
-                            Status = "active"
+                            Shape = "Hexagonaal"
                         },
                         new
                         {
-                            Shape = "Rond",
-                            Status = "active"
+                            Shape = "Rond"
                         });
                 });
 
@@ -314,10 +255,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Type");
 
                     b.ToTable("Medicine_Types");
@@ -325,23 +262,19 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.HasData(
                         new
                         {
-                            Type = "Pil",
-                            Status = "active"
+                            Type = "Pil"
                         },
                         new
                         {
-                            Type = "Tablet",
-                            Status = "active"
+                            Type = "Tablet"
                         },
                         new
                         {
-                            Type = "Capsule",
-                            Status = "active"
+                            Type = "Capsule"
                         },
                         new
                         {
-                            Type = "Spuit",
-                            Status = "active"
+                            Type = "Spuit"
                         });
                 });
 
@@ -368,10 +301,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MedicineId");
@@ -386,8 +315,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
                             MedicineId = 1,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         },
                         new
                         {
@@ -396,8 +324,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 11, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
                             MedicineId = 2,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         },
                         new
                         {
@@ -406,8 +333,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 12, 0, 0, 0),
                             MedicineId = 2,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         },
                         new
                         {
@@ -416,8 +342,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
                             MedicineId = 3,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         },
                         new
                         {
@@ -426,8 +351,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
                             MedicineId = 4,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         },
                         new
                         {
@@ -436,8 +360,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
                             MedicineId = 5,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         },
                         new
                         {
@@ -446,8 +369,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
                             MedicineId = 6,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         },
                         new
                         {
@@ -456,8 +378,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
                             MedicineId = 7,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         },
                         new
                         {
@@ -466,8 +387,7 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
                             MedicineId = 8,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         },
                         new
                         {
@@ -476,20 +396,8 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             IntakeEnd = new TimeSpan(0, 23, 59, 59, 0),
                             IntakeStart = new TimeSpan(0, 0, 0, 0, 0),
                             MedicineId = 9,
-                            PatientId = 1,
-                            Status = "active"
+                            PatientId = 1
                         });
-                });
-
-            modelBuilder.Entity("Domain.Entities.MedicalData.IntakeRegistration", b =>
-                {
-                    b.HasOne("Domain.Entities.MedicalData.PatientIntake", "PatientIntake")
-                        .WithMany()
-                        .HasForeignKey("PatientIntakeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PatientIntake");
                 });
 
             modelBuilder.Entity("Domain.Entities.MedicalData.Medicine", b =>
