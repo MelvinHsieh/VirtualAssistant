@@ -1,13 +1,20 @@
 package com.infosupport.virtualassistent;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.infosupport.virtualassistent.bot.Bot;
 import com.infosupport.virtualassistent.chat.MessageListAdapter;
 import com.infosupport.virtualassistent.model.Message;
@@ -15,7 +22,6 @@ import com.infosupport.virtualassistent.receivers.RecognizeSpeechResultReceiver;
 import com.infosupport.virtualassistent.services.SpeechIntentService;
 import com.infosupport.virtualassistent.storage.AppDatabase;
 import com.infosupport.virtualassistent.storage.MessageDAO;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -23,6 +29,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final Integer RecordAudioRequestCode = 1;
     private MessageListAdapter messageAdapter;
     private List<Message> messageList;
     private RecyclerView messageRecycler;
@@ -61,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
             runSpeechRecognizer(fab);
         });
         bot = new Bot(this);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            checkMicPermission();
+        }
     }
 
     // DO NOT REMOVE, WILL BE USED AGAIN
@@ -89,6 +100,21 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             msgDao.insertAll(message);
         }).start();
+    }
+
+    private void checkMicPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, RecordAudioRequestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == RecordAudioRequestCode && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(this, "Microphone permission Granted", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public Bot getBot() {return bot;}
