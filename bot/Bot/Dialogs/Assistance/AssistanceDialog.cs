@@ -22,6 +22,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             AddDialog(new FindScheduleDialog(connection));
             AddDialog(new FindMedicineByAttributesDialog(connection));
+            AddDialog(new RegisterIntakeDialog(connection));
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
@@ -59,6 +60,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         return await stepContext.BeginDialogAsync(nameof(FindScheduleDialog), null, cancellationToken);
                     case nameof(Intents.Medicine_FindMedicineByAttributes):
                         return await stepContext.BeginDialogAsync(nameof(FindMedicineByAttributesDialog), luisResult.Entities, cancellationToken);
+                    case nameof(Intents.Intake_RegisterIntake):
+                        return await stepContext.BeginDialogAsync(nameof(RegisterIntakeDialog), luisResult.Entities, cancellationToken);
                     default:
                         await stepContext.Context.SendActivityAsync(MessageFactory.Text("Mijn excuses, ik heb de hulpvraag niet begrepen."));
                         return await stepContext.EndDialogAsync(null, cancellationToken);
@@ -73,6 +76,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         Medicine_FindDose,
         Medicine_FindMedicineByAttributes,
         Medicine_FindSchedule,
-        Medicine_GetMedicineInfo
+        Medicine_GetMedicineInfo,
+        Intake_RegisterIntake
     }
 }

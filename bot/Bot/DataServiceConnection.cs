@@ -20,5 +20,11 @@ namespace CoreBot
         {
             return await httpClient.GetStringAsync(endpoint);
         }
+
+        public async void PostRequest(string endpoint, string data)
+        {
+            StringContent httpContent = new StringContent(data, System.Text.Encoding.UTF8, "application/json");
+            await httpClient.PostAsync(endpoint, httpContent);
+        }
     }
 }
