@@ -43,6 +43,7 @@ jobs:
       uses: timheuer/base64-to-file@v1.1
       with:
         fileName: 'play_config.json'
+        fileDir: '/home/runner/work/VirtualAssistant/VirtualAssistant/mobileapp/'
         encodedString: ${{ secrets.PLAY_CONFIG_JSON }}
 
     - name: Distribute app to Beta track 🚀
