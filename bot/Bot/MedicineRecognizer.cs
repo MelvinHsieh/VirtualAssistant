@@ -29,6 +29,7 @@ namespace Microsoft.BotBuilderSamples
                     },
 
                     IncludeAPIResults = true,
+                    
                 };
 
                 _recognizer = new LuisRecognizer(recognizerOptions);

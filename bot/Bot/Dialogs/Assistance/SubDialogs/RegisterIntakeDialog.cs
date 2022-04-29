@@ -36,13 +36,16 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             var intakes = JsonConvert.DeserializeObject<List<PatientIntake>>(await connection.GetRequest($"patientIntake/patient/{1}")); //TODO get id from android app
             var matchingIntakes = new List<PatientIntake>();
 
-            string medicineName = ((JObject)stepContext.Options)["Intake"]?["Medicine"]?.Children().First().First().Value<string>();
-            if(medicineName != null) //if medicineName 
-            {
-                matchingIntakes = intakes
-                   .Where(i => string.IsNullOrEmpty(medicineName) ? true : i.Medicine.Name.ToLower() == medicineName.ToLower())
-                   .ToList();
+            var medicine = ((JObject)stepContext.Options)["Medicine"];
+            if (medicine != null) {
+                string medicineName = medicine.First().First().First()[0].Value<string>();
+                if (medicineName != null) //if medicineName 
+                {
+                    matchingIntakes = intakes
+                       .Where(i => string.IsNullOrEmpty(medicineName) ? true : i.Medicine.Name.ToLower() == medicineName.ToLower())
+                       .ToList();
 
+                }
             }
             else //else if attributes
             {
@@ -57,19 +60,16 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                     .ToList();
             }
 
-            //ExtractDate 
-            DateTime date;
-            if(DateTime.TryParse(((JObject)stepContext.Options)["datetimeV2"]?.Children().First().First().Value<string>(), out date)) //If date
+            if(((JObject)stepContext.Options)["datetime"].HasValues) //Extract Date
             {
-                intakeRegistration.TakenOn = date;
-                
-            } else //what if no date?? fail action? use DateTime now?
-            {
-                intakeRegistration.TakenOn = DateTime.Now;
+                string firstOption = ((JObject)stepContext.Options)["datetime"].Children().First().First().First[0].Value<string>();
+
+                intakeRegistration.TakenOn = TryTimexToDateTime(firstOption);
+
             }
 
             var timeMatchedIntakes = matchingIntakes 
-                    .Where(i => i.IntakeStart.TimeOfDay < intakeRegistration.TakenOn.TimeOfDay && i.IntakeEnd.TimeOfDay > intakeRegistration.TakenOn.TimeOfDay)
+                    .Where(i => i.IntakeStart.TimeOfDay <= intakeRegistration.TakenOn.TimeOfDay && i.IntakeEnd.TimeOfDay >= intakeRegistration.TakenOn.TimeOfDay)
                     .ToList();
 
             if(timeMatchedIntakes.Count > 0)
@@ -86,7 +86,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
                 for (int i = 0; i < matchingIntakes.Count - 1; i++)
                 {
-                    builder.Append($"{matchingIntakes[i].Medicine.Name} tussen {matchingIntakes[i].IntakeStart.TimeOfDay} en {matchingIntakes[i].IntakeEnd.TimeOfDay}, ");
+                    builder.Append($"{matchingIntakes[i].Medicine.Name} tussen {matchingIntakes[i].IntakeStart.TimeOfDay} en {matchingIntakes[i].IntakeEnd.TimeOfDay}, \n");
                 }
 
                 builder.Append($" en {matchingIntakes.Last().Medicine.Name}. Probeer het opnieuw"); //TODO Rephrase
@@ -114,13 +114,26 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
         private async Task<DialogTurnResult> RegisterIntake(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             //Register
-            if ((string)stepContext.Result == "Ja")
+            if (stepContext.Result.ToString().ToLower() == "ja")
             {
                 IntakeRegistration intakeRegistration = (IntakeRegistration)stepContext.Values["intake"];
-                
 
 
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Uw inname voor."));
+
+                var response = await connection.PostRequest("IntakeRegistration", "{ patientIntakeId: " + intakeRegistration.PatientIntakeId + ", date: " + JsonConvert.SerializeObject(intakeRegistration.TakenOn) + " }");
+                if(response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Uw inname is geregistreerd"));
+                } else
+                {
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Het registreren van de inname is mislukt"));
+                }
+
+                return await stepContext.EndDialogAsync(null, cancellationToken);
+            }
+            else if(stepContext.Result.ToString().ToLower() == "nee")
+            {
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text("De registratie poging is geanuleerd"));
                 return await stepContext.EndDialogAsync(null, cancellationToken);
             }
             else
@@ -128,6 +141,43 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik heb je hulpvraag helaas niet begrepen!"));
                 return await stepContext.EndDialogAsync(null, cancellationToken);
             }
+        }
+
+        private DateTime TryTimexToDateTime(string timex)
+        {
+            if (!string.IsNullOrEmpty(timex))
+            {
+                var timexSplit = timex.Split('T', 2);
+                string dateString = timexSplit[0];
+                string timeNumber = timexSplit[1];
+
+                TimeSpan time = new TimeSpan(0,0,0);
+                if (!TimeSpan.TryParse(timeNumber, out time))
+                {
+                    switch (timeNumber)
+                    {
+                        case "MO":
+                            time = new TimeSpan(9, 0, 0);
+                            break;
+                        case "AF":
+                            time = new TimeSpan(12, 0, 0);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
+
+                DateTime date;
+                if (!DateTime.TryParse(dateString, out date))
+                {
+                    date = DateTime.Today.Date;
+                }
+
+                return new DateTime(date.Year, date.Month, date.Day, time.Hours, time.Minutes, time.Seconds);
+            }
+
+            return DateTime.Now;
         }
     }
 }
