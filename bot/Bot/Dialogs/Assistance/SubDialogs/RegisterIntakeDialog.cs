@@ -6,10 +6,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot.Utils;
 
 namespace CoreBot.Dialogs.Assistance.SubDialogs
 {
@@ -64,7 +66,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             {
                 string firstOption = ((JObject)stepContext.Options)["datetime"].Children().First().First().First[0].Value<string>();
 
-                intakeRegistration.TakenOn = TryTimexToDateTime(firstOption);
+                intakeRegistration.TakenOn = TimexToDateTimeConverter.TryTimexToDateTime(firstOption);
 
             }
 
@@ -78,6 +80,8 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             }
 
             //ask for confirmation
+            var culture = CultureInfo.GetCultureInfo("nl-NL");
+            CultureInfo.CurrentCulture = culture;
             var builder = new StringBuilder();
 
             if (matchingIntakes.Count > 1)
@@ -98,7 +102,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             {
                 intakeRegistration.PatientIntakeId = matchingIntakes.First().Id;
                 intakeRegistration.PatientIntake = matchingIntakes.First();
-                builder.Append($"Klopt het dat u {intakeRegistration.PatientIntake.Medicine.Name} heeft ingenomen rond {intakeRegistration.TakenOn}?");
+                builder.Append($"Klopt het dat u {intakeRegistration.PatientIntake.Medicine.Name} heeft ingenomen op { intakeRegistration.TakenOn.ToString("m")} rond {intakeRegistration.TakenOn.ToString("t")}?");
                 stepContext.Values.Add("intake", intakeRegistration);
 
                 return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text(builder.ToString(), null, InputHints.ExpectingInput) }, cancellationToken);
@@ -118,9 +122,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             {
                 IntakeRegistration intakeRegistration = (IntakeRegistration)stepContext.Values["intake"];
 
-
-
-                var response = await connection.PostRequest("IntakeRegistration", "{ patientIntakeId: " + intakeRegistration.PatientIntakeId + ", date: " + JsonConvert.SerializeObject(intakeRegistration.TakenOn) + " }");
+                var response = await connection.PostRequest("IntakeRegistration", JsonConvert.SerializeObject(new { PatientIntakeId = intakeRegistration.PatientIntakeId, Date = intakeRegistration.TakenOn }));
                 if(response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Uw inname is geregistreerd"));
@@ -141,43 +143,6 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik heb je hulpvraag helaas niet begrepen!"));
                 return await stepContext.EndDialogAsync(null, cancellationToken);
             }
-        }
-
-        private DateTime TryTimexToDateTime(string timex)
-        {
-            if (!string.IsNullOrEmpty(timex))
-            {
-                var timexSplit = timex.Split('T', 2);
-                string dateString = timexSplit[0];
-                string timeNumber = timexSplit[1];
-
-                TimeSpan time = new TimeSpan(0,0,0);
-                if (!TimeSpan.TryParse(timeNumber, out time))
-                {
-                    switch (timeNumber)
-                    {
-                        case "MO":
-                            time = new TimeSpan(9, 0, 0);
-                            break;
-                        case "AF":
-                            time = new TimeSpan(12, 0, 0);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                
-
-                DateTime date;
-                if (!DateTime.TryParse(dateString, out date))
-                {
-                    date = DateTime.Today.Date;
-                }
-
-                return new DateTime(date.Year, date.Month, date.Day, time.Hours, time.Minutes, time.Seconds);
-            }
-
-            return DateTime.Now;
         }
     }
 }
