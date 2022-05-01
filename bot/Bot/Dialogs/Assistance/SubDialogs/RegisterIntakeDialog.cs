@@ -33,12 +33,20 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
         private async Task<DialogTurnResult> Confirm(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            //ask for confirmation
+            var culture = CultureInfo.GetCultureInfo("nl-NL");
+            CultureInfo.CurrentCulture = culture;
+            var builder = new StringBuilder();
+
             //Set up register object
             IntakeRegistration intakeRegistration = new IntakeRegistration();
             var intakes = JsonConvert.DeserializeObject<List<PatientIntake>>(await connection.GetRequest($"patientIntake/patient/{1}")); //TODO get id from android app
             var matchingIntakes = new List<PatientIntake>();
 
             var medicine = ((JObject)stepContext.Options)["Medicine"];
+            string color = ((JObject)stepContext.Options)["Color"]?.Children().First().First().Value<string>();
+            string type = ((JObject)stepContext.Options)["Type"]?.Children().First().First().Value<string>();
+            var shape = ((JObject)stepContext.Options)["Shape"]?.Children().First().First().Value<string>();
             if (medicine != null) {
                 string medicineName = medicine.First().First().First()[0].Value<string>();
                 if (medicineName != null) //if medicineName 
@@ -49,25 +57,30 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
                 }
             }
-            else //else if attributes
+            else if(color != null || type != null || shape != null) //else if attributes
             {
-                string color = ((JObject)stepContext.Options)["Color"]?.Children().First().First().Value<string>();
-                string type = ((JObject)stepContext.Options)["Type"]?.Children().First().First().Value<string>();
-                var shape = ((JObject)stepContext.Options)["Shape"]?.Children().First().First().Value<string>();
-
                 matchingIntakes = intakes
                     .Where(i => string.IsNullOrEmpty(color) ? true : i.Medicine.Color.ToLower() == color.ToLower())
                     .Where(i => string.IsNullOrEmpty(type) ? true : i.Medicine.Type.ToLower() == type.ToLower())
                     .Where(i => string.IsNullOrEmpty(shape) ? true : i.Medicine.Shape.ToLower() == shape.ToLower())
                     .ToList();
+            } else
+            {
+                builder.Append("Mijn excuses! Het systeem heeft geen medicijn kunnen herkennen. Bij problemen kunt u contact opnemen met een medewerker");
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text(builder.ToString()));
+                return await stepContext.EndDialogAsync(null, cancellationToken);
             }
 
-            if(((JObject)stepContext.Options)["datetime"].HasValues) //Extract Date
+            if(((JObject)stepContext.Options)["datetime"] != null) //Extract Date
             {
-                string firstOption = ((JObject)stepContext.Options)["datetime"].Children().First().First().First[0].Value<string>();
+                if(((JObject)stepContext.Options)["datetime"].HasValues) { 
+                    string firstOption = ((JObject)stepContext.Options)["datetime"].Children().First().First().First[0].Value<string>();
 
-                intakeRegistration.TakenOn = TimexToDateTimeConverter.TryTimexToDateTime(firstOption);
-
+                    intakeRegistration.TakenOn = TimexToDateTimeConverter.TryTimexToDateTime(firstOption);
+                } else
+                {
+                    intakeRegistration.TakenOn = DateTime.Now;
+                }
             }
 
             var timeMatchedIntakes = matchingIntakes 
@@ -78,11 +91,6 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             {
                 matchingIntakes = timeMatchedIntakes;
             }
-
-            //ask for confirmation
-            var culture = CultureInfo.GetCultureInfo("nl-NL");
-            CultureInfo.CurrentCulture = culture;
-            var builder = new StringBuilder();
 
             if (matchingIntakes.Count > 1)
             {
