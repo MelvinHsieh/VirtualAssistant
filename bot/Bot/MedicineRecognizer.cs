@@ -25,8 +25,11 @@ namespace Microsoft.BotBuilderSamples
                     PredictionOptions = new Bot.Builder.AI.LuisV3.LuisPredictionOptions
                     {
                         IncludeInstanceData = true,
-                        IncludeAllIntents = true
-                    }
+                        IncludeAllIntents = true,
+                    },
+
+                    IncludeAPIResults = true,
+                    
                 };
 
                 _recognizer = new LuisRecognizer(recognizerOptions);
