@@ -13,6 +13,7 @@ namespace Infrastructure.Persistence
         public DbSet<MedicineType> Medicine_Types { get; set; }
         public DbSet<DoseUnit> DoseUnits { get; set; }
         public DbSet<PatientIntake> PatientIntakes { get; set; }
+        public DbSet<IntakeRegistration> IntakeRegistrations { get; set; }
 
         public MedicineDbContext(DbContextOptions<MedicineDbContext> options)
             : base(options)

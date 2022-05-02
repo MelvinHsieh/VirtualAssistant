@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations.MedicineDbMigrations
 {
     [DbContext(typeof(MedicineDbContext))]
-    partial class MedicineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220427065721_Add_IntakeRegistration")]
+    partial class Add_IntakeRegistration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,108 +127,90 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                         new
                         {
                             Id = 1,
-                            Color = "Wit",
                             Dose = 10.0,
                             DoseUnit = "mg",
                             Indication = "Hypercholesterolemie",
                             Name = "Rosuvastatine",
-                            Shape = "Vierkant",
                             Status = "active",
                             Type = "Tablet"
                         },
                         new
                         {
                             Id = 2,
-                            Color = "Rood",
                             Dose = 12.5,
                             DoseUnit = "mg",
                             Indication = "Hypertensei",
                             Name = "Hydrochloorthiazide",
-                            Shape = "Rond",
                             Status = "active",
                             Type = "Tablet"
                         },
                         new
                         {
                             Id = 3,
-                            Color = "Wit",
                             Dose = 500.0,
                             DoseUnit = "mg",
                             Indication = "Diabetes Mellitus type 2",
                             Name = "Metformine",
-                            Shape = "Vierkant",
                             Status = "active",
                             Type = "Tablet"
                         },
                         new
                         {
                             Id = 4,
-                            Color = "Blauw",
                             Dose = 80.0,
                             DoseUnit = "mg",
                             Indication = "Maagbeschermer",
                             Name = "Pantroprazol msr",
-                            Shape = "Vierkant",
                             Status = "active",
                             Type = "Tablet"
                         },
                         new
                         {
                             Id = 5,
-                            Color = "Wit",
                             Dose = 50.0,
                             DoseUnit = "mg",
                             Indication = "Antibiotica (Urineweginfectie)",
                             Name = "Nitrofurantione",
-                            Shape = "Vierkant",
                             Status = "active",
                             Type = "Tablet"
                         },
                         new
                         {
                             Id = 6,
-                            Color = "Groen",
                             Dose = 10.0,
                             DoseUnit = "mg",
                             Indication = "Somberheid",
                             Name = "Temazepam",
-                            Shape = "Rond",
                             Status = "active",
                             Type = "Tablet"
                         },
                         new
                         {
                             Id = 7,
-                            Color = "Wit",
                             Dose = 40.0,
                             DoseUnit = "mg",
                             Indication = "Hartfalen",
                             Name = "Furosemide",
-                            Shape = "Hexagonaal",
                             Status = "active",
                             Type = "Tablet"
                         },
                         new
                         {
                             Id = 8,
-                            Color = "Zwart",
                             Dose = 5.0,
                             DoseUnit = "mg",
                             Indication = "Nycturie",
                             Name = "Finasteride",
-                            Shape = "Rond",
                             Status = "active",
                             Type = "Capsule"
                         },
                         new
                         {
                             Id = 9,
-                            Color = "Wit",
                             Dose = 10.0,
                             DoseUnit = "mg",
                             Indication = "Slaapproblemen",
                             Name = "Oxazepam",
-                            Shape = "Vierkant",
                             Status = "active",
                             Type = "Tablet"
                         });
