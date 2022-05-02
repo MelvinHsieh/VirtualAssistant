@@ -4,24 +4,24 @@ services:
   messagebus:
     image: rabbitmq:latest
 
-  loggingservice:
-    container_name: loggingservice
-    build:
-      context: ./loggingservice
-      dockerfile: Dockerfile
-    deploy:
-      restart_policy:
-        condition: on-failure
-    ports:
-      - "3000:3000"
-    expose:
-      - "3000"
-    environment:
-      - MESSAGE_QUEUE=amqp://messagebus
-      - MONGO_URL=mongodb://loggingdb:loggingdbpass@loggingdb:27017/
-    depends_on:
-      - "messagebus"
-      - "loggingdb"
+  # loggingservice:
+  #   container_name: loggingservice
+  #   build:
+  #     context: ./loggingservice
+  #     dockerfile: Dockerfile
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #   ports:
+  #     - "3000:3000"
+  #   expose:
+  #     - "3000"
+  #   environment:
+  #     - MESSAGE_QUEUE=amqp://messagebus
+  #     - MONGO_URL=mongodb://loggingdb:loggingdbpass@loggingdb:27017/
+  #   depends_on:
+  #     - "messagebus"
+  #     - "loggingdb"
 
   dataservice:
     container_name: dataservice
@@ -38,7 +38,7 @@ services:
     depends_on:
       - "userdatadb"
       - "generaldatadb"
-      - "loggingservice"
+      # - "loggingservice"
 
   web:
     container_name: web
@@ -52,19 +52,19 @@ services:
     depends_on:
       - "dataservice"
 
-  loggingdb:
-    container_name: loggingdb
-    image: mongo:latest
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: loggingdb
-      MONGO_INITDB_ROOT_PASSWORD: loggingdbpass
-    ports:
-      - 27017:27017
-    expose:
-      - "27017"
-    restart: always
-    volumes:
-      - loggingdb_volume:/data/db
+  # loggingdb:
+  #   container_name: loggingdb
+  #   image: mongo:latest
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: loggingdb
+  #     MONGO_INITDB_ROOT_PASSWORD: loggingdbpass
+  #   ports:
+  #     - 27017:27017
+  #   expose:
+  #     - "27017"
+  #   restart: always
+  #   volumes:
+  #     - loggingdb_volume:/data/db
 
   userdatadb:
     container_name: userdatadb
