@@ -30,8 +30,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
-    expose:
-      - "80"
+      - "443:443"
     environment:
       - MSSQL_URL_USER_DATA=mongodb://userdatadb:userdatadbpass@userdatadb:27017/
       - MSSQL_URL_GENERAL_DATA=mongodb://generaldatadb:generaldatadbpass@generaldatadb:27017/
@@ -46,9 +45,8 @@ services:
       context: ./web/web
       dockerfile: Dockerfile
     ports:
-      - "81:80"
-    expose:
-      - "81"
+      - "80:80"
+      - "443:443"
     depends_on:
       - "dataservice"
 
