@@ -15,7 +15,7 @@ COPY ["dataservice/dataservice.csproj", "dataservice/"]
 COPY ["Application/Application.csproj", "dataservice/"]
 COPY ["Domain/Domain.csproj", "dataservice/"]
 
-RUN dotnet restore "./dataservice.csproj"
+RUN dotnet restore
 
 COPY . .
 WORKDIR "/src/."
