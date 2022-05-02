@@ -8,8 +8,6 @@ WORKDIR /src
 COPY . .
 RUN dotnet restore "dataservice/dataservice.csproj"
 
-
-COPY ["dataservice.csproj", "."]
 WORKDIR "/src/."
 COPY . .
 
