@@ -11,11 +11,11 @@ WORKDIR /src
 COPY *.sln ./
 
 COPY ["dataservice/dataservice.sln", "./"]
-COPY ["dataservice/dataservice.csproj", "dataservice/"]
-COPY ["Application/Application.csproj", "dataservice/"]
-COPY ["Domain/Domain.csproj", "dataservice/"]
+COPY ["dataservice/dataservice.csproj", "./"]
+COPY ["Application/Application.csproj", "./"]
+COPY ["Domain/Domain.csproj", "./"]
 
-RUN dotnet restore
+RUN dotnet restore "dataservice/dataservice.csproj"
 
 COPY . .
 WORKDIR "/src/."
