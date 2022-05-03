@@ -8,6 +8,7 @@ namespace Application.Repositories.Interfaces
         public Result AddIntake(int medicineId, int patientId, int amount, TimeOnly start, TimeOnly end);
 
         public IEnumerable<PatientIntake> GetIntakesByPatientId(int patientId);
+        public IEnumerable<PatientIntake> GetRemainingIntakesByPatientId(int patientId);
         public PatientIntake? GetIntakeById(int intakeId);
 
         public Result RemoveIntake(int id);
