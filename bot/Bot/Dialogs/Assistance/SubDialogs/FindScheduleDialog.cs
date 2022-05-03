@@ -32,9 +32,10 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 Type = "OPEN_SCHEDULE",
                 Value = intake
             };
-            
+
             await stepContext.Context.SendActivityAsync(activity);
             return await stepContext.EndDialogAsync(null, cancellationToken);
+
         }
     }
 }
