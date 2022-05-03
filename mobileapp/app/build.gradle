@@ -6,7 +6,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.virtualassistent"
+        applicationId "com.infosupport.virtualassistent"
         vectorDrawables.useSupportLibrary = true
         minSdk 21
         targetSdk 31
@@ -19,6 +19,8 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            debuggable false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
