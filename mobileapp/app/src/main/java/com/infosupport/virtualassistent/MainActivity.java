@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.infosupport.virtualassistent.storage.MessageDAO;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView messageRecycler;
     private MessageDAO msgDao;
     private Bot bot;
+    private TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,14 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             checkMicPermission();
         }
+
+        textToSpeech=new TextToSpeech(getApplicationContext(), status -> {
+            if(status != TextToSpeech.ERROR) {
+                textToSpeech.setLanguage(new Locale("nl_NL"));
+                textToSpeech.setSpeechRate(0.5f);
+            }
+        });
+
     }
 
     // DO NOT REMOVE, WILL BE USED AGAIN
@@ -88,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showMessage(String msg, boolean isUser) {
+        if(!isUser) {
+            textToSpeech.speak(msg, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setImageResource(R.drawable.mic_inactive);
         Message message = new Message(msg, isUser, Calendar.getInstance().getTimeInMillis());

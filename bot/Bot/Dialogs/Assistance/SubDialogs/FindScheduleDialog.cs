@@ -34,7 +34,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         private async Task<DialogTurnResult> ShowSchedule(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             
-            if ((string) stepContext.Result == "Ja")
+            if ((string) stepContext.Result == "ja")
             {
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text("Oké! Eén moment geduld alstublieft, dan pak ik uw gegevens erbij."));
 
