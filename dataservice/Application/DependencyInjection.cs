@@ -20,6 +20,10 @@ namespace Application
             services.AddScoped<IPatientIntakeRepo, PatientIntakeRepo>();
             services.AddScoped<IIntakeRegistrationRepo, IntakeRegistrationRepo>();
 
+            services.AddScoped<ICareWorkerRepo, CareWorkerRepo>();
+            services.AddScoped<ICareWorkerFunctionRepo, CareWorkerFunctionRepo>();
+
+
             return services;
         }
     }
