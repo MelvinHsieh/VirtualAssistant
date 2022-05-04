@@ -15,10 +15,10 @@ namespace Application.Repositories
         private MedicineDbContext _context { get; set; }
         private ICareWorkerFunctionRepo _careWorkerFunctionRepo { get; set; }
 
-
-        public CareWorkerRepo(MedicineDbContext context)
+        public CareWorkerRepo(MedicineDbContext context, ICareWorkerFunctionRepo careWorkerFunctionRepo)
         {
             _context = context;
+            _careWorkerFunctionRepo = careWorkerFunctionRepo;
         }
 
         public Result AddCareWorker(string firstName, string lastName, string functionName)
@@ -30,7 +30,9 @@ namespace Application.Repositories
                 return new Result(false, "Given firstname, lastname or function was empty!");
             }
 
-            if (_careWorkerFunctionRepo.FindCareWorkerFunction(functionName) == null)
+            CareWorkerFunction? careWorkerFunction = _careWorkerFunctionRepo.FindCareWorkerFunction(functionName);
+
+            if (careWorkerFunction == null)
             {
                 return new Result(false, "Given care worker function does not exist!");
             }

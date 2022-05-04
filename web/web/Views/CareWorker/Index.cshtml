@@ -1,20 +1,17 @@
-﻿@model IEnumerable<web.Models.CareWorker>
+﻿@model IEnumerable<web.Models.CareWorkerModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Zorgmedewerkers overzicht";
 }
 
-<h1>Index</h1>
+<h1>Zorgmedewerkers overzicht</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Nieuwe zorgmedewerker aanmaken</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
             </th>
@@ -30,9 +27,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
