@@ -6,6 +6,9 @@ namespace web.Models
 {
     public class CareWorkerModel
     {
+        [JsonProperty(PropertyName = "id")]
+        public int Id { get; set; } = 0;
+
         [JsonProperty(PropertyName = "firstName")]
         [DisplayName("Voornaam")]
         [Required]

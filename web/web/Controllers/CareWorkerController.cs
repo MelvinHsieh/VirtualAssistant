@@ -93,46 +93,75 @@ namespace web.Controllers
             }
         }
 
-        // GET: CareWorkerController/Edit/5
-        public ActionResult Edit(int id)
+        // GET: CareWorkerController/CreateMedicineDoseUnit
+        public ActionResult CreateCareWorkerFunction()
         {
             return View();
         }
 
-        // POST: CareWorkerController/Edit/5
+        // POST: CareWorkerController/CreateCareWorkerFunction
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> CreateCareWorkerFunctionAsync(string careWorkerFunction)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                using (var client = new HttpClient())
+                {
+                    var uri = new Uri(_apiURL + "/CareWorker/function");
+                    var result = await client.PostAsJsonAsync(uri, careWorkerFunction);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        TempData["success"] = "Zorgmedewerker functie aangemaakt!";
+                    }
+                    else
+                    {
+                        TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de zorgmedewerker functie!";
+                    }
+                }
+
             }
             catch
             {
-                return View();
+                TempData["error"] = "Er is iets fout gegaan bij het aanmaken van de zorgmedewerker functie!";
+                return RedirectToAction("Index");
             }
+
+            return RedirectToAction("Index");
         }
 
         // GET: CareWorkerController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            return View();
-        }
+            if (id != 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var uri = new Uri(_apiURL + "/CareWorker/" + id);
+                        var result = await client.DeleteAsync(uri);
 
-        // POST: CareWorkerController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+                        if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            TempData["success"] = "Zorgmedewerker succesvol verwijderd!";
+
+                        }
+                        else
+                        {
+                            TempData["error"] = "Zorgmedewerker kon niet worden verwijderd!";
+                        }
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Zorgmedewerker kon niet worden verwijderd!";
+                    return RedirectToAction("Index");
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return RedirectToAction("Index");
         }
     }
 }
