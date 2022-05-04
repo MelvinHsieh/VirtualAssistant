@@ -9,6 +9,7 @@ import android.os.ResultReceiver;
 
 import androidx.annotation.NonNull;
 
+import com.infosupport.virtualassistent.R;
 import com.infosupport.virtualassistent.receivers.SpeechResultReceiver;
 import com.microsoft.cognitiveservices.speech.CancellationDetails;
 import com.microsoft.cognitiveservices.speech.ResultReason;
@@ -22,11 +23,11 @@ import java.util.concurrent.Future;
 
 public class SpeechIntentService extends IntentService {
 
-    private static final String SubscriptionKey = "0829870a77cf497096c5b42a2c15ae0a";
+    private final String SubscriptionKey = getApplicationContext().getString(R.string.microsoft_speech_key);
     private static final String ServiceRegion = "westeurope";
 
-    private static final String ACTION_RECOGNIZE = "com.example.virtualassistent.services.action.RECOGNIZE";
-    private static final String RESULT_RECEIVER = "com.example.virtualassistent.services.extra.RESULT_RECEIVER";
+    private static final String ACTION_RECOGNIZE = "com.infosupport.virtualassistent.services.action.RECOGNIZE";
+    private static final String RESULT_RECEIVER = "com.infosupport.virtualassistent.services.extra.RESULT_RECEIVER";
 
     public SpeechIntentService() {
         super("SpeechIntentService");
@@ -50,6 +51,7 @@ public class SpeechIntentService extends IntentService {
      * Handle the recognizer in a worker thread
      */
     private void handleActionRecognize(ResultReceiver resultReceiver) throws ExecutionException, InterruptedException {
+        System.out.println("Dit is een test");
         Bundle bundle = new Bundle();
         SpeechConfig speechConfig = SpeechConfig.fromSubscription(SubscriptionKey, ServiceRegion);
         speechConfig.setSpeechRecognitionLanguage("nl-NL");
@@ -57,7 +59,6 @@ public class SpeechIntentService extends IntentService {
         AudioConfig audioConfig = AudioConfig.fromDefaultMicrophoneInput();
         SpeechRecognizer speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
 
-        System.out.println("Speak into your microphone.");
         Future<SpeechRecognitionResult> task = speechRecognizer.recognizeOnceAsync();
         SpeechRecognitionResult speechRecognitionResult = task.get();
 
@@ -65,11 +66,11 @@ public class SpeechIntentService extends IntentService {
             bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, speechRecognitionResult.getText());
         }
         else if (speechRecognitionResult.getReason() == ResultReason.NoMatch) {
-            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "NOMATCH: Speech could not be recognized.");
+            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "Sorry, dat kon ik niet verstaan.");
         }
         else if (speechRecognitionResult.getReason() == ResultReason.Canceled) {
             CancellationDetails cancellation = CancellationDetails.fromResult(speechRecognitionResult);
-            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "CANCELED: Reason=" + cancellation.getReason());
+            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "Er is helaas iets fout gegaan met de spraakherkenner.");
         }
 
         if(resultReceiver != null){

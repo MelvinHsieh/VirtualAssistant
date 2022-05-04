@@ -3,6 +3,8 @@
     package="com.infosupport.virtualassistent">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -12,11 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VirtualAssistent">
         <service
-            android:name="com.infosupport.virtualassistent.services.SpeechIntentService"
+            android:name=".services.WakeWordService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+        <service
+            android:name=".services.SpeechIntentService"
             android:exported="false" />
 
         <activity
-            android:name="com.infosupport.virtualassistent.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
