@@ -30,7 +30,7 @@ import ai.picovoice.porcupine.PorcupineManagerCallback;
 
 public class WakeWordService extends Service {
     private static final String CHANNEL_ID = "WWEServiceChannel";
-    private final String ACCESS_KEY = getApplicationContext().getString(R.string.porcupine_key);
+    private static String ACCESS_KEY;
     private static final String KEYWORD_PATH = "HansKeyword.ppn";
     public static final String RESULT_RECEIVER = "com.infosupport.virtualassistent.services.extra.WWE_RESULT_RECEIVER";
 
@@ -54,6 +54,8 @@ public class WakeWordService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        ACCESS_KEY = getApplicationContext().getString(R.string.porcupine_key);
+        System.out.println(ACCESS_KEY);
         resultReceiver = intent.getParcelableExtra(RESULT_RECEIVER);
 
         createNotificationChannel();

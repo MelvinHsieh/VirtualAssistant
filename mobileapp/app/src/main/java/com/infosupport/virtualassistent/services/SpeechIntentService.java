@@ -1,8 +1,8 @@
 package com.infosupport.virtualassistent.services;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -23,7 +23,7 @@ import java.util.concurrent.Future;
 
 public class SpeechIntentService extends IntentService {
 
-    private final String SubscriptionKey = getApplicationContext().getString(R.string.microsoft_speech_key);
+    private String SubscriptionKey;
     private static final String ServiceRegion = "westeurope";
 
     private static final String ACTION_RECOGNIZE = "com.infosupport.virtualassistent.services.action.RECOGNIZE";
@@ -35,6 +35,7 @@ public class SpeechIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        SubscriptionKey = getApplicationContext().getString(R.string.microsoft_speech_key);
         ResultReceiver resultReceiver = intent.getParcelableExtra(RESULT_RECEIVER);
 
         final String action = intent.getAction();
