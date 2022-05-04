@@ -31,7 +31,12 @@ namespace Application.Repositories
                 return new Result(false, "Given function already exists!");
             }
 
-            _context.CareWorkerFunctions.Add(new CareWorkerFunction(functionName));
+            CareWorkerFunction careWorkerFunction = new CareWorkerFunction()
+            {
+                Name = functionName
+            };
+
+            _context.CareWorkerFunctions.Add(careWorkerFunction);
             _context.SaveChanges();
             return new Result(true);
         }

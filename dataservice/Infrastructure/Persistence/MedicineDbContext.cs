@@ -65,8 +65,8 @@ namespace Infrastructure.Persistence
             MedicineIdentifierSeeder.SeedMedicineIdentifiers(modelBuilder);
             MedicineSeeder.SeedMedicine(modelBuilder);
             PatientIntakeSeeder.SeedPatientIntake(modelBuilder);
-            CareWorkerSeeder.SeedCareWorker(modelBuilder);
             CareWorkerFunctionSeeder.SeedCareWorkerFunction(modelBuilder);
+            CareWorkerSeeder.SeedCareWorker(modelBuilder);
         }
     }
 }
