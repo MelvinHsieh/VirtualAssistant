@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoreBot;
 using CoreBot.Dialogs.Assistance.SubDialogs;
+using CoreBot.Utils;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
@@ -22,7 +23,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             AddDialog(new FindScheduleDialog(connection));
             AddDialog(new FindMedicineByAttributesDialog(connection));
-            AddDialog(new RegisterIntakeDialog(connection));
+            AddDialog(new RegisterIntakeDialog(connection, medicineRecognizer));
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
@@ -68,15 +69,5 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 }
             }
         }
-    }
-
-    public enum Intents
-    {
-        Medicine_ConfirmMedicine,
-        Medicine_FindDose,
-        Medicine_FindMedicineByAttributes,
-        Medicine_FindSchedule,
-        Medicine_GetMedicineInfo,
-        Intake_RegisterIntake
     }
 }
