@@ -19,16 +19,22 @@ import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.infosupport.virtualassistent.bot.Bot;
+import com.infosupport.virtualassistent.bot.models.Medicine;
 import com.infosupport.virtualassistent.chat.MessageListAdapter;
 import com.infosupport.virtualassistent.model.Message;
 import com.infosupport.virtualassistent.receivers.DetectionResultReceiver;
 import com.infosupport.virtualassistent.receivers.RecognizeSpeechResultReceiver;
 import com.infosupport.virtualassistent.receivers.SpeechResultReceiver;
-import com.infosupport.virtualassistent.services.WakeWordService;
 import com.infosupport.virtualassistent.services.SpeechIntentService;
+import com.infosupport.virtualassistent.services.WakeWordService;
 import com.infosupport.virtualassistent.storage.AppDatabase;
 import com.infosupport.virtualassistent.storage.MessageDAO;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,10 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private MessageDAO msgDao;
     private Bot bot;
     private TextToSpeech textToSpeech;
-
-    // TODO: Store in safe place
-    final String accessKey = "q1CmQIopBmTUJFFqfTarnrrCePdKC6ccRNA3eL5dG4Z6hs72bDzTYw==";
-    final String keywordPath = "HansKeyword.ppn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         startWakeWordService();
     }
 
-    public void dbInit() {
+    private void dbInit() {
         AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "message-history").build();
         msgDao = db.messageDao();
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void ttsInit() {
+    private void ttsInit() {
         textToSpeech=new TextToSpeech(getApplicationContext(), status -> {
             if(status != TextToSpeech.ERROR) {
                 textToSpeech.setLanguage(new Locale("nl_NL"));
@@ -118,10 +120,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Run the speech recognition service */
-    public void runSpeechRecognizer(FloatingActionButton fab) {
+    private void runSpeechRecognizer(FloatingActionButton fab) {
         Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
         fab.setImageResource(R.drawable.mic_active);
         SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
+    }
+
+    public void formatSchedule(JSONObject msg) {
+        StringBuilder value = new StringBuilder("U moet de volgende medicijnen nemen:\n");
+        try {
+            String medicine = msg.getString("value");
+            JSONArray array = new JSONArray(medicine);
+            ArrayList<Medicine> list = new ArrayList<>();
+            int len = ((JSONArray)array).length();
+            for (int i=0;i<len;i++){
+                list.add(new Medicine(((JSONArray)array).getJSONObject(i)));
+            }
+
+            for (Medicine med : list) {
+                value.append("Om ")
+                        .append(med.intakeStart)
+                        .append(" neemt u ")
+                        .append(med.dose)
+                        .append(" ")
+                        .append(med.shape)
+                        .append(" ")
+                        .append(med.name)
+                        .append(".\n");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        showMessage(value.toString(), false);
     }
 
     public void showMessage(String msg, boolean isUser) {
