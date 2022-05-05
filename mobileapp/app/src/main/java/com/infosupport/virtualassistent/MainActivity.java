@@ -34,11 +34,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -131,22 +135,30 @@ public class MainActivity extends AppCompatActivity {
         try {
             String medicine = msg.getString("value");
             JSONArray array = new JSONArray(medicine);
-            ArrayList<Medicine> list = new ArrayList<>();
+            HashMap<LocalTime, ArrayList<Medicine>> hashMap = new HashMap<>();
             int len = ((JSONArray)array).length();
             for (int i=0;i<len;i++){
-                list.add(new Medicine(((JSONArray)array).getJSONObject(i)));
+                Medicine m = new Medicine(((JSONArray)array).getJSONObject(i));
+                if (!hashMap.containsKey(m.intakeStart)) {
+                    hashMap.put(m.intakeStart, new ArrayList<>());
+                }
+                Objects.requireNonNull(hashMap.get(m.intakeStart)).add(m);
             }
 
-            for (Medicine med : list) {
+            for(Map.Entry<LocalTime, ArrayList<Medicine>> entry : hashMap.entrySet()) {
+                LocalTime time = entry.getKey();
+                ArrayList<Medicine> medicines = entry.getValue();
                 value.append("Om ")
-                        .append(med.intakeStart)
-                        .append(" neemt u ")
-                        .append(med.dose)
-                        .append(" ")
-                        .append(med.shape)
-                        .append(" ")
-                        .append(med.name)
-                        .append(".\n");
+                        .append(time)
+                        .append(" neemt u: \n");
+                for (Medicine med : medicines) {
+                    value.append(med.amount)
+                            .append(" ")
+                            .append(med.type)
+                            .append(" ")
+                            .append(med.name)
+                            .append(".\n");
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
