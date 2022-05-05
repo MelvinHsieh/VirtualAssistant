@@ -81,6 +81,9 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                 {
                     intakeRegistration.TakenOn = DateTime.Now;
                 }
+            } else
+            {
+                intakeRegistration.TakenOn = DateTime.Now;
             }
 
             var timeMatchedIntakes = matchingIntakes 
