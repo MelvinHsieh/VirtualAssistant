@@ -95,7 +95,7 @@ services:
       - "27018"
     restart: always
     volumes:
-      - loggingdb_volume:/data/db
+      - authdb_volume:/data/db
 
   userdatadb:
     container_name: userdatadb
