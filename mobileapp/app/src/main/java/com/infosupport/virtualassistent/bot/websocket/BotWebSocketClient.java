@@ -19,6 +19,7 @@ public class BotWebSocketClient extends WebSocketClient {
         super(serverURI);
         activityRef = new WeakReference<MainActivity>(activity);
     }
+
     @Override
     public void onOpen(ServerHandshake handshakedata) {
 //        System.out.println("WEBSOCKET CONNECTION OPENED!" + handshakedata.getHttpStatusMessage());
@@ -44,7 +45,6 @@ public class BotWebSocketClient extends WebSocketClient {
                 }
                 else if (type.equalsIgnoreCase("OPEN_SCHEDULE")) {
                     activityRef.get().runOnUiThread(() -> activityRef.get().formatSchedule(msg));
-
                 }
                 if (msg.has("inputHint") && msg.getString("inputHint").equalsIgnoreCase("expectingInput")) {
                     // This would activate the speech whenever input is expected again.

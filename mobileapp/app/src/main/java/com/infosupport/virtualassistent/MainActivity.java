@@ -154,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
                 for (Medicine med : medicines) {
                     value.append(med.amount)
                             .append(" ")
+                            .append(med.color)
+                            .append(" ")
                             .append(med.type)
                             .append(" ")
                             .append(med.name)
