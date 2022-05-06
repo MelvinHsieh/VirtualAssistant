@@ -30,7 +30,7 @@ namespace Microsoft.BotBuilderSamples
                 await turnContext.SendActivityAsync(errorMessage);
 
                 errorMessageText = "Neem alstjeblieft contact op met de administrator.";
-                errorMessage = MessageFactory.Text(errorMessageText, errorMessageText, InputHints.ExpectingInput);
+                errorMessage = MessageFactory.Text(errorMessageText, errorMessageText, InputHints.IgnoringInput);
                 await turnContext.SendActivityAsync(errorMessage);
 
                 if (conversationState != null)
