@@ -6,17 +6,17 @@ namespace web.Controllers
 {
     public class AlertController : Controller
     {
-        private readonly IHubContext<NotificationHub> _hub;
+        private readonly IHubContext<NotificationHub, INotificationHubClient> _hub;
 
-        public AlertController(IHubContext<NotificationHub> hub)
+        public AlertController(IHubContext<NotificationHub, INotificationHubClient> hub)
         {
             _hub = hub;
         }
 
         public async Task<IActionResult> Index()
         {
-            await _hub.Clients.All.SendAsync("AlertCaretaker", "ALERT");
-            return Ok();
+            await _hub.Clients.All.SendAlert("ALERT");  
+            return Ok("Alert");
         }
     }
 }

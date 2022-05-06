@@ -2,11 +2,16 @@
 
 namespace web.SignalR.Hubs
 {
-    public class NotificationHub : Hub
+    public interface INotificationHubClient
     {
-        public async Task AlertCaretaker(string user, string message)
+        Task SendAlert(string message);
+    }
+
+    public class NotificationHub : Hub<INotificationHubClient>
+    {
+        public async Task SendAlert (string message)
         {
-            await Clients.All.SendAsync("ReceiveCaretakerAlert", user, message);
+            await Clients.Others.SendAlert(message);
         }
     }
 }
