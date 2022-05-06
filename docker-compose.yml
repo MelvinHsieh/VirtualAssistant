@@ -22,6 +22,23 @@ services:
     depends_on:
       - "messagebus"
       - "loggingdb"
+  
+  authservice:
+    container_name: authservice
+    build:
+      context: ./authservice
+      dockerfile: Dockerfile
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "3001:3001"
+    expose:
+      - "3001"
+    environment:
+      - MONGO_URL=mongodb://authdb:authdbpass@authdb:27018/
+    depends_on:
+      - "authdb"
 
   dataservice:
     container_name: dataservice
@@ -65,6 +82,20 @@ services:
     restart: always
     volumes:
       - loggingdb_volume:/data/db
+  
+  authdb:
+    container_name: authdb
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: authdb
+      MONGO_INITDB_ROOT_PASSWORD: authdbpass
+    ports:
+      - 27018:27018
+    expose:
+      - "27018"
+    restart: always
+    volumes:
+      - loggingdb_volume:/data/db
 
   userdatadb:
     container_name: userdatadb
@@ -98,5 +129,6 @@ services:
 
 volumes:
   loggingdb_volume:
+  authdb_volume:
   userdatadb_volume:
   generaldatadb_volume:
