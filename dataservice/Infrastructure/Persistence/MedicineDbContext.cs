@@ -13,6 +13,9 @@ namespace Infrastructure.Persistence
         public DbSet<MedicineType> Medicine_Types { get; set; }
         public DbSet<DoseUnit> DoseUnits { get; set; }
         public DbSet<PatientIntake> PatientIntakes { get; set; }
+        public DbSet<IntakeRegistration> IntakeRegistrations { get; set; }
+        public DbSet<CareWorker> CareWorkers { get; set; }
+        public DbSet<CareWorkerFunction> CareWorkerFunctions { get; set; }
 
         public MedicineDbContext(DbContextOptions<MedicineDbContext> options)
             : base(options)
@@ -53,10 +56,17 @@ namespace Infrastructure.Persistence
                 .WithMany()
                 .HasForeignKey(m => m.DoseUnit);
 
+            modelBuilder.Entity<CareWorker>()
+                .HasOne<CareWorkerFunction>()
+                .WithMany()
+                .HasForeignKey(m => m.Function);
+
             //Seed Data
             MedicineIdentifierSeeder.SeedMedicineIdentifiers(modelBuilder);
             MedicineSeeder.SeedMedicine(modelBuilder);
             PatientIntakeSeeder.SeedPatientIntake(modelBuilder);
+            CareWorkerFunctionSeeder.SeedCareWorkerFunction(modelBuilder);
+            CareWorkerSeeder.SeedCareWorker(modelBuilder);
         }
     }
 }
