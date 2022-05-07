@@ -1,0 +1,50 @@
+﻿@model IEnumerable<web.Models.CareWorkerModel>
+
+@{
+    ViewData["Title"] = "Zorgmedewerkers overzicht";
+}
+
+<h1>Zorgmedewerkers overzicht</h1>
+
+@if (Model != null)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Nieuwe zorgmedewerker aanmaken</a>
+        <a asp-action="CreateCareWorkerFunction" class="btn btn-secondary">Nieuwe zorgmedewerker functie aanmaken</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Function)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Function)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Delete", "Delete", new {  id = item.Id  })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

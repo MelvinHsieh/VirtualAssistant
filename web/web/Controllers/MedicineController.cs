@@ -12,7 +12,6 @@ namespace web.Controllers
         public MedicineController(IConfiguration configuration)
         {
             _apiURL = configuration.GetValue<String>("DataServiceURL");
-            Console.WriteLine(_apiURL);
         }
 
         // GET: MedicineController
