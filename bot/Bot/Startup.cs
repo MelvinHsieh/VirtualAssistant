@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using CoreBot;
+using CoreBot.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot.Builder;
@@ -19,6 +20,11 @@ namespace Microsoft.BotBuilderSamples
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient().AddControllers().AddNewtonsoftJson();
+
+            var loggingMiddleware = new TranscriptLoggerMiddleware(new LoggingService());
+
+            services.AddSingleton(loggingMiddleware);
+
             services.AddSingleton<BotFrameworkAuthentication, ConfigurationBotFrameworkAuthentication>();
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
             services.AddSingleton<IStorage, MemoryStorage>();
