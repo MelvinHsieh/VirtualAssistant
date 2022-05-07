@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using web.Models;
 using web.SignalR.Hubs;
 
 namespace web.Controllers
@@ -13,10 +14,11 @@ namespace web.Controllers
             _hub = hub;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpPost("/alert")]
+        public async Task<IActionResult> PostAlert([FromBody] AlertDto alert)
         {
-            await _hub.Clients.All.SendAlert("ALERT");  
-            return Ok("Alert");
+            await _hub.Clients.All.SendAlert(alert.Message);  
+            return Ok("Alert sent!");
         }
     }
 }

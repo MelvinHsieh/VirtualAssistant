@@ -31,7 +31,7 @@ app.MapControllerRoute(
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<NotificationHub>("/notificationHub");
+    endpoints.MapHub<NotificationHub>("/notifications");
 });
 
 app.Run();
