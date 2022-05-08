@@ -144,7 +144,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                     var response = await connection.PostRequest("IntakeRegistration", JsonConvert.SerializeObject(new { PatientIntakeId = intakeRegistration.PatientIntakeId, Date = intakeRegistration.TakenOn }));
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Uw inname is geregistreerd"));
+                        await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Uw inname is geregistreerd."));
                     }
                     else
                     {
