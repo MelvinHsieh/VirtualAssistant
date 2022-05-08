@@ -19,7 +19,6 @@ import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.infosupport.virtualassistent.bot.Bot;
-import com.infosupport.virtualassistent.bot.models.Medicine;
 import com.infosupport.virtualassistent.chat.MessageListAdapter;
 import com.infosupport.virtualassistent.model.Message;
 import com.infosupport.virtualassistent.receivers.DetectionResultReceiver;
@@ -30,19 +29,10 @@ import com.infosupport.virtualassistent.services.WakeWordService;
 import com.infosupport.virtualassistent.storage.AppDatabase;
 import com.infosupport.virtualassistent.storage.MessageDAO;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -128,44 +118,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
         fab.setImageResource(R.drawable.mic_active);
         SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
-    }
-
-    public void formatSchedule(JSONObject msg) {
-        StringBuilder value = new StringBuilder("U moet de volgende medicijnen nemen:\n");
-        try {
-            String medicine = msg.getString("value");
-            JSONArray array = new JSONArray(medicine);
-            HashMap<LocalTime, ArrayList<Medicine>> hashMap = new HashMap<>();
-            int len = ((JSONArray)array).length();
-            for (int i=0;i<len;i++){
-                Medicine m = new Medicine(((JSONArray)array).getJSONObject(i));
-                if (!hashMap.containsKey(m.intakeStart)) {
-                    hashMap.put(m.intakeStart, new ArrayList<>());
-                }
-                Objects.requireNonNull(hashMap.get(m.intakeStart)).add(m);
-            }
-
-            for(Map.Entry<LocalTime, ArrayList<Medicine>> entry : hashMap.entrySet()) {
-                LocalTime time = entry.getKey();
-                ArrayList<Medicine> medicines = entry.getValue();
-                value.append("Om ")
-                        .append(time)
-                        .append(" neemt u: \n");
-                for (Medicine med : medicines) {
-                    value.append(med.amount)
-                            .append(" ")
-                            .append(med.color)
-                            .append(" ")
-                            .append(med.type)
-                            .append(" ")
-                            .append(med.name)
-                            .append(".\n");
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        showMessage(value.toString(), false);
     }
 
     public void showMessage(String msg, boolean isUser) {

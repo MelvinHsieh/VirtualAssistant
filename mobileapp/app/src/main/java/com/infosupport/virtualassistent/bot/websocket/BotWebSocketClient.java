@@ -1,6 +1,7 @@
 package com.infosupport.virtualassistent.bot.websocket;
 
 import com.infosupport.virtualassistent.MainActivity;
+import com.infosupport.virtualassistent.bot.models.Schedule;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -44,7 +45,7 @@ public class BotWebSocketClient extends WebSocketClient {
                     activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(text, false));
                 }
                 else if (type.equalsIgnoreCase("OPEN_SCHEDULE")) {
-                    activityRef.get().runOnUiThread(() -> activityRef.get().formatSchedule(msg));
+                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(Schedule.fromJSON(msg), false));
                 }
                 if (msg.has("inputHint") && msg.getString("inputHint").equalsIgnoreCase("expectingInput")) {
                     // This would activate the speech whenever input is expected again.
