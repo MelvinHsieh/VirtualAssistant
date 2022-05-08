@@ -148,7 +148,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                     }
                     else
                     {
-                        await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Het registreren van de inname is mislukt"));
+                        await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Het registreren van de inname is mislukt."));
                     }
 
                     return await stepContext.EndDialogAsync(null, cancellationToken);
