@@ -155,7 +155,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                     //End Dialog
                 case nameof(Intents.Cancel):
                     //Cancel the registration attempt
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text("De registratie poging is geanuleerd"));
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Text("De registratie poging is geannuleerd."));
                     return await stepContext.EndDialogAsync(null, cancellationToken);
                     //End Dialog
                 default:
