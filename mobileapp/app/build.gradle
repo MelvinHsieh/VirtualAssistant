@@ -6,7 +6,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.virtualassistent"
+        applicationId "com.infosupport.virtualassistent"
         vectorDrawables.useSupportLibrary = true
         minSdk 21
         targetSdk 31
@@ -18,7 +18,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -43,4 +45,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    implementation 'ai.picovoice:porcupine-android:2.1.0'
 }
