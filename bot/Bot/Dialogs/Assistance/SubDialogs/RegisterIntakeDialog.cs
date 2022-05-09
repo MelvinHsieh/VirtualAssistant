@@ -12,14 +12,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoreBot.Utils;
+using Microsoft.BotBuilderSamples;
 
 namespace CoreBot.Dialogs.Assistance.SubDialogs
 {
     public class RegisterIntakeDialog : ComponentDialog
     {
         private DataServiceConnection connection;
+        private MedicineRecognizer _medicineRecognizer;
 
-        public RegisterIntakeDialog(DataServiceConnection connection)
+        public RegisterIntakeDialog(DataServiceConnection connection, MedicineRecognizer medicineRecognizer)
             : base(nameof(RegisterIntakeDialog))
         {
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
@@ -29,6 +31,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             }));
 
             this.connection = connection;
+            _medicineRecognizer = medicineRecognizer;
         }
 
         private async Task<DialogTurnResult> Confirm(WaterfallStepContext stepContext, CancellationToken cancellationToken)
@@ -81,6 +84,9 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                 {
                     intakeRegistration.TakenOn = DateTime.Now;
                 }
+            } else
+            {
+                intakeRegistration.TakenOn = DateTime.Now;
             }
 
             var timeMatchedIntakes = matchingIntakes 
@@ -125,32 +131,39 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
         private async Task<DialogTurnResult> RegisterIntake(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            //Register
-            if (stepContext.Result.ToString().ToLower() == "ja")
-            {
-                IntakeRegistration intakeRegistration = (IntakeRegistration)stepContext.Values["intake"];
+            var luisResult = await _medicineRecognizer.RecognizeAsync(stepContext.Context, cancellationToken);
+            var intents = luisResult.Intents.OrderByDescending(i => i.Value.Score);
+            var intent = intents.First().Key;
 
-                var response = await connection.PostRequest("IntakeRegistration", JsonConvert.SerializeObject(new { PatientIntakeId = intakeRegistration.PatientIntakeId, Date = intakeRegistration.TakenOn }));
-                if(response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Uw inname is geregistreerd"));
-                } else
-                {
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Het registreren van de inname is mislukt"));
-                }
+            switch (intent)
+            {
+                case nameof(Intents.Confirm):
+                    //Start the registration
+                    IntakeRegistration intakeRegistration = (IntakeRegistration)stepContext.Values["intake"];
 
-                return await stepContext.EndDialogAsync(null, cancellationToken);
+                    var response = await connection.PostRequest("IntakeRegistration", JsonConvert.SerializeObject(new { PatientIntakeId = intakeRegistration.PatientIntakeId, Date = intakeRegistration.TakenOn }));
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Uw inname is geregistreerd."));
+                    }
+                    else
+                    {
+                        await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Het registreren van de inname is mislukt."));
+                    }
+
+                    return await stepContext.EndDialogAsync(null, cancellationToken);
+                    //End Dialog
+                case nameof(Intents.Cancel):
+                    //Cancel the registration attempt
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Text("De registratie poging is geannuleerd."));
+                    return await stepContext.EndDialogAsync(null, cancellationToken);
+                    //End Dialog
+                default:
+                    //Not understood
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik heb je antwoord helaas niet begrepen!"));
+                    return await stepContext.EndDialogAsync(null, cancellationToken);
             }
-            else if(stepContext.Result.ToString().ToLower() == "nee")
-            {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("De registratie poging is geanuleerd"));
-                return await stepContext.EndDialogAsync(null, cancellationToken);
-            }
-            else
-            {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik heb je hulpvraag helaas niet begrepen!"));
-                return await stepContext.EndDialogAsync(null, cancellationToken);
-            }
+
         }
     }
 }
