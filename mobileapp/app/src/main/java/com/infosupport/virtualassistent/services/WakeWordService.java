@@ -55,7 +55,6 @@ public class WakeWordService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         ACCESS_KEY = getApplicationContext().getString(R.string.porcupine_key);
-        System.out.println(ACCESS_KEY);
         resultReceiver = intent.getParcelableExtra(RESULT_RECEIVER);
 
         createNotificationChannel();
