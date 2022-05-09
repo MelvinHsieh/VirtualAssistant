@@ -126,7 +126,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
         private async Task<DialogTurnResult> RegisterIntake(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             //Register
-            if (stepContext.Result.ToString().ToLower() == "ja" || stepContext.Result.ToString().ToLower() == "ja.")
+            if (stepContext.Result.ToString().ToLower() == "ja")
             {
                 IntakeRegistration intakeRegistration = (IntakeRegistration)stepContext.Values["intake"];
 
