@@ -58,6 +58,8 @@ namespace Microsoft.BotBuilderSamples.Bots
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
                     await turnContext.SendActivityAsync("Welkom!");
+                    await turnContext.SendActivityAsync("Waar kan ik u vandaag mee helpen?");
+
                     await Dialogs.Find(nameof(AssistanceDialog)).RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
                 }
             }

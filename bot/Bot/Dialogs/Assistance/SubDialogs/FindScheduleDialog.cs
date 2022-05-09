@@ -14,7 +14,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         public FindScheduleDialog(DataServiceConnection connection)
             : base(nameof(FindScheduleDialog))
         {
-            AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
+            AddDialog(new WaterfallDialog("findSchedule", new WaterfallStep[]
             {
                 ShowSchedule
             }));
@@ -34,8 +34,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             };
 
             await stepContext.Context.SendActivityAsync(activity);
-            return await stepContext.EndDialogAsync(null, cancellationToken);
-
+            return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
         }
     }
 }

@@ -20,9 +20,10 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
         public FindMedicineByAttributesDialog(DataServiceConnection connection)
             : base(nameof(FindMedicineByAttributesDialog))
         {
-            AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
+            AddDialog(new WaterfallDialog("findMedicineByAttributes", new WaterfallStep[]
             {
-                Inform
+                Inform,
+                Process
             }));
 
             this.connection = connection;
@@ -66,6 +67,12 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                 
                 return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text(builder.ToString(), null, InputHints.ExpectingInput) }, cancellationToken);
             }
+        }
+
+        private async Task<DialogTurnResult> Process(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Heeft u verder nog hulpvragen?"));
+            return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
         }
     }
 }

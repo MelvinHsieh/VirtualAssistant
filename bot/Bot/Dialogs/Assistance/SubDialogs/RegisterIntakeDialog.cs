@@ -24,7 +24,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
         public RegisterIntakeDialog(DataServiceConnection connection, MedicineRecognizer medicineRecognizer)
             : base(nameof(RegisterIntakeDialog))
         {
-            AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
+            AddDialog(new WaterfallDialog("registerIntake", new WaterfallStep[]
             {
                 Confirm,
                 RegisterIntake
@@ -71,7 +71,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             {
                 builder.Append("Mijn excuses! Het systeem heeft geen medicijn kunnen herkennen. Bij problemen kunt u contact opnemen met een medewerker");
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text(builder.ToString()));
-                return await stepContext.EndDialogAsync(null, cancellationToken);
+                return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
             }
 
             if(((JObject)stepContext.Options)["datetime"] != null) //Extract Date
@@ -110,7 +110,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                 builder.Append($" en {matchingIntakes.Last().Medicine.Name}. Probeer het opnieuw"); //TODO Rephrase
 
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text(builder.ToString()));
-                return await stepContext.EndDialogAsync(null, cancellationToken);
+                return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
             }
             else if (matchingIntakes.Count == 1)
             {
@@ -123,9 +123,9 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             }
             else
             {
-                builder.Append("Mijn excuses! Binnen het systeem staan geen medicijnen aan u gekoppeld die aan die eisen voldoen. Zal ik u doorverbinden met een medewerker?");
+                builder.Append("Mijn excuses! Binnen het systeem staan geen medicijnen aan u gekoppeld die aan die eisen voldoen.");
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text(builder.ToString()));
-                return await stepContext.EndDialogAsync(null, cancellationToken);
+                return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
             }
         }
 
@@ -151,17 +151,17 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                         await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Het registreren van de inname is mislukt."));
                     }
 
-                    return await stepContext.EndDialogAsync(null, cancellationToken);
-                    //End Dialog
+                    return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
+                //End Dialog
                 case nameof(Intents.Cancel):
                     //Cancel the registration attempt
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text("De registratie poging is geannuleerd."));
-                    return await stepContext.EndDialogAsync(null, cancellationToken);
-                    //End Dialog
+                    return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
+                //End Dialog
                 default:
                     //Not understood
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik heb je antwoord helaas niet begrepen!"));
-                    return await stepContext.EndDialogAsync(null, cancellationToken);
+                    return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
             }
 
         }

@@ -25,28 +25,26 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new FindMedicineByAttributesDialog(connection));
             AddDialog(new RegisterIntakeDialog(connection, medicineRecognizer));
             AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
+
+            AddDialog(new WaterfallDialog("assistanceDialog", new WaterfallStep[]
             {
                 OfferHelpAsync,
                 ProcessQuestionAsync
             }));
 
-            InitialDialogId = nameof(WaterfallDialog);
+            InitialDialogId = "assistanceDialog";
         }
 
         private async Task<DialogTurnResult> OfferHelpAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var messageText = "Waar kan ik u vandaag mee helpen?";
-            var promptMessage = MessageFactory.Text(messageText, messageText, InputHints.ExpectingInput);
-
-            return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
+            return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { }, cancellationToken);
         }
 
         private async Task<DialogTurnResult> ProcessQuestionAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             if (!_medicineRecognizer.IsConfigured)
             {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik mis op dit moment de verbinding met de technologie die mij helpt om je te begrijpen, probeer het op een later moment nog een keer!."));
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik mis op dit moment de verbinding met de technologie die mij helpt om je te begrijpen, probeer het op een later moment nog een keer!"));
                 return await stepContext.EndDialogAsync(null, cancellationToken);
             }
             else
@@ -63,9 +61,12 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         return await stepContext.BeginDialogAsync(nameof(FindMedicineByAttributesDialog), luisResult.Entities, cancellationToken);
                     case nameof(Intents.Intake_RegisterIntake):
                         return await stepContext.BeginDialogAsync(nameof(RegisterIntakeDialog), luisResult.Entities, cancellationToken);
+                    case nameof(Intents.Cancel):
+                        await stepContext.Context.SendActivityAsync(MessageFactory.Text("Oké, laat het mij weten als ik in de toekomst nog iets voor u kan betekenen."));
+                        return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
                     default:
                         await stepContext.Context.SendActivityAsync(MessageFactory.Text("Mijn excuses, ik heb de hulpvraag niet begrepen."));
-                        return await stepContext.EndDialogAsync(null, cancellationToken);
+                        return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
                 }
             }
         }
