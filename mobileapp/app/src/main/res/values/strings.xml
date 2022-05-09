@@ -2,4 +2,7 @@
     <string name="app_name">VirtualAssistent</string>
     <string name="listen_text">...</string>
     <string name="listen_button">Listen</string>
+    <string name="assistant_name">Assistent</string>
+    <string name="channel_name">WWE_Notification</string>
+    <string name="channel_description">A notification that shows whenever the Wake Word Engine is active</string>
 </resources>
