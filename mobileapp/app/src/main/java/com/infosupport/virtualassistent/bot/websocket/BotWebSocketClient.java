@@ -31,6 +31,7 @@ public class BotWebSocketClient extends WebSocketClient {
         if (message.isEmpty()) return;
         try {
             JSONObject jObject = new JSONObject(message);
+            if (!jObject.has("activities") || jObject.isNull("activities")) return;
             JSONArray jArray = jObject.getJSONArray("activities");
             for (int i=0; i < jArray.length(); i++)
             {
