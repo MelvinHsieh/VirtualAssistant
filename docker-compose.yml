@@ -90,7 +90,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: authdb
       MONGO_INITDB_ROOT_PASSWORD: authdbpass
     ports:
-      - 27018:27018
+      - 27018:27017
     expose:
       - "27018"
     restart: always
