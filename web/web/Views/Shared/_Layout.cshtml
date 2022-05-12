@@ -38,6 +38,12 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <div class="row">
+                <div class="col-12">
+                    <ul id="alertList"></ul>
+                </div>
+            </div>
+
             @if (TempData["success"] != null)
             {
                 @if (TempData.ContainsKey("success"))  
@@ -68,6 +74,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/AlertCaretaker.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

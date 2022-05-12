@@ -56,8 +56,7 @@ namespace dataservice.Controllers
         [HttpGet("patient/{id}")]
         public IActionResult GetByPatientId(int id)
         {
-
-            var intake = _intakeRepo.GetIntakesByPatientId(id);
+            var intake = _intakeRepo.GetRemainingIntakesByPatientId(id);
             if (intake == null)
             {
                 return NotFound();
