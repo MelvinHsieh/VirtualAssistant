@@ -23,7 +23,7 @@ services:
     expose:
       - "3000"
     environment:
-      - MESSAGE_QUEUE=amqp://messagebus
+      - MESSAGE_QUEUE=amqp://messagebus:5672
       - MONGO_URL=mongodb://loggingdb:loggingdbpass@loggingdb:27017/
     depends_on:
       - "messagebus"
