@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var Scoring = mongoose.model('Interaction');
+var Interaction = mongoose.model('Interaction');
 var q = require('q');
 
 function saveCallback(err) {
@@ -8,7 +8,7 @@ function saveCallback(err) {
     }
 }
 
-function createScorings() {
+function createInteractions() {
     Interaction.find({}).then(function (data) {
         if (data.length == 0) {
             console.log('Creating Interaction testdata');
@@ -32,5 +32,5 @@ function createScorings() {
 }
 
 module.exports = function () {
-    q.fcall(createScorings);
+    q.fcall(createInteractions);
 };

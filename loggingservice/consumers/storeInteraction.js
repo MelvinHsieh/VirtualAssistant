@@ -1,26 +1,67 @@
 const amqp = require('amqplib');
 const uri = process.env.MESSAGEBUS
+const EXCHANGE_NAME = "storeInteraction"
 const QUEUE_NAME = "storeInteractionQueue"
 
 var mongoose = require('mongoose');
 
-var Scoring = mongoose.model('Interaction');
+var Interaction = mongoose.model('Interaction');
 
 const consume = async () => {
     try {
         const connection = await amqp.connect(uri);
         let channel = await connection.createChannel();
 
-        let q = await channel.assertQueue(QUEUE_NAME, { exclusive: false, durable: false });
-        await channel.bindQueue(q.queue, "amq.direct");
+        await channel.assertExchange(EXCHANGE_NAME, 'direct')
+        let q = await channel.assertQueue(QUEUE_NAME, { exclusive: false, durable: true });
+        await channel.bindQueue(q.queue, EXCHANGE_NAME, "");
 
         await channel.consume("", data => {
+
             let content = JSON.parse(data.content)
 
-            console.log(content.data);
+            let id = content.Id ?? "";
+            let replyToId = content.ReplyToId ?? "";
+            let from = content.From ?? "";
+            let message = content.Message ?? "";
 
-            // let _id = content.data._id ?? ""
-            // let image = content.data.image
+            console.log(message);
+            console.log("-=-=-=-=-=-=-=-=-=");
+
+            if (id) {
+                if (replyToId) {
+                    console.log(replyToId);
+
+                    var reply = { _id: id, message: message };
+
+                    Interaction.findOneAndUpdate(
+                        { _id: replyToId },
+                        { $push: { replies: reply } },
+                        function (error, result) {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                if (result) {
+                                    channel.ack(data)
+                                }
+                            }
+                        });
+                } else {
+                    let interaction = Interaction({
+                        _id: id,
+                        from: from,
+                        message: message,
+                    })
+
+                    interaction.save(function (err, result) {
+                        if (result) {
+                            channel.ack(data)
+                        } else if (err) {
+                            throw err;
+                        }
+                    })
+                }
+            }
 
             // if (image) {
             //     if (content.isTarget) {

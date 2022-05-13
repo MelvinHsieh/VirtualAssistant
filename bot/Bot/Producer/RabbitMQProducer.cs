@@ -11,6 +11,7 @@ namespace CoreBot.Producer
     {
         private IConfiguration _configuration;
 
+        private static string EXCHANGE_NAME = "storeInteraction";
         private static string QUEUE_NAME = "storeInteractionQueue";
 
         public RabbitMQProducer(IConfiguration configuration)
@@ -29,12 +30,16 @@ namespace CoreBot.Producer
             var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
-            channel.QueueDeclare(QUEUE_NAME, durable: true, exclusive: false);
+            channel.ExchangeDeclare(exchange: EXCHANGE_NAME, type: ExchangeType.Direct, true);
+
+            channel.QueueDeclare(QUEUE_NAME, true, false, false, null);
+            channel.QueueBind(QUEUE_NAME, EXCHANGE_NAME, QUEUE_NAME);
+
 
             var json = JsonConvert.SerializeObject(message);
             var body = Encoding.UTF8.GetBytes(json);
 
-            channel.BasicPublish(exchange: "", routingKey: QUEUE_NAME, body: body);
+            channel.BasicPublish(exchange: EXCHANGE_NAME, routingKey: QUEUE_NAME, body: body);
         }
     }
 }

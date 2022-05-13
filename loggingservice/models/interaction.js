@@ -7,7 +7,7 @@ var interactionSchema = new mongoose.Schema({
     message: { type: String, required: true, lowercase: false },
     replies: [{
         _id: { type: String, required: true, lowercase: true },
-        message: { type: Number, required: true }
+        message: { type: String, required: true }
     }]
 },
     // settings:
