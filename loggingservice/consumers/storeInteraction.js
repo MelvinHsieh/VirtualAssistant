@@ -25,13 +25,8 @@ const consume = async () => {
             let from = content.From ?? "";
             let message = content.Message ?? "";
 
-            console.log(message);
-            console.log("-=-=-=-=-=-=-=-=-=");
-
             if (id) {
                 if (replyToId) {
-                    console.log(replyToId);
-
                     var reply = { _id: id, message: message };
 
                     Interaction.findOneAndUpdate(
@@ -39,7 +34,7 @@ const consume = async () => {
                         { $push: { replies: reply } },
                         function (error, result) {
                             if (error) {
-                                console.log(error);
+                                console.log("ERROR: " + error);
                             } else {
                                 if (result) {
                                     channel.ack(data)
