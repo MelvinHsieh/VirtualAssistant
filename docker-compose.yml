@@ -43,19 +43,17 @@ services:
   dataservice:
     container_name: dataservice
     build:
-      context: ./dataservice/dataservice
+      context: ./dataservice
       dockerfile: Dockerfile
     ports:
       - "80:80"
-    expose:
-      - "80"
     environment:
       - MSSQL_URL_USER_DATA=mongodb://userdatadb:userdatadbpass@userdatadb:27017/
       - MSSQL_URL_GENERAL_DATA=mongodb://generaldatadb:generaldatadbpass@generaldatadb:27017/
     depends_on:
       - "userdatadb"
       - "generaldatadb"
-      - "loggingservice"
+      # - "loggingservice"
 
   web:
     container_name: web
@@ -63,9 +61,7 @@ services:
       context: ./web/web
       dockerfile: Dockerfile
     ports:
-      - "81:80"
-    expose:
-      - "81"
+      - "80:80"
     depends_on:
       - "dataservice"
 
@@ -100,7 +96,6 @@ services:
   userdatadb:
     container_name: userdatadb
     image: mcr.microsoft.com/mssql/server:2019-latest
-    user: mssql
     environment:
       MSSQL_SA_PASSWORD: UserDataDBPass123545!@
       ACCEPT_EULA: Y
@@ -115,7 +110,6 @@ services:
   generaldatadb:
     container_name: generaldatadb
     image: mcr.microsoft.com/mssql/server:2019-latest
-    user: mssql
     environment:
       MSSQL_SA_PASSWORD: GeneralDataDBPass12345!@
       ACCEPT_EULA: Y

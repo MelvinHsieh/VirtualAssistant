@@ -18,6 +18,11 @@ namespace Application
             services.AddScoped<IMedicineRepo, MedicineRepo>();
             services.AddScoped<IPatientRepo, PatientRepo>();
             services.AddScoped<IPatientIntakeRepo, PatientIntakeRepo>();
+            services.AddScoped<IIntakeRegistrationRepo, IntakeRegistrationRepo>();
+
+            services.AddScoped<ICareWorkerFunctionRepo, CareWorkerFunctionRepo>();
+            services.AddScoped<ICareWorkerRepo, CareWorkerRepo>();
+
 
             return services;
         }

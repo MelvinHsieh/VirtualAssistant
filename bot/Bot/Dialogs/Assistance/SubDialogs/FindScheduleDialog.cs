@@ -14,46 +14,27 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         public FindScheduleDialog(DataServiceConnection connection)
             : base(nameof(FindScheduleDialog))
         {
-            AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
+            AddDialog(new WaterfallDialog("findSchedule", new WaterfallStep[]
             {
-                Confirm,
                 ShowSchedule
             }));
 
             this.connection = connection;
         }
 
-        private async Task<DialogTurnResult> Confirm(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            var messageText = "Zal ik het medicatierooster voor u openen?";
-            var promptMessage = MessageFactory.Text(messageText, messageText, InputHints.ExpectingInput);
-
-            return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
-        }
-
         private async Task<DialogTurnResult> ShowSchedule(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            
-            if ((string) stepContext.Result == "Ja")
-            {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Oké! Eén moment geduld alstublieft, dan pak ik uw gegevens erbij."));
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Het medicijnrooster wordt geopend!"));
 
-                var intake = await connection.GetRequest($"PatientIntake/Patient/1"); // TODO: Ensure that patient ID is actually equal to currently logged in user (mobile app).
-                var activity = new Activity
-                {
-                    Type = "OPEN_SCHEDULE",
-                    Value = intake
-                };
-
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik heb je gegevens opgehaald en zal je nu doorverwijzen naar je medicatieoverzicht!"));
-                await stepContext.Context.SendActivityAsync(activity);
-                return await stepContext.EndDialogAsync(null, cancellationToken);
-            }
-            else
+            var intake = await connection.GetRequest($"PatientIntake/Patient/1"); // TODO: Ensure that patient ID is actually equal to currently logged in user (mobile app).
+            var activity = new Activity
             {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik heb je hulpvraag helaas niet begrepen!"));
-                return await stepContext.EndDialogAsync(null, cancellationToken);
-            }
+                Type = "OPEN_SCHEDULE",
+                Value = intake
+            };
+
+            await stepContext.Context.SendActivityAsync(activity);
+            return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
         }
     }
 }

@@ -16,6 +16,8 @@ namespace Microsoft.BotBuilderSamples.Controllers
         {
             _adapter = adapter;
             _bot = bot;
+
+
         }
 
         [HttpPost, HttpGet]

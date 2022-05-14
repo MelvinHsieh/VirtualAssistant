@@ -11,12 +11,15 @@ namespace Application.Repositories
         private MedicineDbContext _medicineDbContext { get; set; }
         private IMedicineRepo _medicineRepo { get; set; }
         private IPatientRepo _patientRepo { get; set; }
+        private IIntakeRegistrationRepo _intakeRegistrationRepo { get; set; }
 
-        public PatientIntakeRepo(MedicineDbContext medicineDbContext, IMedicineRepo medicineRepo, IPatientRepo patientRepo)
+        public PatientIntakeRepo(MedicineDbContext medicineDbContext, IMedicineRepo medicineRepo, 
+            IPatientRepo patientRepo, IIntakeRegistrationRepo intakeRegistrationRepo)
         {
             _medicineRepo = medicineRepo;
             _medicineDbContext = medicineDbContext;
             _patientRepo = patientRepo;
+            _intakeRegistrationRepo = intakeRegistrationRepo;
         }
 
         public Result AddIntake(int medicineId, int patientId, int amount, TimeOnly start, TimeOnly end)
@@ -50,7 +53,18 @@ namespace Application.Repositories
 
         public IEnumerable<PatientIntake> GetIntakesByPatientId(int patientId)
         {
-            return _medicineDbContext.PatientIntakes.Include(x => x.Medicine).Where(x => x.PatientId == patientId).Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()); ;
+            return _medicineDbContext.PatientIntakes.Include(x => x.Medicine).Where(x => x.PatientId == patientId).Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
+        }
+
+        public IEnumerable<PatientIntake> GetRemainingIntakesByPatientId(int patientId)
+        {
+            IEnumerable<IntakeRegistration> intakeRegistrations = new List<IntakeRegistration>();
+            intakeRegistrations = _intakeRegistrationRepo.GetIntakeRegistrationForDate(patientId, DateOnly.FromDateTime(DateTime.Now));
+
+            return _medicineDbContext.PatientIntakes.Include(x => x.Medicine)
+                .Where(x => x.PatientId == patientId)
+                .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower())
+                .Where(y => !intakeRegistrations.Any(reg => reg.PatientIntakeId == y.Id));
         }
 
         public Result RemoveIntake(int id)

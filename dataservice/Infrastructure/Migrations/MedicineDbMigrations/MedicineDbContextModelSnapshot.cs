@@ -22,6 +22,97 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Domain.Entities.MedicalData.CareWorker", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Function")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Function");
+
+                    b.ToTable("CareWorkers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FirstName = "Petra",
+                            Function = "Verpleger",
+                            LastName = "Janssen",
+                            Status = "active"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FirstName = "Henny",
+                            Function = "Verpleger",
+                            LastName = "Heeren",
+                            Status = "active"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FirstName = "Peter",
+                            Function = "Dokter",
+                            LastName = "Peters",
+                            Status = "active"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            FirstName = "Frida",
+                            Function = "Dokter",
+                            LastName = "Leuken",
+                            Status = "active"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.MedicalData.CareWorkerFunction", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("CareWorkerFunctions");
+
+                    b.HasData(
+                        new
+                        {
+                            Name = "Verpleger",
+                            Status = "active"
+                        },
+                        new
+                        {
+                            Name = "Dokter",
+                            Status = "active"
+                        });
+                });
+
             modelBuilder.Entity("Domain.Entities.MedicalData.DoseUnit", b =>
                 {
                     b.Property<string>("Unit")
@@ -46,6 +137,31 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Unit = "µg",
                             Status = "active"
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.MedicalData.IntakeRegistration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("PatientIntakeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TakenOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientIntakeId");
+
+                    b.ToTable("IntakeRegistrations");
                 });
 
             modelBuilder.Entity("Domain.Entities.MedicalData.Medicine", b =>
@@ -454,6 +570,26 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             PatientId = 1,
                             Status = "active"
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.MedicalData.CareWorker", b =>
+                {
+                    b.HasOne("Domain.Entities.MedicalData.CareWorkerFunction", null)
+                        .WithMany()
+                        .HasForeignKey("Function")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.MedicalData.IntakeRegistration", b =>
+                {
+                    b.HasOne("Domain.Entities.MedicalData.PatientIntake", "PatientIntake")
+                        .WithMany()
+                        .HasForeignKey("PatientIntakeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PatientIntake");
                 });
 
             modelBuilder.Entity("Domain.Entities.MedicalData.Medicine", b =>
