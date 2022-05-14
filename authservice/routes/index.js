@@ -13,7 +13,7 @@ router.post('/signup', passport.authenticate('signup', {session: false}), async 
 
 router.post('/login', async (req, res, next) => {
     const { body: user } = req;
-
+  
     if(!user.username) {
       return res.status(422).json({
         errors: {
@@ -44,7 +44,12 @@ router.post('/login', async (req, res, next) => {
             if(error) return next(error);
 
             const body = {_id: user._id, username: user.username, roles: user.roles };
-            const token = jwt.sign({ user: body }, process.env.AUTH_SECRET)
+          const token = jwt.sign({ user: body }, process.env.AUTH_SECRET,
+            {
+              //TODO EXTRACT
+              audience: "VA_AuthAudience",
+              issuer: "VA_AuthIssuer"
+            })
 
             return res.json(token);
           }

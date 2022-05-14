@@ -1,5 +1,10 @@
-const Patient = "patient"
-const Employee = "zorgmedewerker"
-const Admin = "admin"
+const ROLES = {
+    Patient: "patient",
+    Employee: "zorgmedewerker",
+    Admin: "admin",
 
-const roleList = [Patient, Employee, Admin]
+    roleList: [this.Patient, this.Employee, this.Admin]
+}
+
+module.exports = ROLES
+

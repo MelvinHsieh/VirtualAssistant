@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const roles = require('./roles')
+const ROLES = require('./roles')
 
 const userSchema = mongoose.Schema({
     username: {
@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    roles: {type: [String], enum: roles.roleList}
+    roles: {type: [String], enum: ROLES.roleList}
 });
 
 userSchema.pre(

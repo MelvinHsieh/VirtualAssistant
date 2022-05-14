@@ -1,5 +1,6 @@
 ﻿using Application.Repositories.Interfaces;
 using dataservice.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dataservice.Controllers
@@ -19,6 +20,7 @@ namespace dataservice.Controllers
 
         // GET: api/<CareWorkerController>
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public IActionResult Get()
         {
             return Ok(_careWorkerRepo.GetCareWorkers());
