@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 using web.Models;
 
 namespace web.Controllers
@@ -15,6 +16,7 @@ namespace web.Controllers
 
         public IActionResult Index()
         {
+            var x = HttpContext.User;
             return View();
         }
 

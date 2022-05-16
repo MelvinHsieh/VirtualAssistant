@@ -9,12 +9,12 @@ namespace web.Models
         [Required]
         [JsonProperty(PropertyName = "username")]
         [DisplayName("Gebruikersnaam")]
-        public string FirstName { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
 
         [Required]
         [JsonProperty(PropertyName = "password")]
         [DisplayName("Wachtwoord")]
-        public string LastName { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
 
     }
 }
