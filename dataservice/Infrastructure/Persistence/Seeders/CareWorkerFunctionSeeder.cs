@@ -8,7 +8,7 @@ namespace Infrastructure.Persistence.Seeders
         public static void SeedCareWorkerFunction(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CareWorkerFunction>().HasData(
-                new CareWorkerFunction() { Name = "Verpleger"},
+                new CareWorkerFunction() { Name = "Verpleger" },
                 new CareWorkerFunction() { Name = "Dokter" }
             );
         }

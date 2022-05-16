@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using web.Models;
@@ -49,7 +48,8 @@ namespace web.Controllers
                         return View();
                     }
                 }
-            } catch
+            }
+            catch
             {
                 TempData["error"] = "Geen connectie kon gemaakt worden met de Dataservice.";
                 return View();

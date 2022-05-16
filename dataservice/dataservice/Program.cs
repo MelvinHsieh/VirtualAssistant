@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Security.Claims;
 using System.Text;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -47,7 +46,7 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             ValidateLifetime = false,
             RequireExpirationTime = false,
-            RoleClaimType = "user.roles"
+            RoleClaimType = "auth_roles"
         };
     }
  );

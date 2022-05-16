@@ -1,10 +1,38 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using web.SignalR.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidAudience = configuration["JWT:ValidAudience"],
+        ValidIssuer = configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = false,
+        RequireExpirationTime = false,
+        RoleClaimType = "auth_roles"
+    };
+}
+ );
 
 
 
@@ -23,6 +51,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
