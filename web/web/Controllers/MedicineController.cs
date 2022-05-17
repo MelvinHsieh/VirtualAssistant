@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using web.Models;
+using web.Utils;
 
 namespace web.Controllers
 {
@@ -16,7 +17,7 @@ namespace web.Controllers
         // GET: MedicineController
         public async Task<ActionResult> IndexAsync()
         {
-            using (var client = new HttpClient())
+            using (var client = new AuthHttpClient(User))
             {
                 var uri = new Uri(_apiURL + "/Medicine");
                 try
@@ -41,7 +42,7 @@ namespace web.Controllers
         // GET: MedicineController/Create
         public async Task<ActionResult> CreateAsync()
         {
-            using (var client = new HttpClient())
+            using (var client = new AuthHttpClient(User))
             {
                 try
                 {
@@ -91,7 +92,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/Medicine");
                     var result = await client.PostAsJsonAsync(uri, model);
@@ -122,7 +123,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Medicine/" + id);
                         var result = await client.DeleteAsync(uri);
@@ -161,7 +162,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/DoseUnit");
                     var result = await client.PostAsJsonAsync(uri, doseUnit);
@@ -199,7 +200,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/MedicineColor");
                     var result = await client.PostAsJsonAsync(uri, color);
@@ -237,7 +238,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/MedicineShape");
                     var result = await client.PostAsJsonAsync(uri, shape);
@@ -275,7 +276,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/MedicineType");
                     var result = await client.PostAsJsonAsync(uri, type);

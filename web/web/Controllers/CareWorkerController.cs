@@ -16,7 +16,6 @@ namespace web.Controllers
         }
 
         // GET: CareWorkerController
-        [Authorize()]
         public async Task<ActionResult> IndexAsync()
         {
             using (var client = new AuthHttpClient(User))
@@ -42,7 +41,7 @@ namespace web.Controllers
         // GET: CareWorkerController/Create
         public async Task<ActionResult> CreateAsync()
         {
-            using (var client = new HttpClient())
+            using (var client = new AuthHttpClient(User))
             {
                 try
                 {
@@ -71,7 +70,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/CareWorker");
                     var result = await client.PostAsJsonAsync(uri, model);
@@ -108,7 +107,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/CareWorker/function");
                     var result = await client.PostAsJsonAsync(uri, careWorkerFunction);
@@ -140,7 +139,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/CareWorker/" + id);
                         var result = await client.DeleteAsync(uri);

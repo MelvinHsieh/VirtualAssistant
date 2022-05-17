@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using web.Models;
+using web.Utils;
 
 namespace web.Controllers
 {
@@ -20,7 +21,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/Patient");
 
@@ -75,7 +76,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/Patient");
                     var result = await client.PostAsJsonAsync(uri, model);
@@ -104,7 +105,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
 
@@ -133,7 +134,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
                         var result = await client.DeleteAsync(uri);
@@ -159,7 +160,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
 
@@ -188,7 +189,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
                         var result = await client.DeleteAsync(uri);

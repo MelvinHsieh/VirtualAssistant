@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using web.Models;
+using web.Utils;
 
 namespace web.Controllers
 {
@@ -56,6 +57,13 @@ namespace web.Controllers
                     return View();
                 }
             }
+        }
+
+        [HttpPost()]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
 
         private async void Authenticate (string token)
