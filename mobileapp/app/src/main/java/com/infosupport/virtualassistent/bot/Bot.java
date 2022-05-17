@@ -6,12 +6,12 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.infosupport.virtualassistent.MainActivity;
+import com.google.gson.Gson;
+import com.infosupport.virtualassistent.AssistantActivity;
 import com.infosupport.virtualassistent.bot.models.Activity;
 import com.infosupport.virtualassistent.bot.models.Conversation;
 import com.infosupport.virtualassistent.bot.models.From;
 import com.infosupport.virtualassistent.bot.websocket.BotWebSocketClient;
-import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -28,14 +28,14 @@ public class Bot {
     RequestQueue queue = null;
     Gson gson = null;
 
-    public Bot(MainActivity activity) {
+    public Bot(AssistantActivity activity) {
         gson = new Gson();
 
         queue = Volley.newRequestQueue(activity.getApplicationContext());
         startConversation(activity);
     }
 
-    public void startConversation(MainActivity mainActivity) {
+    public void startConversation(AssistantActivity assistantActivity) {
         String conversationURL = "https://directline.botframework.com/v3/directline/conversations";
 
         JsonObjectRequest startConversationRequest = new JsonObjectRequest(Request.Method.POST, conversationURL, null, new Response.Listener<JSONObject>() {
@@ -44,7 +44,7 @@ public class Bot {
                 conversation = gson.fromJson(response.toString(), Conversation.class);
                 try {
                     URI serverURI = new URI(conversation.streamUrl);
-                    BotWebSocketClient client = new BotWebSocketClient(serverURI, mainActivity);
+                    BotWebSocketClient client = new BotWebSocketClient(serverURI, assistantActivity);
                     client.connect();
                     sendConversationUpdate();
                 } catch (URISyntaxException e) {

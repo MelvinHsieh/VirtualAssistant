@@ -15,7 +15,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.infosupport.virtualassistent.MainActivity;
+import com.infosupport.virtualassistent.AssistantActivity;
 import com.infosupport.virtualassistent.R;
 import com.infosupport.virtualassistent.receivers.SpeechResultReceiver;
 
@@ -104,7 +104,7 @@ public class WakeWordService extends Service {
             pendingIntent = PendingIntent.getActivity(
                     this,
                     0,
-                    new Intent(this, MainActivity.class),
+                    new Intent(this, AssistantActivity.class),
                     PendingIntent.FLAG_MUTABLE);
         }
 
