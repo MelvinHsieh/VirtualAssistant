@@ -1,6 +1,7 @@
 package com.infosupport.virtualassistent.services;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.infosupport.virtualassistent.MainActivity;
 import com.infosupport.virtualassistent.bot.models.LoginAsyncResponse;
 
 import java.util.HashMap;
@@ -48,6 +50,19 @@ public class AuthService {
         queue.add(req);
     }
 
+    public void logOut() {
+        SharedPreferences.Editor prefEditor = preferences.edit();
+        prefEditor.remove("authToken");
+        prefEditor.apply();
+        Toast.makeText(activity, "Je bent succesvol uitgelogd", Toast.LENGTH_SHORT).show();
+
+        // Start the Main activity again
+        Intent intent = new Intent(activity, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(intent);
+        activity.finish();
+    }
+
     private void Login(boolean correctPassword, String response, LoginAsyncResponse responseCallback) {
         if(!correctPassword) {
             Toast.makeText(activity, response, Toast.LENGTH_LONG).show();
@@ -56,9 +71,9 @@ public class AuthService {
         }
         Toast.makeText(activity, "De inloggegevens zijn correct!", Toast.LENGTH_SHORT).show();
 
-        // Save the user auth key in the sharedPreferences
+        // Save the user auth token in the sharedPreferences
         SharedPreferences.Editor prefEditor = preferences.edit();
-        prefEditor.putString("authKey", response);
+        prefEditor.putString("authToken", response);
         prefEditor.apply();
 
         responseCallback.processFinished(true);

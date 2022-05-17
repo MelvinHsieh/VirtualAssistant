@@ -7,6 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +27,7 @@ import com.infosupport.virtualassistent.model.Message;
 import com.infosupport.virtualassistent.receivers.DetectionResultReceiver;
 import com.infosupport.virtualassistent.receivers.RecognizeSpeechResultReceiver;
 import com.infosupport.virtualassistent.receivers.SpeechResultReceiver;
+import com.infosupport.virtualassistent.services.AuthService;
 import com.infosupport.virtualassistent.services.SpeechIntentService;
 import com.infosupport.virtualassistent.services.WakeWordService;
 import com.infosupport.virtualassistent.storage.AppDatabase;
@@ -154,5 +158,30 @@ public class AssistantActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.logout) {
+            AuthService as = new AuthService(this);
+            as.logOut();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public Bot getBot() {return bot;}
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        textToSpeech.stop();
+        stopWakeWordService();
+    }
 }

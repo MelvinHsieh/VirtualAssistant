@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout/frame_chat_other.xml" value="0.1" />
         <entry key="app/src/main/res/layout/frame_chat_received.xml" value="0.523443603515625" />
         <entry key="app/src/main/res/layout/frame_chat_sent.xml" value="0.3415985107421875" />
+        <entry key="app/src/main/res/menu/menu.xml" value="0.1796875" />
       </map>
     </option>
   </component>

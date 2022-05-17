@@ -9,4 +9,5 @@
     <string name="login_form_username">Gebruikersnaam</string>
     <string name="login_form_password">Wachtwoord</string>
     <string name="login_form_login">Inloggen</string>
+    <string name="logout_button">Uitloggen</string>
 </resources>
