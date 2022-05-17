@@ -12,7 +12,15 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    roles: {type: [String], enum: ROLES.roleList}
+    employeeId: {
+        type: Number,
+        required: false,
+    },
+    patientId: {
+        type: Number,
+        required: false
+    },
+    role: {type: String, enum: ROLES.roleList}
 });
 
 userSchema.pre(

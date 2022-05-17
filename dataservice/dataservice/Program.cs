@@ -46,7 +46,7 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             ValidateLifetime = false,
             RequireExpirationTime = false,
-            RoleClaimType = "auth_roles"
+            RoleClaimType = "auth_role"
         };
     }
  );

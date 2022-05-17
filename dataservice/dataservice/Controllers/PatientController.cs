@@ -1,5 +1,7 @@
-﻿using Application.Repositories.Interfaces;
+﻿using Application.Common.Enums;
+using Application.Repositories.Interfaces;
 using dataservice.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -8,6 +10,7 @@ namespace dataservice.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.Personnel)]
     public class PatientController : ControllerBase
     {
         private IPatientRepo _patientRepo;

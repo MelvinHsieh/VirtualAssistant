@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using web.Models;
@@ -6,6 +7,7 @@ using web.Utils;
 
 namespace web.Controllers
 {
+    [Authorize(Roles = Roles.Personnel)]
     public class PatientController : Controller
     {
 

@@ -43,8 +43,17 @@ router.post('/login', async (req, res, next) => {
         req.logIn( user, {session: false}, async (error) => {
             if(error) return next(error);
 
-          const body = {_id: user._id, username: user.username };
-          const token = jwt.sign({ user: body, auth_roles: user.roles }, process.env.AUTH_SECRET,
+          
+          var body = { _id: user._id, username: user.username, role: user.role };
+
+          if (user.employeeId) {
+            body.employeeId = user.employeeId
+          } 
+          if (user.patientId) {
+            body.patientId = user.patientId
+          }
+
+          const token = jwt.sign({ user: body, auth_role: user.role }, process.env.AUTH_SECRET,
             {
               //TODO EXTRACT
               audience: "VA_AuthAudience",

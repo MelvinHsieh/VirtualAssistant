@@ -6,6 +6,7 @@ using web.Utils;
 
 namespace web.Controllers
 {
+    [Authorize(Roles = Roles.Personnel)]
     public class CareWorkerController : Controller
     {
         private readonly string _apiURL;
@@ -39,6 +40,7 @@ namespace web.Controllers
         }
 
         // GET: CareWorkerController/Create
+        [Authorize(Roles = Roles.AdminOnly)]
         public async Task<ActionResult> CreateAsync()
         {
             using (var client = new AuthHttpClient(User))
@@ -66,6 +68,7 @@ namespace web.Controllers
         // POST: CareWorkerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AdminOnly)]
         public async Task<ActionResult> CreateAsync(CareWorkerModel model)
         {
             try
@@ -95,6 +98,7 @@ namespace web.Controllers
         }
 
         // GET: CareWorkerController/CreateMedicineDoseUnit
+        [Authorize(Roles = Roles.AdminOnly)]
         public ActionResult CreateCareWorkerFunction()
         {
             return View();
@@ -103,6 +107,7 @@ namespace web.Controllers
         // POST: CareWorkerController/CreateCareWorkerFunction
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AdminOnly)]
         public async Task<ActionResult> CreateCareWorkerFunctionAsync(string careWorkerFunction)
         {
             try
@@ -133,6 +138,7 @@ namespace web.Controllers
         }
 
         // GET: CareWorkerController/Delete/5
+        [Authorize(Roles = Roles.AdminOnly)]
         public async Task<ActionResult> DeleteAsync(int id)
         {
             if (id != 0)

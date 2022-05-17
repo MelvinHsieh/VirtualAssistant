@@ -15,10 +15,10 @@ function createUsers() {
         if (data.length == 0) {
             console.log('Creating targets testdata');
 
-            new User({ username: "patient1", password: 'patient!1', roles: [ROLES.Patient] }).save(saveCallback);
-            new User({ username: "patient2", password: 'patient!2', roles: [ROLES.Patient] }).save(saveCallback);
-            new User({ username: "employee1", password: 'employee!1', roles: [ROLES.Employee] }).save(saveCallback);
-            new User({ username: "admin1", password: 'admin!1', roles: [ROLES.Admin] }).save(saveCallback);
+            new User({ username: "patient1", password: 'patient!1', patientId: 1, role: ROLES.Patient }).save(saveCallback);
+            new User({ username: "patient2", password: 'patient!2', patientId: 2, role: ROLES.Patient }).save(saveCallback);
+            new User({ username: "employee1", password: 'employee!1', employeeId: 2, role: ROLES.Employee }).save(saveCallback);
+            new User({ username: "admin1", password: 'admin!1', role: ROLES.Admin }).save(saveCallback);
         } else {
             console.log('Skipping create user testdata, already present');
         }

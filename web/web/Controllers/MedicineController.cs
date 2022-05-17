@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using web.Models;
 using web.Utils;
 
 namespace web.Controllers
 {
+    [Authorize]
     public class MedicineController : Controller
     {
         private readonly string _apiURL;
@@ -40,6 +42,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/Create
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateAsync()
         {
             using (var client = new AuthHttpClient(User))
@@ -88,6 +91,7 @@ namespace web.Controllers
         // POST: MedicineController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateAsync(MedicineModel model)
         {
             try
@@ -117,6 +121,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/Delete/5
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> DeleteAsync(int id)
         {
             if (id != 0)
@@ -150,6 +155,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/CreateMedicineDoseUnit
+        [Authorize(Roles = Roles.Personnel)]
         public ActionResult CreateMedicineDoseUnit()
         {
             return View();
@@ -158,6 +164,7 @@ namespace web.Controllers
         // POST: MedicineController/CreateMedicineDoseUnit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateMedicineDoseUnitAsync(string doseUnit)
         {
             try
@@ -188,6 +195,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/CreateMedicineColor
+        [Authorize(Roles = Roles.Personnel)]
         public ActionResult CreateMedicineColor()
         {
             return View();
@@ -196,6 +204,7 @@ namespace web.Controllers
         // POST: MedicineController/CreateMedicineColor
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateMedicineColorAsync(string color)
         {
             try
@@ -226,6 +235,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/CreateMedicineShape
+        [Authorize(Roles = Roles.Personnel)]
         public ActionResult CreateMedicineShape()
         {
             return View();
@@ -234,6 +244,7 @@ namespace web.Controllers
         // POST: MedicineController/CreateMedicineShape
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateMedicineShapeAsync(string shape)
         {
             try
@@ -264,6 +275,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/CreateMedicineType
+        [Authorize(Roles = Roles.Personnel)]
         public ActionResult CreateMedicineType()
         {
             return View();
@@ -272,6 +284,7 @@ namespace web.Controllers
         // POST: MedicineController/CreateMedicineType
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateMedicineTypeAsync(string type)
         {
             try
