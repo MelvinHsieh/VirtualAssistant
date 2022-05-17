@@ -16,9 +16,10 @@ namespace web.Controllers
         }
 
         // GET: CareWorkerController
+        [Authorize()]
         public async Task<ActionResult> IndexAsync()
         {
-            using (var client = new HttpClient())
+            using (var client = new AuthHttpClient(User))
             {
                 var uri = new Uri(_apiURL + "/CareWorker");
                 try

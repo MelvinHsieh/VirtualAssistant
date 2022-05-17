@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using web.Models;
 
@@ -10,18 +14,21 @@ namespace web.Controllers
     public class AuthController : Controller
     {
         private readonly string _authURL;
+
         public AuthController(IConfiguration configuration)
         {
             _authURL = configuration.GetValue<String>("AuthURL");
         }
 
-        [HttpGet("/login")]
+        [HttpGet("Account/Login")]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View("Login");
         }
 
-        [HttpPost("/login")]
+        [HttpPost("Account/Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginModel model)
         {
             using (var client = new HttpClient())
@@ -51,7 +58,7 @@ namespace web.Controllers
             }
         }
 
-        private void Authenticate (string token)
+        private async void Authenticate (string token)
         {
             var handler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = handler.ReadJwtToken(token);
@@ -60,12 +67,14 @@ namespace web.Controllers
             {
                 new Claim(ClaimTypes.Name, "admin1"),
                 new Claim(ClaimTypes.Role, "Admin"),
+                new Claim("token", token)
             };
 
-            var userIdentity = new ClaimsIdentity(claims, "login");
+            var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
-            HttpContext.SignInAsync("Cookies", principal);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
     }
 }
