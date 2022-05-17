@@ -59,6 +59,12 @@ namespace web.Controllers
             }
         }
 
+        // GET: PatientController/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         // Note: This is for creating the intake schema
         // GET: PatientController/Show/5
         public async Task<ActionResult> CreateIntake(int id)
