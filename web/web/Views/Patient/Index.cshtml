@@ -73,6 +73,7 @@
                     </td>
                     <td>
                         @Html.ActionLink("Aanpassen", "Edit", new { id=item.Id }, new { @class= "btn btn-primary" }) 
+                        @Html.ActionLink("Medicijnen", "CreateIntake", new {  id=item.Id  }, new { @class= "btn btn-info" })
                         @Html.ActionLink("Verwijderen", "Delete", new {  id=item.Id  }, new { @class= "btn btn-danger" })
                     </td>
                 </tr>
