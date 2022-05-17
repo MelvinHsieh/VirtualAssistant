@@ -1,5 +1,6 @@
 package com.infosupport.virtualassistent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,15 +35,20 @@ public class MainActivity extends AppCompatActivity {
                 if (usernameEditText.getText().length() > 0 && passwordEditText.getText().length() > 0) {
                     String username = usernameEditText.getText().toString();
                     String password = passwordEditText.getText().toString();
-                    String toastMessage = "Username: " + username + ", Password: " + password;
-                    Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
-                    authService.sendLoginInfo(username, password, (bool, message) -> Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show());
+                    authService.sendLoginInfo(username, password, bool -> {
+                        if(bool) startAssistantActivity();
+                    });
                 } else {
-                    String toastMessage = "Username or Password are not populated";
-                    Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
+                    String toastMessage = "Vul je gebruikersnaam en wachtwoord in";
+                    Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    private void startAssistantActivity() {
+        Intent intent = new Intent(this, AssistantActivity.class);
+        startActivity(intent);
     }
 
 }
