@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,6 +13,7 @@ namespace web.Models
         public int Id { get; set; } = 0;
 
         [Required]
+        [BindProperty]
         [JsonProperty(PropertyName = "patientId")]
         [ScaffoldColumn(false)]
         public int PatientId { get; set; } = 0;
@@ -38,7 +40,7 @@ namespace web.Models
         [Required]
         [JsonProperty(PropertyName = "amount")]
         [DisplayName("Aantal")]
-        public int Amount { get; set; } = 0;
+        public int Amount { get; set; }
 
     }
 }

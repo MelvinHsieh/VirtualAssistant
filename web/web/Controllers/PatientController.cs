@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using web.Models;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace web.Controllers
 {
@@ -58,16 +59,83 @@ namespace web.Controllers
             }
         }
 
-        // GET: PatientController/Details/5
-        public ActionResult Details(int id)
+        // Note: This is for creating the intake schema
+        // GET: PatientController/Show/5
+        public async Task<ActionResult> CreateIntake(int id)
         {
-            return View();
+            if (id > 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+
+                        var uri = new Uri(_apiURL + "/Patient/" + id);
+                        var response = client.GetAsync(uri).Result;
+                        string result = await response.Content.ReadAsStringAsync();
+                        PatientModel? patient = JsonConvert.DeserializeObject<PatientModel>(result);
+
+                        uri = new Uri(_apiURL + "/Medicine");
+                        response = client.GetAsync(uri).Result;
+                        result = await response.Content.ReadAsStringAsync();
+                        List<MedicineModel>? models = JsonConvert.DeserializeObject<List<MedicineModel>>(result);
+                        SetMedicineBag(models);
+                        
+                        return View(Tuple.Create(patient, new IntakeModel()));
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Ophalen van patiënt is mislukt!";
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: PatientController/Create
-        public ActionResult Create()
+        // helper method for the SHOW method
+        private void SetMedicineBag(List<MedicineModel>? models)
         {
-            return View();
+            if (models != null)
+            {
+                var references = models.AsEnumerable().OrderBy(o => o.Id);
+
+                List<SelectListItem> medicineItems = references.Select(r =>
+                    new SelectListItem()
+                    {
+                        Value = r.Id.ToString(),
+                        Text = r.Name
+                    }).ToList();
+
+                ViewBag.Medicine = new SelectList(medicineItems, "Value", "Text");
+            }
+            else
+                ViewBag.Medicine = new SelectList(null);
+        }
+
+        // POST: PatientController/CreateIntake/id
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateIntakeAsync(IntakeModel model)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var uri = new Uri(_apiURL + "/PatientIntake");
+                    var result = await client.PostAsJsonAsync(uri, model);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                        TempData["success"] = "Inname schema successvol gecreëerd!";
+                    else
+                        TempData["error"] = "Schema kon niet gekoppeld/gecreëerd worden!";
+                }
+            }
+            catch
+            {
+                TempData["error"] = "Inname creatie mislukt!";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: PatientController/Create
