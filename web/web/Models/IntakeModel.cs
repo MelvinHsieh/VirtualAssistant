@@ -39,8 +39,9 @@ namespace web.Models
 
         [Required]
         [JsonProperty(PropertyName = "amount")]
+        [Range(1, 100)]
         [DisplayName("Aantal")]
-        public int Amount { get; set; }
+        public int Amount { get; set; } = 0;
 
     }
 }

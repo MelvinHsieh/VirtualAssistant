@@ -11,14 +11,14 @@
         <form asp-action="CreateIntake">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" id="@Model.Item1.Id" asp-for="@Model.Item2.PatientId"/>
+            @Html.Hidden("PatientId", @Model.Item1.Id)
             <div class="form-group">
                 <label asp-for="@Model.Item2.MedicineId" class="control-label">Kies Medicijn</label>
                 @Html.DropDownList("MedicineId", ViewBag.Medicine, null, new { @class ="form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Item2.Amount" class="control-label"></label>
-                <input asp-for="@Model.Item2.Amount" class="form-control" />
+                <input asp-for="@Model.Item2.Amount" class="form-control" name="Amount"/>
                 <span asp-validation-for="@Model.Item2.Amount" class="text-danger"></span>
             </div>
             <div class="form-group">
