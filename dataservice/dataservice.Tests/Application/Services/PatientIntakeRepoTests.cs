@@ -22,7 +22,8 @@ namespace dataservice.Tests.Application.Services
         {
             _medicineDbContext = this.CreateMedicineTestContext();
             _patientDbContext = this.CreatePatientTestContext();
-            _intakeRepo = new PatientIntakeRepo(_medicineDbContext, new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext)), new PatientRepo(_patientDbContext));
+            //TODO WEGHALEN
+            //_intakeRepo = new PatientIntakeRepo(_medicineDbContext, new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext)), new PatientRepo(_patientDbContext));
         }
 
         [TestMethod]
