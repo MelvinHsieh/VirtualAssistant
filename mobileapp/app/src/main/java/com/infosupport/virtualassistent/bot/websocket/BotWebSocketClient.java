@@ -51,6 +51,7 @@ public class BotWebSocketClient extends WebSocketClient {
                 if (msg.has("inputHint") && msg.getString("inputHint").equalsIgnoreCase("expectingInput")) {
                     // This would activate the speech whenever input is expected again.
                     // Right now it causes way too many requests, because nearly every reply - EVEN ERRORS - expect reply
+                    // And it detects internal TTS as input as well
 
                     //activityRef.get().runOnUiThread(() -> activityRef.get().runSpeechRecognizer());
                 }

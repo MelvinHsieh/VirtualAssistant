@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -12,7 +13,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.infosupport.virtualassistent.MainActivity;
-import com.infosupport.virtualassistent.bot.models.LoginAsyncResponse;
+import com.infosupport.virtualassistent.model.LoginAsyncResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +57,7 @@ public class AuthService {
     public void logOut() {
         SharedPreferences.Editor prefEditor = preferences.edit();
         prefEditor.remove("authToken");
+        prefEditor.remove("userId");
         prefEditor.apply();
         Toast.makeText(activity, "Je bent succesvol uitgelogd", Toast.LENGTH_SHORT).show();
 
@@ -69,11 +74,27 @@ public class AuthService {
             responseCallback.processFinished(false);
             return;
         }
+
+        // Get the user id from the encoded response
+        String[] chunks = response.split("\\.");
+        String jsonString = new String(Base64.decode(chunks[1], Base64.DEFAULT));
+        String userId = "";
+        try {
+            JSONObject json = new JSONObject(jsonString);
+            JSONObject userJson = json.getJSONObject("user");
+            userId = userJson.getString("_id");
+
+        } catch (JSONException e) {
+            Toast.makeText(activity, "Je accountgegevens konden niet worden opgehaald.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Toast.makeText(activity, "De inloggegevens zijn correct!", Toast.LENGTH_SHORT).show();
 
         // Save the user auth token in the sharedPreferences
         SharedPreferences.Editor prefEditor = preferences.edit();
         prefEditor.putString("authToken", response);
+        prefEditor.putString("userId", userId);
         prefEditor.apply();
 
         responseCallback.processFinished(true);

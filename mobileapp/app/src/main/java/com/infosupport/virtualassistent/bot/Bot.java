@@ -1,5 +1,8 @@
 package com.infosupport.virtualassistent.bot;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,9 +30,11 @@ public class Bot {
     String secretCode = "xP92GZX8--c.Cx-sJT1V-hbGz2_nkSaC_5pQvPd4anvBpBm7mOwhmYc"; //TODO ergens opbergen in een kluisje
     RequestQueue queue = null;
     Gson gson = null;
+    SharedPreferences preferences;
 
     public Bot(AssistantActivity activity) {
         gson = new Gson();
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
 
         queue = Volley.newRequestQueue(activity.getApplicationContext());
         startConversation(activity);
@@ -68,7 +73,7 @@ public class Bot {
         Activity activity = new Activity();
         activity.type = type;
         activity.text = message;
-        activity.from = new From("eenID");
+        activity.from = new From(preferences.getString("userId", "NoId"));
         activity.locale = "nl-NL";
         sendActivity(activity);
     }
