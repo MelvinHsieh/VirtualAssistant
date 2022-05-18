@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.infosupport.virtualassistent.AssistantActivity;
+import com.infosupport.virtualassistent.R;
 import com.infosupport.virtualassistent.bot.models.Activity;
 import com.infosupport.virtualassistent.bot.models.Conversation;
 import com.infosupport.virtualassistent.bot.models.From;
@@ -27,12 +28,13 @@ import java.util.Map;
 public class Bot {
 
     Conversation conversation = null;
-    String secretCode = "xP92GZX8--c.Cx-sJT1V-hbGz2_nkSaC_5pQvPd4anvBpBm7mOwhmYc"; //TODO ergens opbergen in een kluisje
+    String secretCode;
     RequestQueue queue = null;
     Gson gson = null;
     SharedPreferences preferences;
 
     public Bot(AssistantActivity activity) {
+        secretCode = activity.getApplicationContext().getString(R.string.bot_secret_code);
         gson = new Gson();
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
 
