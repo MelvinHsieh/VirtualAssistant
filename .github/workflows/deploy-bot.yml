@@ -19,7 +19,7 @@ jobs:
       with:
         files: '**/appsettings.json'
       env:
-        MicrosoftAppId: '#3-n*wc1a_%STx*9yn?f+/hu1bx'
+        MicrosoftAppPassword: '#3-n*wc1a_%STx*9yn?f+/hu1bx'
         LuisApiKey: '38b91ed7842d4085bf322c96e1517491'
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
