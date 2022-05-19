@@ -19,8 +19,8 @@ jobs:
       with:
         files: '**/appsettings.json'
       env:
-        DbUserID: 'virtualassistent'
-        DbUserPassword: 'VirtualAssistantPass12345!@'
+        ConnectionStrings.DbUserID: 'virtualassistent'
+        ConnectionStrings.DbUserPassword: 'VirtualAssistantPass12345!@'
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
