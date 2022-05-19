@@ -2,7 +2,7 @@ name: Build and deploy .NET Core app to Windows WebApp va-bots-dev
 on:
   push:
     branches:
-    - feature-189
+    - dev
 env:
   AZURE_WEBAPP_NAME: va-bots-dev
   AZURE_WEBAPP_PACKAGE_PATH: Bot/publish
@@ -19,8 +19,8 @@ jobs:
       with:
         files: '**/appsettings.json'
       env:
-        MicrosoftAppPassword: '#3-n*wc1a_%STx*9yn?f+/hu1bx'
-        LuisApiKey: '38b91ed7842d4085bf322c96e1517491'
+        MicrosoftAppPassword: ${{ secrets.MicrosoftAppPassword }}
+        LuisApiKey: ${{ secrets.LuisApiKey }}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
