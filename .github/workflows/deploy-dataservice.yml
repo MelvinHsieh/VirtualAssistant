@@ -2,7 +2,7 @@ name: Build and deploy .NET Core app to Windows dataservice-deploy
 on:
   push:
     branches:
-    - dev
+    - feature-189
 env:
   AZURE_WEBAPP_NAME: dataservice-deploy
   AZURE_WEBAPP_PACKAGE_PATH: dataservice/publish
@@ -15,6 +15,12 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: microsoft/variable-substitution@v1 
+      with:
+        files: 'appsettings.json'
+      env:
+        DbUserID: 'virtualassistent'
+        DbUserPassword: 'VirtualAssistantPass12345!@'
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
