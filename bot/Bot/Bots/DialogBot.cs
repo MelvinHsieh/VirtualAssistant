@@ -12,6 +12,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 using Microsoft.BotBuilderSamples.Dialogs;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.BotBuilderSamples.Bots
@@ -27,11 +28,13 @@ namespace Microsoft.BotBuilderSamples.Bots
         protected readonly BotState ConversationState;
         protected readonly BotState UserState;
         protected readonly ILogger Logger;
+        protected readonly IConfiguration _configuration;
 
-        public DialogBot(ConversationState conversationState, UserState userState, MedicineRecognizer medicineRecognizer, DataServiceConnection connection)
+        public DialogBot(ConversationState conversationState, UserState userState, MedicineRecognizer medicineRecognizer, DataServiceConnection connection, IConfiguration configuration)
         {
             ConversationState = conversationState;
             UserState = userState;
+            _configuration = configuration;
 
             var dialogStateAccessor = conversationState.CreateProperty<DialogState>(nameof(DialogState));
             var userStateAccessor = UserState.CreateProperty<UserProfile>(nameof(UserProfile));
@@ -59,8 +62,8 @@ namespace Microsoft.BotBuilderSamples.Bots
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync("Welkom!");
-                    await turnContext.SendActivityAsync("Waar kan ik u vandaag mee helpen?");
+                    await turnContext.SendActivityAsync(_configuration.GetSection("WelcomeMessage").Value);
+                    await turnContext.SendActivityAsync(_configuration.GetSection("HelpMessage").Value);
 
                     await Dialogs.Find(nameof(AssistanceDialog)).RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
                 }

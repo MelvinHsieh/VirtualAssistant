@@ -31,7 +31,7 @@ namespace Microsoft.BotBuilderSamples
         {
             services.AddHttpClient().AddControllers().AddNewtonsoftJson();
 
-            var loggingMiddleware = new TranscriptLoggerMiddleware(new LoggingService(new RabbitMQProducer(configuration)));
+            var loggingMiddleware = new TranscriptLoggerMiddleware(new LoggingService(new RabbitMQProducer(configuration), configuration));
 
             services.AddSingleton(loggingMiddleware);
 
