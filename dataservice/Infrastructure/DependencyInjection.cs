@@ -16,12 +16,12 @@ namespace Infrastructure
 
             services.AddDbContext<MedicineDbContext>(options =>
                 options.UseSqlServer(
-                    $"{medicineConnection}User Id=${userID};Password=${userPass};",
+                    $"{medicineConnection}User Id={userID};Password={userPass};",
                     b => b.MigrationsAssembly(typeof(MedicineDbContext).Assembly.FullName)));
 
             services.AddDbContext<PatientDbContext>(options =>
                 options.UseSqlServer(
-                    $"{patientConnection}User Id=${userID};Password=${userPass};",
+                    $"{patientConnection}User Id={userID};Password={userPass};",
                     b => b.MigrationsAssembly(typeof(PatientDbContext).Assembly.FullName)));
 
 
