@@ -4,6 +4,7 @@ var interactionSchema = new mongoose.Schema({
     // Schema including validation
     _id: { type: String, required: true, lowercase: true },
     from: { type: String, required: true, lowercase: false },
+    date: { type: Date, default: Date.now },
     message: { type: String, required: true, lowercase: false },
     replies: [{
         _id: { type: String, required: true, lowercase: true },
