@@ -1,5 +1,7 @@
 package com.infosupport.virtualassistent.bot.models;
 
+import com.infosupport.virtualassistent.services.LoggingService;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +47,7 @@ public class Schedule {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            LoggingService.Log(e.getMessage());
         }
         return value.toString();
     }

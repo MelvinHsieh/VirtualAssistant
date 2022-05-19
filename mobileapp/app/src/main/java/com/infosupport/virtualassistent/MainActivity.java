@@ -24,6 +24,7 @@ import com.infosupport.virtualassistent.model.Message;
 import com.infosupport.virtualassistent.receivers.DetectionResultReceiver;
 import com.infosupport.virtualassistent.receivers.RecognizeSpeechResultReceiver;
 import com.infosupport.virtualassistent.receivers.SpeechResultReceiver;
+import com.infosupport.virtualassistent.services.LoggingService;
 import com.infosupport.virtualassistent.services.SpeechIntentService;
 import com.infosupport.virtualassistent.services.WakeWordService;
 import com.infosupport.virtualassistent.storage.AppDatabase;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
             checkMicPermission();
         }
         startWakeWordService();
+
+        LoggingService.Log("De android app is gestart.");
     }
 
     private void dbInit() {
