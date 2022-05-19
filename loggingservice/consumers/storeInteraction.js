@@ -57,36 +57,6 @@ const consume = async () => {
                     })
                 }
             }
-
-            // if (image) {
-            //     if (content.isTarget) {
-            //         let result = new Photo(
-            //             {
-            //                 _id: _id,
-            //                 image: image,
-            //             }).save()
-
-            //         result.then(data => {
-            //             console.log(_id + " SAVED NEW TARGET IMAGE")
-
-            //             submitScoring({ _id: _id, username: data.username, image_id: data._id, image: image }, true);
-            //         })
-            //     } else {
-            //         let result = new Photo(
-            //             {
-            //                 _id: new mongoose.Types.ObjectId().toHexString(),
-            //                 image: image,
-            //             }).save()
-
-            //         result.then(data => {
-            //             console.log(data._id + " SAVED NEW ATTEMPT IMAGE")
-
-            //             submitScoring({ _id: data._id, target_id: _id, image_id: data._id, image: image }, false);
-            //         })
-            //     }
-            // }
-
-            // channel.ack(data)
         },
             {
                 noAck: false
