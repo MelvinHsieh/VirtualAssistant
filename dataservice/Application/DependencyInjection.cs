@@ -23,7 +23,6 @@ namespace Application
             services.AddScoped<ICareWorkerFunctionRepo, CareWorkerFunctionRepo>();
             services.AddScoped<ICareWorkerRepo, CareWorkerRepo>();
 
-
             return services;
         }
     }

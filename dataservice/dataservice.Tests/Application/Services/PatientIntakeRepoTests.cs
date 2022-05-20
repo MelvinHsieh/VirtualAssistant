@@ -13,16 +13,22 @@ namespace dataservice.Tests.Application.Services
     [TestClass]
     internal class PatientIntakeTests : DatabaseTestBase
     {
-        private IPatientIntakeRepo _intakeRepo;
         private MedicineDbContext _medicineDbContext;
         private PatientDbContext _patientDbContext;
+        private ICareWorkerRepo _careWorkerRepo;
+        private IPatientRepo _patientRepo;
+        private ICareWorkerFunctionRepo _careWorkerFunctionRepo;
+        private IPatientIntakeRepo _intakeRepo;
 
         [TestInitialize]
         public void Initialize()
         {
             _medicineDbContext = this.CreateMedicineTestContext();
             _patientDbContext = this.CreatePatientTestContext();
-            _intakeRepo = new PatientIntakeRepo(_medicineDbContext, new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext)), new PatientRepo(_patientDbContext));
+            _careWorkerFunctionRepo = new CareWorkerFunctionRepo(_medicineDbContext);
+            _patientRepo = new PatientRepo(_patientDbContext, _careWorkerRepo);
+            _careWorkerRepo = new CareWorkerRepo(_medicineDbContext, _careWorkerFunctionRepo);
+            _intakeRepo = new PatientIntakeRepo(_medicineDbContext, new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext)), _patientRepo);
         }
 
         [TestMethod]

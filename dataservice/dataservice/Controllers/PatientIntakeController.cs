@@ -1,5 +1,5 @@
 ﻿using Application.Repositories.Interfaces;
-using dataservice.ViewModels;
+using dataservice.DTO;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
