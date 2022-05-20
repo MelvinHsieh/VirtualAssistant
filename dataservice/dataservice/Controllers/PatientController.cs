@@ -1,5 +1,6 @@
-﻿using Application.Repositories.Interfaces;
-using dataservice.ViewModels;
+﻿using Application.Common.Models;
+using Application.Repositories.Interfaces;
+using dataservice.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -51,11 +52,22 @@ namespace dataservice.Controllers
             }
         }
 
-        // PUT api/<PatientController>/5 NO EDIT FUNCTIONALITY YET
-        /*     [HttpPut("{id}")]
-             public void Put(int id, [FromBody] string value)
-             {
-             }*/
+        //POST api/<PatientController>/5
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] PatientDto data)
+        {
+            Result result = new Result(false);
+            if (data != null)
+            {
+                DateTime date;
+                if (DateTime.TryParse(data.BirthDate, out date))
+                {
+                    result = _patientRepo.UpdatePatient(id, data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber, data.CareWorkerId);
+                }
+            }
+
+            return Ok(result);
+        }
 
         // DELETE api/<PatientController>/5
         [HttpDelete("{id}")]
