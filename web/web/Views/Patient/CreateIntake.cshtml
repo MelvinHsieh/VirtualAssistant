@@ -1,0 +1,47 @@
+﻿@model Tuple<PatientModel, IntakeModel>
+@{
+    ViewData["Title"] = "Inname Schema Creëeren";
+}
+
+<h1>Creëer Inname Schema</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateIntake">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.Hidden("PatientId", @Model.Item1.Id)
+            <div class="form-group">
+                <label asp-for="@Model.Item2.MedicineId" class="control-label">Kies Medicijn</label>
+                @Html.DropDownList("MedicineId", ViewBag.Medicine, null, new { @class ="form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item2.Amount" class="control-label"></label>
+                <input asp-for="@Model.Item2.Amount" class="form-control" name="Amount"/>
+                <span asp-validation-for="@Model.Item2.Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item2.IntakeStart" class="control-label"></label>
+                <input asp-for="@Model.Item2.IntakeStart" class="form-control" />
+                <span asp-validation-for="@Model.Item2.IntakeStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Item2.IntakeEnd" class="control-label"></label>
+                <input asp-for="@Model.Item2.IntakeEnd" class="form-control" />
+                <span asp-validation-for="@Model.Item2.IntakeEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Schema Aanmaken" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Terug naar overzicht</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
