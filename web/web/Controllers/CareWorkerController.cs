@@ -82,13 +82,13 @@ namespace web.Controllers
                 {
                     var apiUri = new Uri(_apiURL + "/CareWorker");
                     var result = await client.PostAsJsonAsync(apiUri, model.CareWorkerData);
-                    
+
 
                     if (result.IsSuccessStatusCode)
                     {
                         var response = await result.Content.ReadAsStringAsync();
-                        var careWorkerId = int.Parse(response); 
-                        
+                        var careWorkerId = int.Parse(response);
+
                         using (var client2 = new HttpClient())
                         {
                             var authUri = new Uri(_authURL + "/signup");
@@ -106,16 +106,17 @@ namespace web.Controllers
                             content.Headers.Add("Content-Type", "application/json");
 
                             var authResult = await client2.PostAsync(authUri, content);
-                        
-                             if (!authResult.IsSuccessStatusCode)
+
+                            if (!authResult.IsSuccessStatusCode)
                             {
-                                
-                            
+
+
                                 var deleteUri = new Uri(_apiURL + $"/CareWorker/{careWorkerId}");
                                 await client.DeleteAsync(deleteUri);
 
                                 TempData["error"] = "Er is iets fout gegaan bij het registreren van het account!";
-                            } else
+                            }
+                            else
                             {
                                 TempData["success"] = "Zorgmedewerker aangemaakt!";
                             }

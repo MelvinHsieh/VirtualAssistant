@@ -11,6 +11,6 @@ namespace web.Models.Common
         [JsonProperty(PropertyName = "role")]
         public string? Role { get; set; }
         [JsonProperty(PropertyName = "id")]
-        public int? Id { get; set; }  
+        public int? Id { get; set; }
     }
 }

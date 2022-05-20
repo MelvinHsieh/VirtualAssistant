@@ -1,7 +1,4 @@
-﻿using Application.Common.Enums;
-using Application.Repositories.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using dataservice.DTO;
+﻿using Application.Repositories.Interfaces;
 using dataservice.DTO;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,9 +2,9 @@
 {
     public class Result
     {
-        public Result(bool success, string? message = null)
+        public Result(bool success)
         {
-            Success = succes;
+            Success = success;
             ResponseData = null;
             Message = null;
         }
@@ -19,7 +19,7 @@
         public Result(bool success, string? message = null, object? response = null)
         {
             Success = success;
-            ResponseData = response; 
+            ResponseData = response;
             Message = message;
         }
 

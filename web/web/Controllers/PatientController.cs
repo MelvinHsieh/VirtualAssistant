@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
@@ -7,8 +8,6 @@ using web.Models;
 using web.Models.Common;
 using web.Models.CreateModels;
 using web.Utils;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace web.Controllers
 {
@@ -66,7 +65,7 @@ namespace web.Controllers
                 return View();
             }
         }
-        
+
         // GET: PatientController/Details/5
         public async Task<ActionResult> Details(int id)
         {
@@ -120,7 +119,7 @@ namespace web.Controllers
                         result = await response.Content.ReadAsStringAsync();
                         List<MedicineModel>? models = JsonConvert.DeserializeObject<List<MedicineModel>>(result);
                         SetMedicineBag(models);
-                        
+
                         return View(Tuple.Create(patient, new IntakeModel()));
                     }
                 }
@@ -255,7 +254,7 @@ namespace web.Controllers
 
                         var response = client.GetAsync(uri).Result;
                         var careWorkerseResponse = client.GetAsync(careWorkersUri).Result;
-             
+
                         string result = await response.Content.ReadAsStringAsync();
                         string careWorkersResult = await careWorkerseResponse.Content.ReadAsStringAsync();
 
@@ -284,7 +283,7 @@ namespace web.Controllers
                 {
                     var uri = new Uri(_apiURL + "/Patient/" + model.Id);
                     var result = await client.PutAsJsonAsync(uri, model);
-                    
+
                     TempData["success"] = "Patiënt is aangepast!";
                 }
             }
@@ -292,7 +291,7 @@ namespace web.Controllers
             {
                 TempData["error"] = "Er is iets fout gegaan bij het aanpassen van de Patiënt!";
             }
-            
+
             return RedirectToAction(nameof(Index));
         }
 

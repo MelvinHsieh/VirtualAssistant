@@ -1,7 +1,8 @@
 ﻿using Application.Common.Enums;
+using Application.Common.Models;
 using Application.Repositories.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using dataservice.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -51,7 +52,7 @@ namespace dataservice.Controllers
                 {
                     var result = _patientRepo.AddPatient(data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber);
                     return (int?)result.ResponseData;
-                }   
+                }
             }
             return null;
         }
