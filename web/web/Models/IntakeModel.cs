@@ -9,18 +9,14 @@ namespace web.Models
     {
         [Required]
         [JsonProperty(PropertyName = "id")]
-        [ScaffoldColumn(false)]
         public int Id { get; set; } = 0;
 
         [Required]
-        [BindProperty]
         [JsonProperty(PropertyName = "patientId")]
-        [ScaffoldColumn(false)]
         public int PatientId { get; set; } = 0;
 
         [Required]
         [JsonProperty(PropertyName = "medicineId")]
-        [ScaffoldColumn(false)]
         public int MedicineId { get; set; } = 0;
 
         [Required]
