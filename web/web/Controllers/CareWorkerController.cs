@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 using web.Models;
 using web.Models.Common;
 using web.Models.CreateModels;
@@ -91,13 +92,20 @@ namespace web.Controllers
                         using (var client2 = new HttpClient())
                         {
                             var authUri = new Uri(_authURL + "/signup");
-                            var authResult = await client2.PostAsJsonAsync(authUri, new AuthRequestModel()
+
+                            string json = JsonConvert.SerializeObject(new AuthRequestModel() //Creates a JSON object of the authRequest
                             {
                                 UserName = model.AccountData.UserName,
                                 Password = model.AccountData.Password,
                                 Role = Roles.CareWorkerOnly,
                                 Id = careWorkerId
-                            });
+                            }, Formatting.Indented);
+
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            content.Headers.Remove("Content-Type");
+                            content.Headers.Add("Content-Type", "application/json");
+
+                            var authResult = await client2.PostAsync(authUri, content);
                         
                              if (!authResult.IsSuccessStatusCode)
                             {

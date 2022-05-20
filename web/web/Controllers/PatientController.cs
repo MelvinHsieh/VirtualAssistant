@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text;
 using web.Models;
+using web.Models.Common;
 using web.Models.CreateModels;
 using web.Utils;
 
@@ -88,21 +90,41 @@ namespace web.Controllers
 
                     if (result.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        var authUri = new Uri(_authURL + "/register");
-                        var authResult = await client.PostAsJsonAsync(authUri, model.AccountData);
+                        var response = await result.Content.ReadAsStringAsync();
+                        var patientId = int.Parse(response);
 
-                        if (!authResult.IsSuccessStatusCode)
+                        using (var client2 = new HttpClient())
                         {
-                            var response = await result.Content.ReadAsStringAsync();
-                            var patientId = int.Parse(response);
+                            var authUri = new Uri(_authURL + "/signup");
 
-                            var deleteUri = new Uri(_apiURL + $"/Patient/{patientId}");
-                            await client.DeleteAsync(deleteUri);
+                            string json = JsonConvert.SerializeObject(new AuthRequestModel() //Creates a JSON object of the authRequest
+                            {
+                                UserName = model.AccountData.UserName,
+                                Password = model.AccountData.Password,
+                                Role = Roles.PatientOnly,
+                                Id = patientId
+                            }, Formatting.Indented);
 
-                            TempData["error"] = "Er is iets fout gegaan bij het registreren van de gebruiker";
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            content.Headers.Remove("Content-Type");
+                            content.Headers.Add("Content-Type", "application/json");
+
+                            var authResult = await client2.PostAsync(authUri, content);
+
+                            if (!authResult.IsSuccessStatusCode)
+                            {
+
+
+                                var deleteUri = new Uri(_apiURL + $"/Patient/{patientId}");
+                                await client.DeleteAsync(deleteUri);
+
+                                TempData["error"] = "Er is iets fout gegaan bij het registreren van het account!";
+                            }
+                            else
+                            {
+                                TempData["success"] = "Patiënt aangemaakt!";
+                            }
                         }
-
-                        TempData["success"] = "Patiënt aangemaakt!";
                     }
                     else
                     {
