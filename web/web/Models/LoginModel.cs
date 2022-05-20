@@ -12,6 +12,7 @@ namespace web.Models
         public string Username { get; set; } = string.Empty;
 
         [Required]
+        [PasswordPropertyText]
         [JsonProperty(PropertyName = "password")]
         [DisplayName("Wachtwoord")]
         public string Password { get; set; } = string.Empty;

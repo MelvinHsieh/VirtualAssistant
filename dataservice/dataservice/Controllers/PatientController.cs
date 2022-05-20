@@ -42,16 +42,18 @@ namespace dataservice.Controllers
 
         // POST api/<PatientController>
         [HttpPost]
-        public void Post([FromBody] PatientDto data)
+        public int? Post([FromBody] PatientDto data)
         {
             if (data != null)
             {
                 DateTime date;
                 if (DateTime.TryParse(data.BirthDate, out date))
                 {
-                    _patientRepo.AddPatient(data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber);
-                }
+                    var result = _patientRepo.AddPatient(data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber);
+                    return (int?)result.ResponseData;
+                }   
             }
+            return null;
         }
 
         // PUT api/<PatientController>/5 NO EDIT FUNCTIONALITY YET

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using web.Models;
+using web.Models.CreateModels;
 using web.Utils;
 
 namespace web.Controllers
@@ -12,10 +13,12 @@ namespace web.Controllers
     {
 
         private readonly string _apiURL;
+        private readonly string _authURL;
 
         public PatientController(IConfiguration configuration)
         {
             _apiURL = configuration.GetValue<String>("DataServiceURL");
+            _authURL = configuration.GetValue<String>("AuthURL");
         }
 
         // GET: PatientController
@@ -74,17 +77,31 @@ namespace web.Controllers
         // POST: PatientController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(PatientModel model)
+        public async Task<ActionResult> CreateAsync(PatientCreateModel model)
         {
             try
             {
                 using (var client = new AuthHttpClient(User))
                 {
-                    var uri = new Uri(_apiURL + "/Patient");
-                    var result = await client.PostAsJsonAsync(uri, model);
+                    var apiUri = new Uri(_apiURL + "/Patient");
+                    var result = await client.PostAsJsonAsync(apiUri, model.PatientData);
 
                     if (result.StatusCode == System.Net.HttpStatusCode.OK)
                     {
+                        var authUri = new Uri(_authURL + "/register");
+                        var authResult = await client.PostAsJsonAsync(authUri, model.AccountData);
+
+                        if (!authResult.IsSuccessStatusCode)
+                        {
+                            var response = await result.Content.ReadAsStringAsync();
+                            var patientId = int.Parse(response);
+
+                            var deleteUri = new Uri(_apiURL + $"/Patient/{patientId}");
+                            await client.DeleteAsync(deleteUri);
+
+                            TempData["error"] = "Er is iets fout gegaan bij het registreren van de gebruiker";
+                        }
+
                         TempData["success"] = "Patiënt aangemaakt!";
                     }
                     else

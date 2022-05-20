@@ -1,17 +1,35 @@
 const passport = require("passport");
 const localStrategy = require('passport-local').Strategy;
 const UserModel = require("../models/user");
+const ROLES = require('../models/roles')
 
 passport.use(
     'signup',
     new localStrategy(
         {
             usernameField: 'username',
-            passwordField: 'password'
+            passwordField: 'password',
+            passReqToCallback: true
         },
-        async (username, password, done) => {
+        async (req, username, password, done) => {
             try {
-                const user = await UserModel.create({ username, password, roles: ['user'] });
+                if (req.body.role != null) {
+                    var id = req.body.id; 
+                    var user;
+                    if (id) {
+                        switch (req.body.role) {
+                            case ROLES.Employee:
+                                user = await UserModel.create({ username, password, employeeId: id, role: ROLES.Employee });
+                                break;
+                            case ROLES.Patient:
+                                user = await UserModel.create({ username, password, patientId: id, role: ROLES.Patient });
+                                break;
+                            default:
+                                break;
+                            }
+                    }
+                }
+                
 
                 return done(null, user);
             } catch (error) {

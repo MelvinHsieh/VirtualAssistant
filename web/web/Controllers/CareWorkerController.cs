@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using web.Models;
+using web.Models.Common;
+using web.Models.CreateModels;
 using web.Utils;
 
 namespace web.Controllers
@@ -10,10 +12,12 @@ namespace web.Controllers
     public class CareWorkerController : Controller
     {
         private readonly string _apiURL;
+        private readonly string _authURL;
 
         public CareWorkerController(IConfiguration configuration)
         {
             _apiURL = configuration.GetValue<String>("DataServiceURL");
+            _authURL = configuration.GetValue<String>("AuthURL");
         }
 
         // GET: CareWorkerController
@@ -69,18 +73,45 @@ namespace web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Roles.AdminOnly)]
-        public async Task<ActionResult> CreateAsync(CareWorkerModel model)
+        public async Task<ActionResult> CreateAsync(CareWorkerCreateModel model)
         {
             try
             {
                 using (var client = new AuthHttpClient(User))
                 {
-                    var uri = new Uri(_apiURL + "/CareWorker");
-                    var result = await client.PostAsJsonAsync(uri, model);
+                    var apiUri = new Uri(_apiURL + "/CareWorker");
+                    var result = await client.PostAsJsonAsync(apiUri, model.CareWorkerData);
+                    
 
-                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    if (result.IsSuccessStatusCode)
                     {
-                        TempData["success"] = "Zorgmedewerker aangemaakt!";
+                        var response = await result.Content.ReadAsStringAsync();
+                        var careWorkerId = int.Parse(response); 
+                        
+                        using (var client2 = new HttpClient())
+                        {
+                            var authUri = new Uri(_authURL + "/signup");
+                            var authResult = await client2.PostAsJsonAsync(authUri, new AuthRequestModel()
+                            {
+                                UserName = model.AccountData.UserName,
+                                Password = model.AccountData.Password,
+                                Role = Roles.CareWorkerOnly,
+                                Id = careWorkerId
+                            });
+                        
+                             if (!authResult.IsSuccessStatusCode)
+                            {
+                                
+                            
+                                var deleteUri = new Uri(_apiURL + $"/CareWorker/{careWorkerId}");
+                                await client.DeleteAsync(deleteUri);
+
+                                TempData["error"] = "Er is iets fout gegaan bij het registreren van het account!";
+                            } else
+                            {
+                                TempData["success"] = "Zorgmedewerker aangemaakt!";
+                            }
+                        }
                     }
                     else
                     {

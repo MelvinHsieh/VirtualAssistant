@@ -7,14 +7,21 @@ namespace web.Models
     public class RegisterModel
     {
         [Required]
-        [JsonProperty(PropertyName = "firstName")]
+        [JsonProperty(PropertyName = "username")]
         [DisplayName("Gebruikersnaam")]
         public string UserName { get; set; } = string.Empty;
 
         [Required]
-        [JsonProperty(PropertyName = "lastName")]
+        [JsonProperty(PropertyName = "password")]
         [DisplayName("Wachtwoord")]
-        public string LastName { get; set; } = string.Empty;
+        [PasswordPropertyText]
+        public string Password { get; set; } = string.Empty;
 
+        [Required]
+        [JsonIgnore]
+        [DisplayName("Wachtwoord")]
+        [PasswordPropertyText]
+        [Compare("Password", ErrorMessage = "Confirm password doesn't match, Type again !")]
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 }
