@@ -11,12 +11,15 @@ namespace CoreBot.Producer
     {
         private IConfiguration _configuration;
 
-        private static string EXCHANGE_NAME = "storeInteraction";
-        private static string QUEUE_NAME = "storeInteractionQueue";
+        private static string EXCHANGE_NAME;
+        private static string QUEUE_NAME;
 
         public RabbitMQProducer(IConfiguration configuration)
         {
             _configuration = configuration;
+
+            EXCHANGE_NAME = configuration.GetSection("MessageBusExchange").Value;
+            QUEUE_NAME = configuration.GetSection("MessageBusQueue").Value;
         }
 
         public void SendMessage<T>(T message)

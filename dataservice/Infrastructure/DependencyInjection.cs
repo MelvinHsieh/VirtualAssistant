@@ -9,15 +9,19 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            var medicineConnection = configuration.GetConnectionString("MedicineConnection");
+            var patientConnection = configuration.GetConnectionString("PatientConnection");
+            var userID = configuration.GetConnectionString("DbUserID");
+            var userPass = configuration.GetConnectionString("DbUserPassword");
 
             services.AddDbContext<MedicineDbContext>(options =>
                 options.UseSqlServer(
-                    configuration.GetConnectionString("MedicineConnection"),
+                    $"{medicineConnection}User Id={userID};Password={userPass};",
                     b => b.MigrationsAssembly(typeof(MedicineDbContext).Assembly.FullName)));
 
             services.AddDbContext<PatientDbContext>(options =>
                 options.UseSqlServer(
-                    configuration.GetConnectionString("PatientConnection"),
+                    $"{patientConnection}User Id={userID};Password={userPass};",
                     b => b.MigrationsAssembly(typeof(PatientDbContext).Assembly.FullName)));
 
 

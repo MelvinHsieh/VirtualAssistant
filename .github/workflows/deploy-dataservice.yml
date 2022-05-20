@@ -15,6 +15,12 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: microsoft/variable-substitution@v1 
+      with:
+        files: '**/appsettings.json'
+      env:
+        ConnectionStrings.DbUserID: ${{ secrets.DbUserID }}
+        ConnectionStrings.DbUserPassword: ${{ secrets.DbUserPassword }}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
