@@ -49,5 +49,8 @@ namespace web.Models
         [DisplayName("Huisnummer")]
         public string HomeNumber { get; set; } = string.Empty;
 
+        [JsonProperty(PropertyName = "CareWorkerId")]
+        [DisplayName("Zorgmedewerker")]
+        public int CareWorkerId { get; set; }
     }
 }

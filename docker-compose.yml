@@ -2,7 +2,13 @@ version: "3.9"
 
 services:
   messagebus:
-    image: rabbitmq:latest
+    container_name: messagebus
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - 15672
 
   loggingservice:
     container_name: loggingservice
@@ -17,28 +23,11 @@ services:
     expose:
       - "3000"
     environment:
-      - MESSAGE_QUEUE=amqp://messagebus
+      - MESSAGE_QUEUE=amqp://messagebus:5672
       - MONGO_URL=mongodb://loggingdb:loggingdbpass@loggingdb:27017/
     depends_on:
       - "messagebus"
       - "loggingdb"
-  
-  authservice:
-    container_name: authservice
-    build:
-      context: ./authservice
-      dockerfile: Dockerfile
-    deploy:
-      restart_policy:
-        condition: on-failure
-    ports:
-      - "3001:3001"
-    expose:
-      - "3001"
-    environment:
-      - MONGO_URL=mongodb://authdb:authdbpass@authdb:27018/
-    depends_on:
-      - "authdb"
 
   dataservice:
     container_name: dataservice
@@ -53,7 +42,7 @@ services:
     depends_on:
       - "userdatadb"
       - "generaldatadb"
-      # - "loggingservice"
+      - "loggingservice"
 
   web:
     container_name: web
@@ -78,20 +67,6 @@ services:
     restart: always
     volumes:
       - loggingdb_volume:/data/db
-  
-  authdb:
-    container_name: authdb
-    image: mongo:latest
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: authdb
-      MONGO_INITDB_ROOT_PASSWORD: authdbpass
-    ports:
-      - 27018:27017
-    expose:
-      - "27018"
-    restart: always
-    volumes:
-      - authdb_volume:/data/db
 
   userdatadb:
     container_name: userdatadb

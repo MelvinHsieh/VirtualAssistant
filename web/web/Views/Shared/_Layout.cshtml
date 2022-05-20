@@ -25,9 +25,6 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patient</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Medicine" asp-action="Index">Medicijnen</a>
                             </li>
                             <li class="nav-item">
@@ -40,24 +37,9 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patient</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Medicine" asp-action="Index">Medicijnen</a>
                             </li>
                         } 
-                        @if(User.IsInRole(Roles.PatientOnly))
-                        {
-                          <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>  
-                        }
-                        @if(User.Identity.IsAuthenticated == false)
-                        {
-                           <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>   
-                        }
                     </ul>
 
                     @Html.Partial("_LoginPartial")

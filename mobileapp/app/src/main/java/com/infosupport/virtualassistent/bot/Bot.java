@@ -9,8 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.infosupport.virtualassistent.AssistantActivity;
+import com.infosupport.virtualassistent.MainActivity;
 import com.infosupport.virtualassistent.R;
 import com.infosupport.virtualassistent.bot.models.Activity;
 import com.infosupport.virtualassistent.bot.models.Conversation;
@@ -26,26 +25,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Bot {
-
+    String directLineURL;
     Conversation conversation = null;
     String secretCode;
     RequestQueue queue = null;
     Gson gson = null;
     SharedPreferences preferences;
 
-    public Bot(AssistantActivity activity) {
+    public Bot(MainActivity activity) {
         secretCode = activity.getApplicationContext().getString(R.string.bot_secret_code);
         gson = new Gson();
-        preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-
         queue = Volley.newRequestQueue(activity.getApplicationContext());
         startConversation(activity);
     }
 
-    public void startConversation(AssistantActivity assistantActivity) {
-        String conversationURL = "https://directline.botframework.com/v3/directline/conversations";
+    public void startConversation(MainActivity mainActivity) {
+        directLineURL = mainActivity.getApplicationContext().getString(R.string.direct_line_url);
 
-        JsonObjectRequest startConversationRequest = new JsonObjectRequest(Request.Method.POST, conversationURL, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest startConversationRequest = new JsonObjectRequest(Request.Method.POST, directLineURL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 conversation = gson.fromJson(response.toString(), Conversation.class);
@@ -89,7 +86,7 @@ public class Bot {
     }
 
     public void sendActivity(Activity activity) {
-        String postActivityURL = "https://directline.botframework.com/v3/directline/conversations/" + conversation.conversationId + "/activities";
+        String postActivityURL = directLineURL + "/" + conversation.conversationId + "/activities";
 
         StringRequest messagePostRequest = new StringRequest(Request.Method.POST, postActivityURL, new Response.Listener<String>() {
             @Override

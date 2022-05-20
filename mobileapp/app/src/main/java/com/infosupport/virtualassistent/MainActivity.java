@@ -55,4 +55,48 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /** Run the speech recognition service */
+    private void runSpeechRecognizer(FloatingActionButton fab) {
+        textToSpeech.stop();
+        Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
+        fab.setImageResource(R.drawable.mic_active);
+        SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
+    }
+
+    public void showMessage(String msg, boolean isUser) {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setImageResource(R.drawable.mic_inactive);
+        Message message = new Message(msg, isUser, Calendar.getInstance().getTimeInMillis());
+        messageList.add(message);
+        int pos = messageList.size() - 1;
+        messageAdapter.notifyItemInserted(pos);
+        messageRecycler.scrollToPosition(pos);
+
+        // Save new message to the database
+        new Thread(() -> {
+            msgDao.insertAll(message);
+        }).start();
+
+        if(!isUser) {
+            textToSpeech.speak(msg, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+    }
+
+    private void checkMicPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, RecordAudioRequestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == RecordAudioRequestCode && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(this, "Microphone permission Granted", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public Bot getBot() {return bot;}
+
 }

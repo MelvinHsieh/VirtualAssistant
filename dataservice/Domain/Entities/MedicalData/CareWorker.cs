@@ -14,6 +14,5 @@ namespace Domain.Entities.MedicalData
         [Required]
         public string Function { get; set; } = "";
         public string Status { get; set; } = EntityStatus.Active.ToString().ToLower();
-
     }
 }

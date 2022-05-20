@@ -5,7 +5,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -29,9 +31,9 @@ import ai.picovoice.porcupine.PorcupineManager;
 import ai.picovoice.porcupine.PorcupineManagerCallback;
 
 public class WakeWordService extends Service {
-    private static final String CHANNEL_ID = "WWEServiceChannel";
+    private static String CHANNEL_ID;
     private static String ACCESS_KEY;
-    private static final String KEYWORD_PATH = "HansKeyword.ppn";
+    private static String KEYWORD_PATH;
     public static final String RESULT_RECEIVER = "com.infosupport.virtualassistent.services.extra.WWE_RESULT_RECEIVER";
 
     private PorcupineManager porcupineManager;
@@ -39,6 +41,14 @@ public class WakeWordService extends Service {
     private final PorcupineManagerCallback porcupineManagerCallback = (keywordIndex) -> {
         resultReceiver.send(SpeechResultReceiver.RESULT_CODE_OK, new Bundle());
     };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        CHANNEL_ID = this.getString(R.string.wakeword_service_channel_id);
+        ACCESS_KEY = this.getString(R.string.porcupine_key);
+        KEYWORD_PATH = this.getString(R.string.wakeword_keyword_path);
+    }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -54,7 +64,6 @@ public class WakeWordService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        ACCESS_KEY = getApplicationContext().getString(R.string.porcupine_key);
         resultReceiver = intent.getParcelableExtra(RESULT_RECEIVER);
 
         createNotificationChannel();

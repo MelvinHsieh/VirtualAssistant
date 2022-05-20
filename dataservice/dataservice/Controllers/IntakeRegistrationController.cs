@@ -1,6 +1,6 @@
 ﻿using Application.Common.Enums;
 using Application.Repositories.Interfaces;
-using dataservice.ViewModels;
+using dataservice.DTO;
 using Domain.Entities.MedicalData;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Authorization;

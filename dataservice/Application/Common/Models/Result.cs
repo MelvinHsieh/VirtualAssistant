@@ -2,21 +2,21 @@
 {
     public class Result
     {
-        public Result(bool succes)
+        public Result(bool success, string? message = null)
         {
             Success = succes;
             ResponseData = null;
             Message = null;
         }
 
-        public Result(bool success, string? message)
+        public Result(bool success, string? message = null)
         {
             Success = success;
             ResponseData = null;
             Message = message;
         }
 
-        public Result(bool success, string? message, object? response)
+        public Result(bool success, string? message = null, object? response = null)
         {
             Success = success;
             ResponseData = response; 

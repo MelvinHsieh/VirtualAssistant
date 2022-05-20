@@ -11,14 +11,21 @@ namespace dataservice.Tests.Application.Services
     [TestClass]
     internal class PatientRepoTests : DatabaseTestBase
     {
+        private PatientDbContext _patientDbContext;
+        private MedicineDbContext _medcontext;
         private IPatientRepo _patientRepo;
-        private PatientDbContext _context;
+        private ICareWorkerRepo _careWorkerRepo;
+        private ICareWorkerFunctionRepo _careWorkerFunctionRepo;
 
         [TestInitialize]
         public void Initialize()
         {
-            _context = this.CreatePatientTestContext();
-            _patientRepo = new PatientRepo(_context);
+            _patientDbContext = this.CreatePatientTestContext();
+            _medcontext = this.CreateMedicineTestContext();
+
+            _careWorkerRepo = new CareWorkerRepo(_medcontext, _careWorkerFunctionRepo);
+            _patientRepo = new PatientRepo(_patientDbContext, _careWorkerRepo);
+            _careWorkerFunctionRepo = new CareWorkerFunctionRepo(_medcontext);
         }
 
         [TestMethod]
@@ -75,7 +82,7 @@ namespace dataservice.Tests.Application.Services
         [TestCleanup]
         public void TestCleanup()
         {
-            this._context.Dispose();
+            this._patientDbContext.Dispose();
         }
     }
 }

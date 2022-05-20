@@ -66,6 +66,10 @@ app.UseCookiePolicy(cookiePolicyOptions);
 app.UseAuthentication();
 app.UseAuthorization();
 
+/*app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Patient}/{action=Index}/{id?}");*/
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
