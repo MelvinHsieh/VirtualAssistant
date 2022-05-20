@@ -52,7 +52,6 @@ public class SpeechIntentService extends IntentService {
      * Handle the recognizer in a worker thread
      */
     private void handleActionRecognize(ResultReceiver resultReceiver) throws ExecutionException, InterruptedException {
-        System.out.println("Dit is een test");
         Bundle bundle = new Bundle();
         SpeechConfig speechConfig = SpeechConfig.fromSubscription(SubscriptionKey, ServiceRegion);
         speechConfig.setSpeechRecognitionLanguage("nl-NL");

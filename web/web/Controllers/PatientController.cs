@@ -58,6 +58,33 @@ namespace web.Controllers
                 return View();
             }
         }
+        
+        // GET: PatientController/Details/5
+        public async Task<ActionResult> Details(int id)
+        {
+            if (id > 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var uri = new Uri(_apiURL + "/Patient/" + id);
+
+                        var response = client.GetAsync(uri).Result;
+
+                        string result = await response.Content.ReadAsStringAsync();
+
+                        PatientModel? model = JsonConvert.DeserializeObject<PatientModel>(result);
+                        return View("Details", model);
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Ophalen van patiënt is mislukt!";
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
         // GET: PatientController/Create
         public IActionResult Create()
@@ -183,12 +210,17 @@ namespace web.Controllers
                     using (var client = new HttpClient())
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
+                        var careWorkersUri = new Uri(_apiURL + "/Careworker");
 
                         var response = client.GetAsync(uri).Result;
-
+                        var careWorkerseResponse = client.GetAsync(careWorkersUri).Result;
+             
                         string result = await response.Content.ReadAsStringAsync();
+                        string careWorkersResult = await careWorkerseResponse.Content.ReadAsStringAsync();
 
                         PatientModel? model = JsonConvert.DeserializeObject<PatientModel>(result);
+                        ViewBag.CareWorkers = JsonConvert.DeserializeObject<List<CareWorkerModel>>(careWorkersResult);
+
                         return View(model);
                     }
                 }
@@ -203,28 +235,23 @@ namespace web.Controllers
         // POST: PatientController/Edit/id
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id)
+        public async Task<ActionResult> EditAsync(PatientModel model)
         {
-            if (id > 0)
+            try
             {
-                try
+                using (var client = new HttpClient())
                 {
-                    using (var client = new HttpClient())
-                    {
-                        var uri = new Uri(_apiURL + "/Patient/" + id);
-                        var result = await client.DeleteAsync(uri);
-
-                        if (result.StatusCode == System.Net.HttpStatusCode.OK)
-                            TempData["success"] = "Patiënt successvol verwijderd!";
-                        else
-                            TempData["error"] = "Patiënt kon niet worden verwijderd!";
-                    }
-                }
-                catch
-                {
-                    TempData["error"] = "Verwijderen mislukt!";
+                    var uri = new Uri(_apiURL + "/Patient/" + model.Id);
+                    var result = await client.PutAsJsonAsync(uri, model);
+                    
+                    TempData["success"] = "Patiënt is aangepast!";
                 }
             }
+            catch
+            {
+                TempData["error"] = "Er is iets fout gegaan bij het aanpassen van de Patiënt!";
+            }
+            
             return RedirectToAction(nameof(Index));
         }
 
@@ -282,10 +309,8 @@ namespace web.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
-
         private bool IsValidJson(string strInput)
-        {//Using JSON.Net
+        {
             if (string.IsNullOrWhiteSpace(strInput)) { return false; }
             strInput = strInput.Trim();
             if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || //For object
@@ -312,12 +337,6 @@ namespace web.Controllers
             {
                 return false;
             }
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

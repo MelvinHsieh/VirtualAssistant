@@ -2,11 +2,6 @@
 using Application.Repositories.Interfaces;
 using Domain.Entities.MedicalData;
 using Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Repositories
 {
@@ -23,7 +18,7 @@ namespace Application.Repositories
 
         public Result AddCareWorker(string firstName, string lastName, string functionName)
         {
-            if (string.IsNullOrEmpty(firstName) || 
+            if (string.IsNullOrEmpty(firstName) ||
                 string.IsNullOrEmpty(lastName) ||
                 string.IsNullOrEmpty(functionName))
             {
