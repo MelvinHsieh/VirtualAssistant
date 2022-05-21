@@ -1,7 +1,7 @@
 const AMQP = require('amqplib');
 const URI = process.env.MESSAGE_BUS_URI
-const EXCHANGE_NAME = process.env.MESSAGE_BUS_EXCHANGE_NAME
-const QUEUE_NAME = process.env.MESSAGE_BUS_QUEUE_NAME
+const EXCHANGE_NAME = process.env.MESSAGE_BUS_EXCHANGE_NAME2
+const QUEUE_NAME = process.env.MESSAGE_BUS_QUEUE_NAME2
 
 var mongoose = require('mongoose');
 
@@ -13,6 +13,7 @@ const consume = async () => {
         let channel = await connection.createChannel();
 
         await channel.assertExchange(EXCHANGE_NAME, 'direct')
+
         let q = await channel.assertQueue(QUEUE_NAME, { exclusive: false, durable: true });
         await channel.bindQueue(q.queue, EXCHANGE_NAME, "");
 
@@ -20,53 +21,31 @@ const consume = async () => {
 
             let content = JSON.parse(data.content)
 
-            console.log(content);
+            let service = content.ServiceName ?? "";
+            let message = content.ErrorMessage ?? "";
 
-            // let id = content.Id ?? "";
-            // let replyToId = content.ReplyToId ?? "";
-            // let from = content.From ?? "";
-            // let message = content.Message ?? "";
+            let errorLog = ErrorLog({
+                _id: new mongoose.Types.ObjectId(),
+                service: service,
+                error: message,
+            })
 
-            // if (id) {
-            //     if (replyToId) {
-            //         var reply = { _id: id, message: message };
+            errorLog.save(function (err, result) {
+                if (result) {
+                    channel.ack(data)
+                } else if (err) {
+                    throw err;
+                }
+            })
 
-            //         Interaction.findOneAndUpdate(
-            //             { _id: replyToId },
-            //             { $push: { replies: reply } },
-            //             function (error, result) {
-            //                 if (error) {
-            //                     console.log("ERROR: " + error);
-            //                 } else {
-            //                     if (result) {
-            //                         channel.ack(data)
-            //                     }
-            //                 }
-            //             });
-            //     } else {
-            //         let interaction = Interaction({
-            //             _id: id,
-            //             from: from,
-            //             message: message,
-            //         })
-
-            //         interaction.save(function (err, result) {
-            //             if (result) {
-            //                 channel.ack(data)
-            //             } else if (err) {
-            //                 throw err;
-            //             }
-            //         })
-            //     }
-            // }
-        },
-            {
-                noAck: false
-            });
+        }, {
+            noAck: false
+        });
 
     } catch (error) {
         console.log(`error is: ${error}`);
     }
 }
+
 
 module.exports = consume;
