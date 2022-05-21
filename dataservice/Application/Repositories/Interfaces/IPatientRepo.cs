@@ -17,5 +17,7 @@ namespace Application.Repositories.Interfaces
         public bool DoesPatientExist(int id);
 
         public Result ValidatePatient(Patient patient);
+
+        public Result RegisterAlert(int id, DateTime date);
     }
 }

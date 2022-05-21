@@ -145,5 +145,37 @@ namespace Application.Repositories
 
             return new Result(true);
         }
+
+        public Result RegisterAlert(int id, DateTime date)
+        {
+            Result result = new Result(false, "Alert opslaan mislukt!");
+
+            if (!DoesPatientExist(id))
+            {
+                return result;
+            }
+
+            Patient? patient = GetPatient(id);
+            if (patient is null)
+            {
+                result.Success = false;
+                result.Message = "De patient bestaat niet.";
+                return result;
+            }
+
+            patient.EmergencyNotices.Add(new EmergencyNotice {
+                PatientId = id,
+                Sent = date
+            });
+
+            _context.Patients.Update(patient);
+            _context.SaveChanges();
+
+
+            result.Success = true;
+            result.Message = "De melding is geregistreerd!";
+
+            return result;
+        }
     }
 }

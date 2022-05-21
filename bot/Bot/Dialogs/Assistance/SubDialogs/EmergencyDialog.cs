@@ -45,6 +45,15 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text("De hulpoproep kon niet worden verzonden."));
             }
 
+            //Save the Emergency call to the database using the dataservice
+            url = "https://localhost:7257/api/PatientEmergency";
+            values = new Dictionary<string, string>
+            {
+                { "patientId", "1" },
+                { "date", DateTime.Now.ToString() }
+            };
+            data = new FormUrlEncodedContent(values);
+            response = await client.PostAsync(url, data);
 
             
             return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
