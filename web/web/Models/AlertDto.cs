@@ -1,7 +1,12 @@
-﻿namespace web.Models
+﻿using Newtonsoft.Json;
+
+namespace web.Models
 {
     public class AlertDto
     {
-        public string Message { get; set; }
+        [JsonProperty("patientId")]
+        public int? PatientId { get; set; }
+        [JsonProperty("message")]
+        public string Message { get; set; } = string.Empty;
     }
 }

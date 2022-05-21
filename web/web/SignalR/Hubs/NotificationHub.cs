@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using web.Models;
 
 namespace web.SignalR.Hubs
 {
@@ -9,9 +10,9 @@ namespace web.SignalR.Hubs
 
     public class NotificationHub : Hub<INotificationHubClient>
     {
-        public async Task SendAlert (string message)
+        public async Task SendAlert (string alertJson)
         {
-            await Clients.Others.SendAlert(message);
+            await Clients.Others.SendAlert(alertJson);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using web.Models;
 using web.SignalR.Hubs;
 
@@ -17,7 +18,8 @@ namespace web.Controllers
         [HttpPost("/alert")]
         public async Task<IActionResult> PostAlert([FromBody] AlertDto alert)
         {
-            await _hub.Clients.All.SendAlert(alert.Message);  
+            var alertJson = JsonConvert.SerializeObject(alert);
+            await _hub.Clients.All.SendAlert(alertJson);  
             return Ok("Alert sent!");
         }
     }
