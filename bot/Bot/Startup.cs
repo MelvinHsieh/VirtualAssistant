@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using CoreBot;
+using CoreBot.Models;
 using CoreBot.Producer;
 using CoreBot.Utils;
 using Microsoft.AspNetCore.Builder;
@@ -63,6 +64,22 @@ namespace Microsoft.BotBuilderSamples
                 {
                     endpoints.MapControllers();
                 });
+
+            app.UseExceptionHandler(
+                options =>
+                {
+                    options.Run(
+                        async context =>
+                        {
+                            var ex = context.Features.Get<IExceptionHandlerFeature>();
+                            var service = context.RequestServices.GetService<IMessageProducer>();
+                            if (ex != null && service != null)
+                            {
+                                service.SendMessage(new ErrorModel() { ErrorMessage = ex.Error.Message });
+                            }
+                        });
+                }
+            );
         }
     }
 }

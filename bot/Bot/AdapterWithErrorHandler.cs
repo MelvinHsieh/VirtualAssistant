@@ -11,12 +11,13 @@ using Microsoft.Bot.Builder.TraceExtensions;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
+using Producer.RabbitMQ;
 
 namespace Microsoft.BotBuilderSamples
 {
     public class AdapterWithErrorHandler : CloudAdapter
     {
-        public AdapterWithErrorHandler(TranscriptLoggerMiddleware loggingMiddleware, BotFrameworkAuthentication auth, StoreError errorLogger, ConversationState conversationState = default)
+        public AdapterWithErrorHandler(TranscriptLoggerMiddleware loggingMiddleware, BotFrameworkAuthentication auth, IMessageProducer errorLogger, ConversationState conversationState = default)
             : base(auth)
         {
             Use(loggingMiddleware);
