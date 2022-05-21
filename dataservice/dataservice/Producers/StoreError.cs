@@ -5,16 +5,16 @@ using RabbitMQ.Client;
 using System;
 using System.Text;
 
-namespace CoreBot.Producer
+namespace dataservice.Producers
 {
-    public class RabbitMQProducer : IMessageProducer
+    public class StoreError : IMessageProducer
     {
         private IConfiguration _configuration;
 
         private static string EXCHANGE_NAME;
         private static string QUEUE_NAME;
 
-        public RabbitMQProducer(IConfiguration configuration)
+        public StoreError(IConfiguration configuration)
         {
             _configuration = configuration;
 

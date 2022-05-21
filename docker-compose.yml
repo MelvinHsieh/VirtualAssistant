@@ -72,7 +72,7 @@ services:
     container_name: userdatadb
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      MSSQL_SA_PASSWORD: UserDataDBPass123545!@
+      MSSQL_SA_PASSWORD: VirtualAssistantPass12345!@
       ACCEPT_EULA: Y
     ports:
       - 1433:1433
@@ -86,7 +86,7 @@ services:
     container_name: generaldatadb
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      MSSQL_SA_PASSWORD: GeneralDataDBPass12345!@
+      MSSQL_SA_PASSWORD: VirtualAssistantPass12345!@
       ACCEPT_EULA: Y
     ports:
       - 1434:1433

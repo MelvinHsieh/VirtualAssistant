@@ -1,6 +1,6 @@
 ﻿namespace CoreBot.Models
 {
-    public class LoggingModel
+    public class InteractionModel
     {
         public string Id { get; set; }
         public string ReplyToId { get; set; }

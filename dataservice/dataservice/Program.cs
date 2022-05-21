@@ -1,6 +1,11 @@
 using Application;
+using Application.Common.Models;
+using dataservice.Producers;
 using Infrastructure.Persistence;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Producer.RabbitMQ;
+using System.Net;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -28,7 +33,27 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication(builder.Configuration);
 
+builder.Services.AddSingleton<IMessageProducer, StoreError>();
+
 var app = builder.Build();
+
+app.UseExceptionHandler(
+    options =>
+    {
+        options.Run(
+            async context =>
+            {
+                var ex = context.Features.Get<IExceptionHandlerFeature>();
+
+                var service = context.RequestServices.GetService<IMessageProducer>();
+
+                if (ex != null && service != null)
+                {
+                    service.SendMessage(new ErrorModel() { ErrorMessage = ex.Error.Message });
+                }
+            });
+    }
+);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
