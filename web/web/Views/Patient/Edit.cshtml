@@ -89,6 +89,38 @@
                 <span asp-validation-for="HomeNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="CareWorkerId" class="control-label"></label>
+                @if (Model != null)
+                {  
+                    <select asp-for="CareWorkerId" class="form-control">
+                        <option value="0">Selecteer een zorgmedewerker</option>
+                        @foreach (CareWorkerModel item in ViewBag.CareWorkers)
+                        {
+                            @item.Id
+                            @Model.CareWorkerId
+                            @if (item.Id == Model.CareWorkerId)
+                            {
+                                <option value="@item.Id" selected >@item.FirstName @item.LastName</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id" >@item.FirstName @item.LastName</option>
+                            }
+                        }
+                    </select>
+                } 
+                else
+                {
+                    <select asp-for="CareWorkerId" class="form-control">
+                        @foreach (CareWorkerModel item in ViewBag.CareWorkers)
+                        {
+                            <option value="@item.Id">@item.FirstName @item.LastName</option>
+                        }
+                    </select>
+                }
+                <span asp-validation-for="CareWorkerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Opslaan" class="btn btn-primary" />
             </div>
         </form>

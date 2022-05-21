@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Run the speech recognition service */
     private void runSpeechRecognizer(FloatingActionButton fab) {
+        textToSpeech.stop();
         Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
         fab.setImageResource(R.drawable.mic_active);
         SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));

@@ -2,18 +2,11 @@
 {
     public class Result
     {
-        public Result(bool succes)
-        {
-            Success = succes;
-            Message = null;
-        }
-
-        public Result(bool success, string? message)
+        public Result(bool success, string? message = null)
         {
             Success = success;
             Message = message;
         }
-
 
         public bool Success { get; set; }
         public string? Message { get; set; }

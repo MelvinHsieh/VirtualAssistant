@@ -1,4 +1,4 @@
-﻿namespace dataservice.ViewModels
+﻿namespace dataservice.DTO
 {
     public class MedicineDto
     {
