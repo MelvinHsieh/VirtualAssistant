@@ -39,7 +39,7 @@ public class AuthService {
     }
 
     public void sendLoginInfo(String username, String password, LoginAsyncResponse responseCallback) {
-        String url = "http://localhost:3001/login"; //inject??
+        String url = activity.getApplicationContext().getString(R.string.login_url);
 
         StringRequest req = new StringRequest(Request.Method.POST, url,
                 response -> Login(true, response, responseCallback),
@@ -81,10 +81,12 @@ public class AuthService {
 
         DecodedJWT jwt;
         String secret = activity.getApplicationContext().getString(R.string.auth_secret_key);
+        String issuer = activity.getApplicationContext().getString(R.string.auth_issuer);
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer("VA_AuthIssuer")
+                    .withIssuer(issuer)
                     .acceptLeeway(5)
                     .build();
             jwt = verifier.verify(response);
