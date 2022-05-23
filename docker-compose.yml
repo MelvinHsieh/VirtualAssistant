@@ -104,10 +104,14 @@ services:
     ports:
       - "3001:3001"
     environment:
+      - PORT=3001
       - AUTH_DB_HOST_NAME=authdb
       - AUTH_DB_PORT=27018
       - AUTH_DB_USER_ID=authdb_user
       - AUTH_DB_USER_PASSWORD=AuthDBPass12345
+      - JWT_SECRET_TOKEN=
+      - JWT_AUDIENCE=VA_AuthAudience
+      - JWT_ISSUER=VA_AuthIssuer
     depends_on:
       - "authdb"
 
