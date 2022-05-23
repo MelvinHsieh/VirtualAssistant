@@ -7,7 +7,7 @@ require('dotenv').config();
 
 // Data Access Layer
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true });
+mongoose.connect(`mongodb://${process.env.AUTH_DB_USER_ID}:${process.env.AUTH_DB_USER_PASSWORD}@${process.env.AUTH_DB_HOST_NAME}:${process.env.AUTH_DB_PORT}/`, { useNewUrlParser: true });
 
 require('./auth/auth')
 
