@@ -39,7 +39,7 @@ public class AuthService {
     }
 
     public void sendLoginInfo(String username, String password, LoginAsyncResponse responseCallback) {
-        String url = "http://192.168.2.2:3001/login";
+        String url = "http://localhost:3001/login"; //inject??
 
         StringRequest req = new StringRequest(Request.Method.POST, url,
                 response -> Login(true, response, responseCallback),
