@@ -38,5 +38,7 @@ namespace web.Models
         [DisplayName("Aantal")]
         public int Amount { get; set; } = 0;
 
+        public MedicineModel? Medicine { get; set; }
+
     }
 }

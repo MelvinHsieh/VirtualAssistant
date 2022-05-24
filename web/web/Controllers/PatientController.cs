@@ -8,6 +8,9 @@ using web.Models;
 using web.Models.Common;
 using web.Models.CreateModels;
 using web.Utils;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using web.Models.ViewModels;
 
 namespace web.Controllers
 {
@@ -75,22 +78,25 @@ namespace web.Controllers
                 {
                     using (var client = new HttpClient())
                     {
-                        var uri = new Uri(_apiURL + "/Patient/" + id);
-
+                        var uri = new Uri($"{_apiURL}/Patient/{id}");
                         var response = client.GetAsync(uri).Result;
-
                         string result = await response.Content.ReadAsStringAsync();
+                        PatientModel? patient = JsonConvert.DeserializeObject<PatientModel>(result);
 
-                        PatientModel? model = JsonConvert.DeserializeObject<PatientModel>(result);
-                        return View("Details", model);
+                        uri = new Uri($"{_apiURL}/PatientIntake/patient/{id}");
+                        response = client.GetAsync(uri).Result;
+                        result = await response.Content.ReadAsStringAsync();
+                        List<IntakeModel>? intake = JsonConvert.DeserializeObject<List<IntakeModel>>(result);
+
+                        return View("Details", new PatientDetailsViewModel(patient, intake));
                     }
                 }
                 catch
                 {
-                    TempData["error"] = "Ophalen van patiënt is mislukt!";
+                    TempData["error"] = "Ophalen van patiëntgegevens is mislukt!";
                 }
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(IndexAsync));
         }
 
         // GET: PatientController/Create
