@@ -25,5 +25,8 @@ namespace Domain.Entities.PatientData
         public string Status { get; set; } = EntityStatus.Active.ToString().ToLower();
 
         public int CareWorkerId { get; set; } = 0;
+        public int LocationId { get; set; } = 0;
+
+        public virtual PatientLocation? Location { get; set; }
     }
 }

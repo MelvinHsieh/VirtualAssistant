@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using web.Models;
 
@@ -22,13 +21,14 @@ namespace web.Controllers
                 var uri = new Uri(_apiURL + "/Medicine");
                 try
                 {
-                var response = client.GetAsync(uri).Result;
+                    var response = client.GetAsync(uri).Result;
 
-                string result = await response.Content.ReadAsStringAsync();
+                    string result = await response.Content.ReadAsStringAsync();
 
-                List<MedicineModel>? models = JsonConvert.DeserializeObject<List<MedicineModel>>(result);
-                return View(models);
-                } catch
+                    List<MedicineModel>? models = JsonConvert.DeserializeObject<List<MedicineModel>>(result);
+                    return View(models);
+                }
+                catch
                 {
                     TempData["error"] = "De medicijnen konden niet opgehaald worden. Controleer de dataservice!";
 
@@ -43,38 +43,40 @@ namespace web.Controllers
         {
             using (var client = new HttpClient())
             {
-                try { 
-                var uri = new Uri(_apiURL + "/DoseUnit");
-                var response = client.GetAsync(uri).Result;
-                string result = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var uri = new Uri(_apiURL + "/DoseUnit");
+                    var response = client.GetAsync(uri).Result;
+                    string result = await response.Content.ReadAsStringAsync();
 
-                List<String>? doseUnits = JsonConvert.DeserializeObject<List<String>>(result);
+                    List<String>? doseUnits = JsonConvert.DeserializeObject<List<String>>(result);
 
-                uri = new Uri(_apiURL + "/MedicineColor");
-                response = client.GetAsync(uri).Result;
-                result = await response.Content.ReadAsStringAsync();
+                    uri = new Uri(_apiURL + "/MedicineColor");
+                    response = client.GetAsync(uri).Result;
+                    result = await response.Content.ReadAsStringAsync();
 
-                List<String>? medicineColors = JsonConvert.DeserializeObject<List<String>>(result);
+                    List<String>? medicineColors = JsonConvert.DeserializeObject<List<String>>(result);
 
-                uri = new Uri(_apiURL + "/MedicineType");
-                response = client.GetAsync(uri).Result;
-                result = await response.Content.ReadAsStringAsync();
+                    uri = new Uri(_apiURL + "/MedicineType");
+                    response = client.GetAsync(uri).Result;
+                    result = await response.Content.ReadAsStringAsync();
 
-                List<String>? medicineTypes = JsonConvert.DeserializeObject<List<String>>(result);
+                    List<String>? medicineTypes = JsonConvert.DeserializeObject<List<String>>(result);
 
-                uri = new Uri(_apiURL + "/MedicineShape");
-                response = client.GetAsync(uri).Result;
-                result = await response.Content.ReadAsStringAsync();
+                    uri = new Uri(_apiURL + "/MedicineShape");
+                    response = client.GetAsync(uri).Result;
+                    result = await response.Content.ReadAsStringAsync();
 
-                List<String>? medicineShapes = JsonConvert.DeserializeObject<List<String>>(result);
+                    List<String>? medicineShapes = JsonConvert.DeserializeObject<List<String>>(result);
 
-                ViewBag.DoseUnits = doseUnits;
-                ViewBag.MedicineColors = medicineColors;
-                ViewBag.MedicineTypes = medicineTypes;
-                ViewBag.MedicineShapes = medicineShapes;
+                    ViewBag.DoseUnits = doseUnits;
+                    ViewBag.MedicineColors = medicineColors;
+                    ViewBag.MedicineTypes = medicineTypes;
+                    ViewBag.MedicineShapes = medicineShapes;
 
-                return View();
-                } catch
+                    return View();
+                }
+                catch
                 {
                     TempData["error"] = "De medicijnengegevens konden niet opgehaald worden. Controleer de dataservice!";
                     return RedirectToAction("Index");

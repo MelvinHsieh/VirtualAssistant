@@ -40,6 +40,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.HomeNumber)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RoomId)
+                </th>
                 <th></th>
             </tr>
         </thead>
@@ -70,6 +73,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.HomeNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomId)
                     </td>
                     <td> 
                         <a href='@Url.Action("Details", "Patient", new {  id=item.Id  })'>

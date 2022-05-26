@@ -28,7 +28,8 @@ namespace dataservice.Tests.Application.Services
             _careWorkerFunctionRepo = new CareWorkerFunctionRepo(_medicineDbContext);
             _patientRepo = new PatientRepo(_patientDbContext, _careWorkerRepo);
             _careWorkerRepo = new CareWorkerRepo(_medicineDbContext, _careWorkerFunctionRepo);
-            _intakeRepo = new PatientIntakeRepo(_medicineDbContext, new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext)), _patientRepo);
+            var medicineRepo = new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext));
+            _intakeRepo = new PatientIntakeRepo(_medicineDbContext, medicineRepo, _patientRepo, new IntakeRegistrationRepo(medicineRepo, _medicineDbContext));
         }
 
         [TestMethod]

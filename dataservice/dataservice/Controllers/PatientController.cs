@@ -47,7 +47,7 @@ namespace dataservice.Controllers
                 DateTime date;
                 if (DateTime.TryParse(data.BirthDate, out date))
                 {
-                    _patientRepo.AddPatient(data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber);
+                    _patientRepo.AddPatient(data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber, data.RoomId);
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace dataservice.Controllers
                 DateTime date;
                 if (DateTime.TryParse(data.BirthDate, out date))
                 {
-                    result = _patientRepo.UpdatePatient(id, data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber, data.CareWorkerId);
+                    result = _patientRepo.UpdatePatient(id, data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber, data.CareWorkerId, data.RoomId);
                 }
             }
 
