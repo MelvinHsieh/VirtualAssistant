@@ -1,7 +1,6 @@
 package com.infosupport.virtualassistent.bot;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -9,7 +8,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.infosupport.virtualassistent.MainActivity;
+import com.google.gson.Gson;
+import com.infosupport.virtualassistent.AssistantActivity;
 import com.infosupport.virtualassistent.R;
 import com.infosupport.virtualassistent.bot.models.Activity;
 import com.infosupport.virtualassistent.bot.models.Conversation;
@@ -32,15 +32,15 @@ public class Bot {
     Gson gson = null;
     SharedPreferences preferences;
 
-    public Bot(MainActivity activity) {
+    public Bot(AssistantActivity activity) {
         secretCode = activity.getApplicationContext().getString(R.string.bot_secret_code);
         gson = new Gson();
         queue = Volley.newRequestQueue(activity.getApplicationContext());
         startConversation(activity);
     }
 
-    public void startConversation(MainActivity mainActivity) {
-        directLineURL = mainActivity.getApplicationContext().getString(R.string.direct_line_url);
+    public void startConversation(AssistantActivity assistantActivity) {
+        directLineURL = assistantActivity.getApplicationContext().getString(R.string.direct_line_url);
 
         JsonObjectRequest startConversationRequest = new JsonObjectRequest(Request.Method.POST, directLineURL, null, new Response.Listener<JSONObject>() {
             @Override
