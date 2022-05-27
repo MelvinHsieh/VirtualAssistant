@@ -21,11 +21,7 @@ namespace dataservice.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-          try {
-            return Ok(_medicineRepo.GetAllMedicine());
-          } catch (Exception e) {
-            return Ok(e);
-          }
+          return Ok(_medicineRepo.GetAllMedicine());
         }
 
         // GET api/<ValuesController>/5
