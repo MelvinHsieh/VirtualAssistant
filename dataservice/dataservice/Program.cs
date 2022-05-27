@@ -31,7 +31,7 @@ builder.Services.AddApplication(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     // migrate any database changes on startup (includes initial db creation)
     using (var scope = app.Services.CreateScope())
@@ -45,8 +45,6 @@ if (!app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
 
