@@ -1,14 +1,19 @@
 package com.infosupport.virtualassistent;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -24,6 +29,7 @@ import com.infosupport.virtualassistent.model.Message;
 import com.infosupport.virtualassistent.receivers.DetectionResultReceiver;
 import com.infosupport.virtualassistent.receivers.RecognizeSpeechResultReceiver;
 import com.infosupport.virtualassistent.receivers.SpeechResultReceiver;
+import com.infosupport.virtualassistent.services.NotificationService;
 import com.infosupport.virtualassistent.services.SpeechIntentService;
 import com.infosupport.virtualassistent.services.WakeWordService;
 import com.infosupport.virtualassistent.storage.AppDatabase;
@@ -36,6 +42,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String CHANNEL_ID = "HANS Notification Channel";
     public static final Integer RecordAudioRequestCode = 1;
     private MessageListAdapter messageAdapter;
     private List<Message> messageList;
@@ -69,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
             checkMicPermission();
         }
         startWakeWordService();
+
+        setNotificationButtonListener();
+        createNotificationChannel();
     }
 
     private void dbInit() {
@@ -106,6 +116,35 @@ public class MainActivity extends AppCompatActivity {
     private void stopWakeWordService() {
         Intent serviceIntent = new Intent(this, WakeWordService.class);
         stopService(serviceIntent);
+    }
+
+    private void showNotification(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    /** Creates notification channel **/
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "HANS Notification",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
+    }
+
+    private void setNotificationButtonListener() {
+        ImageButton notifButton = (ImageButton) findViewById(R.id.notification_button);
+        notifButton.setImageResource(R.drawable.NotificationDisabledDark);
+        notifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifButton.setImageResource(R.drawable.NotificationEnabledDark);
+            }
+        });
     }
 
     public void runSpeechRecognizer() {
@@ -156,5 +195,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Bot getBot() {return bot;}
+
 
 }

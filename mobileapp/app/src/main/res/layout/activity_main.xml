@@ -5,6 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageButton
+        android:id="@+id/notification_button"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_gchat"
         android:layout_width="match_parent"
@@ -39,14 +46,14 @@
         android:contentDescription="@string/listen_button"
         android:src="@drawable/mic_inactive"
         app:backgroundTint="@color/design_default_color_primary"
-        app:rippleColor="@color/design_default_color_background"
         app:fabCustomSize="92dp"
-        app:tint="@android:color/white"
-        app:maxImageSize="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="60dp"
+        app:rippleColor="@color/design_default_color_background"
+        app:tint="@android:color/white" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
