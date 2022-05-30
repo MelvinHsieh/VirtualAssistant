@@ -15,6 +15,7 @@ import com.infosupport.virtualassistent.bot.models.Activity;
 import com.infosupport.virtualassistent.bot.models.Conversation;
 import com.infosupport.virtualassistent.bot.models.From;
 import com.infosupport.virtualassistent.bot.websocket.BotWebSocketClient;
+import com.infosupport.virtualassistent.services.LoggingService;
 
 import org.json.JSONObject;
 
@@ -52,7 +53,7 @@ public class Bot {
                     client.connect();
                     sendConversationUpdate();
                 } catch (URISyntaxException e) {
-                    e.printStackTrace();
+                    LoggingService.Log(e.getMessage());
                 }
             }
         }, error -> System.out.println(error.toString())) {

@@ -105,6 +105,7 @@ public class WakeWordService extends Service {
         Intent i = new Intent("PorcupineInitError");
         i.putExtra("errorMessage", message);
         sendBroadcast(i);
+        LoggingService.Log(message);
     }
 
     private Notification getNotification(String title, String message) {
@@ -138,6 +139,7 @@ public class WakeWordService extends Service {
                 porcupineManager.stop();
                 porcupineManager.delete();
             } catch (PorcupineException e) {
+                LoggingService.Log(e.getMessage());
                 Log.e("PORCUPINE", e.toString());
             }
         }

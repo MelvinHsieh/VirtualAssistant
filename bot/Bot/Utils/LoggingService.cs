@@ -27,7 +27,7 @@ namespace CoreBot.Utils
             {
                 if(messageActivity.From.Name == "User")
                 {
-                    _messagePublisher.SendMessage(new LoggingModel()
+                    _messagePublisher.SendMessage(new InteractionModel()
                     {
                         Id = messageActivity.Id,
                         From = "User",
@@ -42,7 +42,7 @@ namespace CoreBot.Utils
                             messageActivity.Text != _configuration.GetSection("HelpMessage").Value)
                         {
                             _messagePublisher.SendMessage(
-                            new LoggingModel() 
+                            new InteractionModel() 
                             { 
                                 Id = messageActivity.Id,
                                 From = "Bot",

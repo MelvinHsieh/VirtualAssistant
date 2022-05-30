@@ -2,6 +2,7 @@ package com.infosupport.virtualassistent.bot.websocket;
 
 import com.infosupport.virtualassistent.AssistantActivity;
 import com.infosupport.virtualassistent.bot.models.Schedule;
+import com.infosupport.virtualassistent.services.LoggingService;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -57,7 +58,7 @@ public class BotWebSocketClient extends WebSocketClient {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            LoggingService.Log(e.getMessage());
         }
 
     }
