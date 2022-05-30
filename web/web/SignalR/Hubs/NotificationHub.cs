@@ -9,7 +9,7 @@ namespace web.SignalR.Hubs
 
     public class NotificationHub : Hub<INotificationHubClient>
     {
-        public async Task SendAlert (string message)
+        public async Task SendAlert(string message)
         {
             await Clients.Others.SendAlert(message);
         }
