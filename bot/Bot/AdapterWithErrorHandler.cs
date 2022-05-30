@@ -2,6 +2,8 @@
 // Licensed under the MIT License.
 
 using System;
+using CoreBot.Models;
+using CoreBot.Producer;
 using CoreBot.Utils;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
@@ -9,13 +11,14 @@ using Microsoft.Bot.Builder.TraceExtensions;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
+using Producer.RabbitMQ;
 
 namespace Microsoft.BotBuilderSamples
 {
     public class AdapterWithErrorHandler : CloudAdapter
     {
-        public AdapterWithErrorHandler(TranscriptLoggerMiddleware loggingMiddleware, BotFrameworkAuthentication auth, ILogger<IBotFrameworkHttpAdapter> logger, ConversationState conversationState = default)
-            : base(auth, logger)
+        public AdapterWithErrorHandler(TranscriptLoggerMiddleware loggingMiddleware, BotFrameworkAuthentication auth, IMessageProducer errorLogger, ConversationState conversationState = default)
+            : base(auth)
         {
             Use(loggingMiddleware);
 
@@ -25,7 +28,7 @@ namespace Microsoft.BotBuilderSamples
                 // NOTE: In production environment, you should consider logging this to
                 // Azure Application Insights. Visit https://aka.ms/bottelemetry to see how
                 // to add telemetry capture to your bot.
-                logger.LogError(exception, $"[OnTurnError] unhandled error : {exception.Message}");
+                errorLogger.SendMessage(new ErrorModel() { ErrorMessage = $"[OnTurnError] unhandled error : {exception.Message}" });
 
                 // Send a message to the user
                 var errorMessageText = "Ik weet helaas even niet meer wat ik moet doen.";
@@ -47,7 +50,7 @@ namespace Microsoft.BotBuilderSamples
                     }
                     catch (Exception e)
                     {
-                        logger.LogError(e, $"Exception caught on attempting to Delete ConversationState : {e.Message}");
+                        errorLogger.SendMessage(new ErrorModel() { ErrorMessage = $"Exception caught on attempting to Delete ConversationState : {e.Message}" });
                     }
                 }
 
