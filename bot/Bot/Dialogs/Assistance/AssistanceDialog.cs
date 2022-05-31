@@ -61,6 +61,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         return await stepContext.BeginDialogAsync(nameof(FindMedicineByAttributesDialog), luisResult.Entities, cancellationToken);
                     case nameof(Intents.Intake_RegisterIntake):
                         return await stepContext.BeginDialogAsync(nameof(RegisterIntakeDialog), luisResult.Entities, cancellationToken);
+                    case nameof(Intents.Emergency_Notice):
+                        return await stepContext.BeginDialogAsync(nameof(EmergencyDialog), luisResult.Entities, cancellationToken);
                     case nameof(Intents.Cancel):
                         await stepContext.Context.SendActivityAsync(MessageFactory.Text("Oké, laat het mij weten als ik in de toekomst nog iets voor u kan betekenen."));
                         return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
