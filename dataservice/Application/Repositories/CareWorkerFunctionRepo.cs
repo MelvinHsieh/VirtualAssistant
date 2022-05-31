@@ -2,11 +2,6 @@
 using Application.Repositories.Interfaces;
 using Domain.Entities.MedicalData;
 using Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Repositories
 {
@@ -26,7 +21,7 @@ namespace Application.Repositories
                 return new Result(false, "Given function is empty!");
             }
 
-            if(FindCareWorkerFunction(functionName) != null)
+            if (FindCareWorkerFunction(functionName) != null)
             {
                 return new Result(false, "Given function already exists!");
             }

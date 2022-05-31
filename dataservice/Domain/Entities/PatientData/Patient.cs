@@ -1,5 +1,4 @@
-﻿using Domain.Entities.MedicalData;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities.PatientData
 {

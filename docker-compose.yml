@@ -23,7 +23,9 @@ services:
     expose:
       - "3000"
     environment:
-      - MESSAGE_QUEUE=amqp://messagebus:5672
+      - MESSAGE_BUS_URI=amqp://messagebus:5672
+      - MESSAGE_BUS_EXCHANGE_NAME=storeInteraction
+      - MESSAGE_BUS_QUEUE_NAME=storeInteractionQueue
       - MONGO_URL=mongodb://loggingdb:loggingdbpass@loggingdb:27017/
     depends_on:
       - "messagebus"
@@ -72,7 +74,7 @@ services:
     container_name: userdatadb
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      MSSQL_SA_PASSWORD: UserDataDBPass123545!@
+      MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
     ports:
       - 1433:1433
@@ -86,7 +88,7 @@ services:
     container_name: generaldatadb
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      MSSQL_SA_PASSWORD: GeneralDataDBPass12345!@
+      MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
     ports:
       - 1434:1433
@@ -95,8 +97,40 @@ services:
     restart: always
     volumes:
       - generaldatadb_volume:/var/opt/mssql
+  
+  authservice:
+    container_name: authservice
+    build:
+      context: ./authservice
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - AUTH_DB_HOST_NAME=authdb
+      - AUTH_DB_PORT=27018
+      - AUTH_DB_USER_ID=authdb_user
+      - AUTH_DB_USER_PASSWORD=AuthDBPass12345
+      - JWT_SECRET_TOKEN=
+      - JWT_AUDIENCE=VA_AuthAudience
+      - JWT_ISSUER=VA_AuthIssuer
+    depends_on:
+      - "authdb"
+
+  authdb:
+    container_name: authdb
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: authdb_user
+      MONGO_INITDB_ROOT_PASSWORD: AuthDBPass12345
+    ports:
+      - 27018:27017
+    restart: always
+    volumes:
+      - authdb_volume:/data/auth_db
 
 volumes:
   loggingdb_volume:
+  authdb_volume:
   userdatadb_volume:
   generaldatadb_volume:

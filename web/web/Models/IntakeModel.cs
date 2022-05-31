@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -38,6 +37,8 @@ namespace web.Models
         [Range(1, 100)]
         [DisplayName("Aantal")]
         public int Amount { get; set; } = 0;
+
+        public MedicineModel? Medicine { get; set; }
 
     }
 }

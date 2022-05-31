@@ -71,10 +71,24 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.HomeNumber)
                     </td>
-                    <td>
-                        @Html.ActionLink("Aanpassen", "Edit", new { id=item.Id }, new { @class= "btn btn-primary" }) 
-                        @Html.ActionLink("Medicijnen", "CreateIntake", new {  id=item.Id  }, new { @class= "btn btn-info" })
-                        @Html.ActionLink("Verwijderen", "Delete", new {  id=item.Id  }, new { @class= "btn btn-danger" })
+                    <td> 
+                        <a href='@Url.Action("Details", "Patient", new {  id=item.Id  })'>
+                            <button class="btn btn-primary">
+                                <i class='fa-solid fa-file'></i>
+                            </button>
+                        </a>
+                        
+                        <a href='@Url.Action("Edit", "Patient", new {  id=item.Id  })'>
+                            <button class="btn btn-primary">
+                                <i class='fa-solid fa-pen'></i>
+                            </button>
+                        </a>
+                        <a href='@Url.Action("CreateIntake", "Patient", new {  id=item.Id  })'>
+                            <button class="btn btn-primary">
+                                <i class='fa-solid fa-capsules'></i>
+                            </button>
+                        </a>
+                        @Html.ActionLink("Delete", "Delete", new {  id=item.Id  }, new { @class= "btn btn-danger" })
                     </td>
                 </tr>
             }
