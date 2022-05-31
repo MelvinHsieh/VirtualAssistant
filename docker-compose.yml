@@ -24,6 +24,8 @@ services:
       - "3000"
     environment:
       - MESSAGE_BUS_URI=amqp://messagebus:5672
+      - MESSAGE_BUS_USERNAME=vaadmin
+      - MESSAGE_BUS_PASSWORD=MessageBus12345!@
       - MESSAGE_BUS_EXCHANGE_NAME=storeInteraction
       - MESSAGE_BUS_QUEUE_NAME=storeInteractionQueue
       - MONGO_URL=mongodb://loggingdb:loggingdbpass@loggingdb:27017/
