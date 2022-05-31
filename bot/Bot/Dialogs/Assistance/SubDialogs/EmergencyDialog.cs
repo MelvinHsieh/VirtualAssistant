@@ -17,7 +17,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
         public EmergencyDialog(DataServiceConnection connection)
             : base(nameof(EmergencyDialog))
         {
-            AddDialog(new WaterfallDialog("sendAlert", new WaterfallStep[]
+            AddDialog(new WaterfallDialog("Emergency", new WaterfallStep[]
             {
                 SendAlert
             }));
