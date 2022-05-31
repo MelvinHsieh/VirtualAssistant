@@ -11,9 +11,11 @@ mongoose.Promise = require('q').Promise;
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true });
 
 require('./models/interaction');
+require('./models/errorLog');
 require('./models/interactionSeeder')();
 
 let storeInteraction = require("./consumers/storeInteraction")
+let storeErrorLog = require("./consumers/storeErrorLog")
 
 var app = express();
 
@@ -36,14 +38,14 @@ app.use(function (err, req, res, next) {
 });
 
 async function startConsumers() {
+  try {
+    await storeInteraction();
+    await storeErrorLog();
 
-    storeInteraction()
-    .then(() => {
-      console.log('Consumers enabled in loggingservice.');
-    })
-    .catch((error) => {
-      console.log(`Error: ${error}`)
-    });
+    console.log('Consumers enabled in loggingservice');
+  } catch (err) {
+    console.log('Error : ' + err);
+  }
 }
 
 startConsumers();

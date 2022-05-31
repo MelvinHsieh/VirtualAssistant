@@ -1,5 +1,7 @@
 package com.infosupport.virtualassistent.bot.models;
 
+import com.infosupport.virtualassistent.services.LoggingService;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +32,7 @@ public class Message {
             try {
                 this.created = dateFormat.parse(json.getString("created"));
             } catch (ParseException e) {
-                e.printStackTrace();
+                LoggingService.Log(e.getMessage());
             }
         }
 
@@ -73,7 +75,7 @@ public class Message {
             json.put("text", this.text);
             json.put("eTag", this.eTag);
         } catch (JSONException e) {
-            e.printStackTrace();
+            LoggingService.Log(e.getMessage());
         }
 
         return json;

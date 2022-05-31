@@ -2,6 +2,8 @@ package com.infosupport.virtualassistent.bot.models;
 
 import android.os.Build;
 
+import com.infosupport.virtualassistent.services.LoggingService;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.time.LocalTime;
@@ -40,7 +42,7 @@ public class Medicine {
             this.type = med.getString("type");
             this.status = med.getString("status");
         } catch (JSONException e) {
-            e.printStackTrace();
+            LoggingService.Log(e.getMessage());
         }
     }
 
