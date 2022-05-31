@@ -1,6 +1,7 @@
 package com.infosupport.virtualassistent.bot;
 
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,6 +38,7 @@ public class Bot {
         secretCode = activity.getApplicationContext().getString(R.string.bot_secret_code);
         gson = new Gson();
         queue = Volley.newRequestQueue(activity.getApplicationContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         startConversation(activity);
     }
 
