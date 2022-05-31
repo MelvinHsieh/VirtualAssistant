@@ -76,6 +76,7 @@ services:
     environment:
       MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
+      MSSQL_PID: Developer
     ports:
       - 1433:1433
     expose:
@@ -90,6 +91,7 @@ services:
     environment:
       MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
+      MSSQL_PID: Developer
     ports:
       - 1434:1433
     expose:
@@ -108,10 +110,10 @@ services:
     environment:
       - PORT=3001
       - AUTH_DB_HOST_NAME=authdb
-      - AUTH_DB_PORT=27018
+      - AUTH_DB_PORT=27017
       - AUTH_DB_USER_ID=authdb_user
       - AUTH_DB_USER_PASSWORD=AuthDBPass12345
-      - JWT_SECRET_TOKEN=
+      - JWT_SECRET_TOKEN=JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr
       - JWT_AUDIENCE=VA_AuthAudience
       - JWT_ISSUER=VA_AuthIssuer
     depends_on:
