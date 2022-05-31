@@ -53,7 +53,7 @@ router.post('/login', async (req, res, next) => {
             body.patientId = user.patientId
           }
 
-          const token = jwt.sign({ user: body, auth_role: user.role }, process.env.JWT_SECRET,
+          const token = jwt.sign({ user: body, auth_role: user.role }, process.env.JWT_SECRET_TOKEN,
             {
               audience: process.env.JWT_AUDIENCE,
               issuer: process.env.JWT_ISSUER
