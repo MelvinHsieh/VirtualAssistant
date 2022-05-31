@@ -8,6 +8,7 @@
         Medicine_FindSchedule,
         Medicine_GetMedicineInfo,
         Intake_RegisterIntake,
+        Emergency_Notice,
         Confirm,
         Cancel
     }

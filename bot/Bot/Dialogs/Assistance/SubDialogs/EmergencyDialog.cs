@@ -30,7 +30,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             HttpClient client = new HttpClient();
             var values = new Dictionary<string, string>
             {
-                { "message", "Er is hulp vereist bij patient ...!" }
+                { "message", "Er is hulp vereist bij patient "+ stepContext.Context.Activity.From + "!" }
             };
 
             string url = "https://localhost:7153/alert";
