@@ -13,6 +13,8 @@ namespace dataservice.Producers
 
         private static string EXCHANGE_NAME;
         private static string QUEUE_NAME;
+        private static string USERNAME;
+        private static string PASSWORD;
 
         public StoreError(IConfiguration configuration)
         {
@@ -20,12 +22,16 @@ namespace dataservice.Producers
 
             EXCHANGE_NAME = configuration.GetSection("MessageBusExchange").Value;
             QUEUE_NAME = configuration.GetSection("MessageBusQueue").Value;
+            USERNAME = configuration.GetSection("MessageBusUsername").Value;
+            PASSWORD = configuration.GetSection("MessageBusPassword").Value;
         }
 
         public void SendMessage<T>(T message)
         {
             var factory = new ConnectionFactory
             {
+                UserName = USERNAME,
+                Password = PASSWORD,
                 HostName = _configuration.GetSection("MessageBus").Value,
                 Port = Int32.Parse(_configuration.GetSection("MessageBusPort").Value)
             };

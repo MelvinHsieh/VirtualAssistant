@@ -15,14 +15,14 @@ import java.util.concurrent.TimeoutException;
 
 public class LoggingService {
 
-    private static final String EXCHANGE_NAME = "storeErrorLog";
-    private static final String QUEUE_NAME = "storeErrorLogQueue";
+    private static final String EXCHANGE_NAME = "storeError";
+    private static final String QUEUE_NAME = "storeErrorQueue";
 
     public static void Log(String message) {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setUsername("guest");
-        factory.setPassword("guest");
-        factory.setHost("192.168.2.2");
+        factory.setUsername("vaadmin");
+        factory.setPassword("MessageBus12345!@");
+        factory.setHost("va-messagebus.westeurope.cloudapp.azure.com");
         factory.setPort(5672);
 
         AsyncTask.execute(() -> {
