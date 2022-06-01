@@ -4,7 +4,7 @@
 name: Build and deploy Node.js app to Azure Web App - va-authservice
 defaults:
     run:
-      working-directory: '../../authservice'
+      working-directory: './authservice'
 
 on:
   push:

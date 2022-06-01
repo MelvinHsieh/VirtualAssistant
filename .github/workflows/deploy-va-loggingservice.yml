@@ -4,7 +4,7 @@
 name: Build and deploy Node.js app to Azure Web App - va-loggingservice
 defaults:
       run:
-        working-directory: '../../loggingservice'
+        working-directory: './loggingservice'
 
 on:
   push:
