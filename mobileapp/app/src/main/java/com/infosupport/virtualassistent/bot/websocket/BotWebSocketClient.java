@@ -1,7 +1,8 @@
 package com.infosupport.virtualassistent.bot.websocket;
 
-import com.infosupport.virtualassistent.MainActivity;
+import com.infosupport.virtualassistent.AssistantActivity;
 import com.infosupport.virtualassistent.bot.models.Schedule;
+import com.infosupport.virtualassistent.services.LoggingService;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -13,12 +14,12 @@ import java.lang.ref.WeakReference;
 import java.net.URI;
 
 public class BotWebSocketClient extends WebSocketClient {
-    private final WeakReference<MainActivity> activityRef;
+    private final WeakReference<AssistantActivity> activityRef;
     private String lastMessage = "";
 
-    public BotWebSocketClient(URI serverURI, MainActivity activity) {
+    public BotWebSocketClient(URI serverURI, AssistantActivity activity) {
         super(serverURI);
-        activityRef = new WeakReference<MainActivity>(activity);
+        activityRef = new WeakReference<AssistantActivity>(activity);
     }
 
     @Override
@@ -51,12 +52,13 @@ public class BotWebSocketClient extends WebSocketClient {
                 if (msg.has("inputHint") && msg.getString("inputHint").equalsIgnoreCase("expectingInput")) {
                     // This would activate the speech whenever input is expected again.
                     // Right now it causes way too many requests, because nearly every reply - EVEN ERRORS - expect reply
+                    // And it detects internal TTS as input as well
 
                     //activityRef.get().runOnUiThread(() -> activityRef.get().runSpeechRecognizer());
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            LoggingService.Log(e.getMessage());
         }
 
     }

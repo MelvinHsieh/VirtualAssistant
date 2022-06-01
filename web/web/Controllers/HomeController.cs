@@ -15,6 +15,7 @@ namespace web.Controllers
 
         public IActionResult Index()
         {
+            var x = HttpContext.User;
             return View();
         }
 

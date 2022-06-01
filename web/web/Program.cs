@@ -1,14 +1,70 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics;
+using Producer.RabbitMQ;
+using web.Models;
+using web.Producers;
 using web.SignalR.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;
+        options.AccessDeniedPath = "/";
+    });
 
+/*builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidAudience = configuration["JWT:ValidAudience"],
+        ValidIssuer = configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = false,
+        RequireExpirationTime = false,
+        RoleClaimType = "auth_roles"
+    };
+}
+ );*/
+
+builder.Services.AddSingleton<IMessageProducer, StoreError>();
 
 var app = builder.Build();
+
+app.UseExceptionHandler(
+    options =>
+    {
+        options.Run(
+            async context =>
+            {
+                var ex = context.Features.Get<IExceptionHandlerFeature>();
+
+                var service = context.RequestServices.GetService<IMessageProducer>();
+
+                if (ex != null && service != null)
+                {
+                    service.SendMessage(new ErrorModel() { ErrorMessage = ex.Error.Message });
+                }
+            });
+    }
+);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -23,7 +79,18 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+var cookiePolicyOptions = new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+};
+app.UseCookiePolicy(cookiePolicyOptions);
+
+app.UseAuthentication();
 app.UseAuthorization();
+
+/*app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Patient}/{action=Index}/{id?}");*/
 
 app.MapControllerRoute(
     name: "default",

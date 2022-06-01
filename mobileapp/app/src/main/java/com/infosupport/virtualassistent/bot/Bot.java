@@ -1,17 +1,22 @@
 package com.infosupport.virtualassistent.bot;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.infosupport.virtualassistent.MainActivity;
+import com.google.gson.Gson;
+import com.infosupport.virtualassistent.AssistantActivity;
+import com.infosupport.virtualassistent.R;
 import com.infosupport.virtualassistent.bot.models.Activity;
 import com.infosupport.virtualassistent.bot.models.Conversation;
 import com.infosupport.virtualassistent.bot.models.From;
 import com.infosupport.virtualassistent.bot.websocket.BotWebSocketClient;
-import com.google.gson.Gson;
+import com.infosupport.virtualassistent.services.LoggingService;
 
 import org.json.JSONObject;
 
@@ -22,33 +27,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Bot {
-
+    String directLineURL;
     Conversation conversation = null;
-    String secretCode = "xP92GZX8--c.Cx-sJT1V-hbGz2_nkSaC_5pQvPd4anvBpBm7mOwhmYc"; //TODO ergens opbergen in een kluisje
+    String secretCode;
     RequestQueue queue = null;
     Gson gson = null;
+    SharedPreferences preferences;
 
-    public Bot(MainActivity activity) {
+    public Bot(AssistantActivity activity) {
+        secretCode = activity.getApplicationContext().getString(R.string.bot_secret_code);
         gson = new Gson();
-
         queue = Volley.newRequestQueue(activity.getApplicationContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         startConversation(activity);
     }
 
-    public void startConversation(MainActivity mainActivity) {
-        String conversationURL = "https://directline.botframework.com/v3/directline/conversations";
+    public void startConversation(AssistantActivity assistantActivity) {
+        directLineURL = assistantActivity.getApplicationContext().getString(R.string.direct_line_url);
 
-        JsonObjectRequest startConversationRequest = new JsonObjectRequest(Request.Method.POST, conversationURL, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest startConversationRequest = new JsonObjectRequest(Request.Method.POST, directLineURL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 conversation = gson.fromJson(response.toString(), Conversation.class);
                 try {
                     URI serverURI = new URI(conversation.streamUrl);
-                    BotWebSocketClient client = new BotWebSocketClient(serverURI, mainActivity);
+                    BotWebSocketClient client = new BotWebSocketClient(serverURI, assistantActivity);
                     client.connect();
                     sendConversationUpdate();
                 } catch (URISyntaxException e) {
-                    e.printStackTrace();
+                    LoggingService.Log(e.getMessage());
                 }
             }
         }, error -> System.out.println(error.toString())) {
@@ -68,7 +75,7 @@ public class Bot {
         Activity activity = new Activity();
         activity.type = type;
         activity.text = message;
-        activity.from = new From("eenID");
+        activity.from = new From(preferences.getString("userId", "NoId"));
         activity.locale = "nl-NL";
         sendActivity(activity);
     }
@@ -82,7 +89,7 @@ public class Bot {
     }
 
     public void sendActivity(Activity activity) {
-        String postActivityURL = "https://directline.botframework.com/v3/directline/conversations/" + conversation.conversationId + "/activities";
+        String postActivityURL = directLineURL + "/" + conversation.conversationId + "/activities";
 
         StringRequest messagePostRequest = new StringRequest(Request.Method.POST, postActivityURL, new Response.Listener<String>() {
             @Override

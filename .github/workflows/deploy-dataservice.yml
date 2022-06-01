@@ -4,9 +4,9 @@ on:
     branches:
     - dev
 env:
-  AZURE_WEBAPP_NAME: dataservice-deploy
+  AZURE_WEBAPP_NAME: va-dataservice
   AZURE_WEBAPP_PACKAGE_PATH: dataservice/publish
-  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.DATASERVICEPUBLISHPROFILE }}
+  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.VA_DATASERVICE_PUBLISH_PROFILE }}
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
   WORKING_DIRECTORY: dataservice/dataservice
@@ -15,6 +15,12 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: microsoft/variable-substitution@v1 
+      with:
+        files: '**/appsettings.json'
+      env:
+        ConnectionStrings.DbUserID: ${{ secrets.VA_DB_USER_ID }}
+        ConnectionStrings.DbUserPassword: ${{ secrets.VA_DB_PASSWORD }}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:

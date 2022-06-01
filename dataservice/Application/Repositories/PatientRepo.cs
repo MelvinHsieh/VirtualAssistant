@@ -1,5 +1,6 @@
 ﻿using Application.Common.Models;
 using Application.Repositories.Interfaces;
+using Domain.Entities.MedicalData;
 using Domain.Entities.PatientData;
 using Infrastructure.Persistence;
 
@@ -8,13 +9,15 @@ namespace Application.Repositories
     public class PatientRepo : IPatientRepo
     {
         private PatientDbContext _context { get; set; }
+        private ICareWorkerRepo _careWorkerRepo { get; set; }
 
-        public PatientRepo(PatientDbContext context)
+        public PatientRepo(PatientDbContext context, ICareWorkerRepo careWorkerRepo)
         {
             _context = context;
+            _careWorkerRepo = careWorkerRepo;
         }
 
-        public Result AddPatient(string firstname, string lastname, DateTime birthdate, string postalcode, string housenumber, string email, string phonenumber)
+        public Result AddPatient(string firstname, string lastname, DateTime birthdate, string postalcode, string homenumber, string email, string phonenumber)
         {
             Patient patient = new Patient()
             {
@@ -24,7 +27,7 @@ namespace Application.Repositories
                 Email = email,
                 BirthDate = birthdate,
                 PostalCode = postalcode,
-                HomeNumber = housenumber,
+                HomeNumber = homenumber,
             };
 
             Result result = ValidatePatient(patient);
@@ -34,10 +37,10 @@ namespace Application.Repositories
                 return result;
             }
 
-            _context.Patients.Add(patient);
+            var entityEntry = _context.Patients.Add(patient);
             _context.SaveChanges();
 
-            return new Result(true);
+            return new Result(true, null, entityEntry.Entity.Id);
         }
 
         public bool DoesPatientExist(int id)
@@ -52,7 +55,49 @@ namespace Application.Repositories
 
         public IEnumerable<Patient> GetAllPatients()
         {
-            return _context.Patients.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()); ;
+            return _context.Patients.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
+        }
+
+        public Result UpdatePatient(int id, string firstname, string lastname, DateTime birthdate, string postalcode, string homenumber, string email, string phonenumber, int careworkerid)
+        {
+            Result result = new Result(false, "Patient aanpassen mislukt!");
+
+            if (!DoesPatientExist(id))
+            {
+                return result;
+            }
+
+            Patient? patient = GetPatient(id);
+            if (patient is null)
+            {
+                result.Success = false;
+                result.Message = "De patient bestaat niet.";
+                return result;
+            }
+
+            CareWorker? careWorker = _careWorkerRepo.FindCareWorker(careworkerid);
+            if (careWorker is null && careworkerid != 0)
+            {
+                result.Success = false;
+                result.Message = "De zorgmedewerker bestaat niet.";
+                return result;
+            }
+
+            patient.FirstName = firstname;
+            patient.LastName = firstname;
+            patient.BirthDate = birthdate;
+            patient.PostalCode = postalcode;
+            patient.HomeNumber = homenumber;
+            patient.PhoneNumber = phonenumber;
+            patient.CareWorkerId = careworkerid;
+
+            _context.Patients.Update(patient);
+            _context.SaveChanges();
+
+            result.Success = true;
+            result.Message = "Patiënt aanpassen voltooid!";
+
+            return result;
         }
 
         public Result RemovePatient(int id)

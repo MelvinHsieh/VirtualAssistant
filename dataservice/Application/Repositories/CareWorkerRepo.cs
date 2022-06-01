@@ -2,11 +2,6 @@
 using Application.Repositories.Interfaces;
 using Domain.Entities.MedicalData;
 using Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Repositories
 {
@@ -23,7 +18,7 @@ namespace Application.Repositories
 
         public Result AddCareWorker(string firstName, string lastName, string functionName)
         {
-            if (string.IsNullOrEmpty(firstName) || 
+            if (string.IsNullOrEmpty(firstName) ||
                 string.IsNullOrEmpty(lastName) ||
                 string.IsNullOrEmpty(functionName))
             {
@@ -44,9 +39,9 @@ namespace Application.Repositories
                 Function = functionName
             };
 
-            _context.CareWorkers.Add(careWorker);
+            var entityEntry = _context.CareWorkers.Add(careWorker);
             _context.SaveChanges();
-            return new Result(true);
+            return new Result(true, null, entityEntry.Entity.Id);
         }
 
         public CareWorker? FindCareWorker(int id)

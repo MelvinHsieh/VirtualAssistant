@@ -15,7 +15,8 @@ namespace Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Patient>().HasData(
-                new Patient() { Id = 1, FirstName = "Test", LastName = "Tester", BirthDate = new DateTime(1993, 10, 20), Email = "testtester@test.com", PhoneNumber = "0687654321", PostalCode = "5223 DE", HomeNumber = "215" }
+                new Patient() { Id = 1, FirstName = "Test", LastName = "Tester", BirthDate = new DateTime(1993, 10, 20), Email = "testtester@test.com", PhoneNumber = "0687654321", PostalCode = "5223 DE", HomeNumber = "215" },
+                new Patient() { Id = 2, FirstName = "Teste", LastName = "Anderson", BirthDate = new DateTime(1998, 10, 20), Email = "testtesteranderson@test.com", PhoneNumber = "0612346789", PostalCode = "1234 DE", HomeNumber = "123" }
             );
         }
     }

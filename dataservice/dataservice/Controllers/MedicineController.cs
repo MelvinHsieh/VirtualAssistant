@@ -1,5 +1,5 @@
 ﻿using Application.Repositories.Interfaces;
-using dataservice.ViewModels;
+using dataservice.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -21,7 +21,7 @@ namespace dataservice.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_medicineRepo.GetAllMedicine());
+          return Ok(_medicineRepo.GetAllMedicine());
         }
 
         // GET api/<ValuesController>/5

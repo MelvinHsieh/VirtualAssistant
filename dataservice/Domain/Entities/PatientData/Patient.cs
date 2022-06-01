@@ -22,5 +22,7 @@ namespace Domain.Entities.PatientData
         public string? HomeNumber { get; set; }
 
         public string Status { get; set; } = EntityStatus.Active.ToString().ToLower();
+
+        public int CareWorkerId { get; set; } = 0;
     }
 }

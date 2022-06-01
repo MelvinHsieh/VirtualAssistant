@@ -1,5 +1,5 @@
 ﻿using Application.Repositories.Interfaces;
-using dataservice.ViewModels;
+using dataservice.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dataservice.Controllers
@@ -10,14 +10,12 @@ namespace dataservice.Controllers
     {
         private ICareWorkerRepo _careWorkerRepo { get; set; }
         private ICareWorkerFunctionRepo _careWorkerFunctionRepo { get; set; }
-
         public CareWorkerController(ICareWorkerRepo careWorkerRepo, ICareWorkerFunctionRepo careWorkerFunctionRepo)
         {
             _careWorkerRepo = careWorkerRepo;
             _careWorkerFunctionRepo = careWorkerFunctionRepo;
         }
 
-        // GET: api/<CareWorkerController>
         [HttpGet]
         public IActionResult Get()
         {
@@ -40,12 +38,14 @@ namespace dataservice.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] CareWorkerDto data)
+        public int? Post([FromBody] CareWorkerDto data)
         {
             if (data != null)
             {
-                _careWorkerRepo.AddCareWorker(data.FirstName, data.LastName, data.Function);
+                var result = _careWorkerRepo.AddCareWorker(data.FirstName, data.LastName, data.Function);
+                return (int?)result.ResponseData;
             }
+            return null;
         }
 
         [HttpPost("function")]

@@ -33,6 +33,9 @@ namespace Infrastructure.Migrations.PatientDbMigrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CareWorkerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -64,12 +67,26 @@ namespace Infrastructure.Migrations.PatientDbMigrations
                         {
                             Id = 1,
                             BirthDate = new DateTime(1993, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CareWorkerId = 0,
                             Email = "testtester@test.com",
                             FirstName = "Test",
                             HomeNumber = "215",
                             LastName = "Tester",
                             PhoneNumber = "0687654321",
                             PostalCode = "5223 DE",
+                            Status = "active"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BirthDate = new DateTime(1998, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CareWorkerId = 0,
+                            Email = "testtesteranderson@test.com",
+                            FirstName = "Teste",
+                            HomeNumber = "123",
+                            LastName = "Anderson",
+                            PhoneNumber = "0612346789",
+                            PostalCode = "1234 DE",
                             Status = "active"
                         });
                 });

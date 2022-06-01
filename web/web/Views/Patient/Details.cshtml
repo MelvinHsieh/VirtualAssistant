@@ -1,0 +1,145 @@
+﻿@model web.Models.ViewModels.PatientDetailsViewModel
+
+@{
+    ViewData["Title"] = "Patiënt Dossier";
+}
+
+<h1>Patiënt dossier</h1>
+<hr />
+@if (Model != null)
+{
+    <div class="row">
+    <div class="col-md-4">
+        <h4>Persoonlijke gegevens</h4>
+        @if (Model.Patient != null)
+        {
+            <table class="table">
+                <tr>
+                    <th>
+                        Voornaam
+                    </th>
+                    <td>
+                        @Model.Patient.FirstName
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Achternaam
+                    </th>
+                    <td>
+                        @Model.Patient.LastName
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        E-mail adres
+                    </th>
+                    <td>
+                        @Model.Patient.Email
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Telefoonnummer
+                    </th>
+                    <td>
+                        @Model.Patient.PhoneNumber
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Geboortedatum
+                    </th>
+                    <td>
+                        @Model.Patient.BirthDate
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Postcode
+                    </th>
+                    <td>
+                        @Model.Patient.PostalCode
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Huisnummer
+                    </th>
+                    <td>
+                        @Model.Patient.HomeNumber
+                    </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            <p>De persoonlijke gegevens van deze patiënt zijn niet beschikbaar.</p>
+        } 
+    </div>
+    @if (Model.Intake != null)
+    {
+        <div class="col-md-8">
+        <h4>Medicatie gegevens</h4>
+        @if (Model.Intake.Count == 0)
+        {
+            <p>Er is nog geen medicatie gekoppeld aan @Model.Patient.FirstName.</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            Medicijn
+                        </th>
+                        <th>
+                            Indicatie
+                        </th>
+                        <th>
+                            In te nemen tussen
+                        </th>
+                        <th>
+                            Dosering
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach(var intake in @Model.Intake)
+                {
+                    <tr>
+                        <td>
+                            @intake.Medicine.Name
+                        </td>
+                        <td>
+                            @intake.Medicine.Indication
+                        </td>
+                        <td>
+                            @($"{intake.IntakeStart.ToShortTimeString()} - {intake.IntakeEnd.ToShortTimeString()}")
+                        </td>
+                        <td>
+                            @($"{intake.Medicine.Dose}{intake.Medicine.DoseUnit}")
+                        </td>
+                    </tr>    
+                }
+                </tbody>
+            </table>    
+        }
+       
+    </div>
+    }
+    else
+    {
+        <p>De medicatiegegevens van deze patiënt zijn niet beschikbaar.</p>
+    }
+</div>
+}
+else
+{
+    <p>De gegevens van deze patiënt zijn niet beschikbaar.</p>
+}
+
+
+<div>
+    <a asp-action="Index">Terug naar overzicht</a>
+</div>

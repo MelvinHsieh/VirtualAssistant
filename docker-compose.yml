@@ -2,26 +2,36 @@ version: "3.9"
 
 services:
   messagebus:
-    image: rabbitmq:latest
+    container_name: messagebus
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - 15672
 
-  # loggingservice:
-  #   container_name: loggingservice
-  #   build:
-  #     context: ./loggingservice
-  #     dockerfile: Dockerfile
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #   ports:
-  #     - "3000:3000"
-  #   expose:
-  #     - "3000"
-  #   environment:
-  #     - MESSAGE_QUEUE=amqp://messagebus
-  #     - MONGO_URL=mongodb://loggingdb:loggingdbpass@loggingdb:27017/
-  #   depends_on:
-  #     - "messagebus"
-  #     - "loggingdb"
+  loggingservice:
+    container_name: loggingservice
+    build:
+      context: ./loggingservice
+      dockerfile: Dockerfile
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    environment:
+      - MESSAGE_BUS_URI=amqp://messagebus:5672
+      - MESSAGE_BUS_USERNAME=vaadmin
+      - MESSAGE_BUS_PASSWORD=MessageBus12345!@
+      - MESSAGE_BUS_EXCHANGE_NAME=storeInteraction
+      - MESSAGE_BUS_QUEUE_NAME=storeInteractionQueue
+      - MONGO_URL=mongodb://loggingdb:loggingdbpass@loggingdb:27017/
+    depends_on:
+      - "messagebus"
+      - "loggingdb"
 
   dataservice:
     container_name: dataservice
@@ -36,7 +46,7 @@ services:
     depends_on:
       - "userdatadb"
       - "generaldatadb"
-      # - "loggingservice"
+      - "loggingservice"
 
   web:
     container_name: web
@@ -48,25 +58,25 @@ services:
     depends_on:
       - "dataservice"
 
-  # loggingdb:
-  #   container_name: loggingdb
-  #   image: mongo:latest
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: loggingdb
-  #     MONGO_INITDB_ROOT_PASSWORD: loggingdbpass
-  #   ports:
-  #     - 27017:27017
-  #   expose:
-  #     - "27017"
-  #   restart: always
-  #   volumes:
-  #     - loggingdb_volume:/data/db
+  loggingdb:
+    container_name: loggingdb
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: loggingdb
+      MONGO_INITDB_ROOT_PASSWORD: loggingdbpass
+    ports:
+      - 27017:27017
+    expose:
+      - "27017"
+    restart: always
+    volumes:
+      - loggingdb_volume:/data/db
 
   userdatadb:
     container_name: userdatadb
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      MSSQL_SA_PASSWORD: UserDataDBPass123545!@
+      MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
     ports:
       - 1433:1433
@@ -80,7 +90,7 @@ services:
     container_name: generaldatadb
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      MSSQL_SA_PASSWORD: GeneralDataDBPass12345!@
+      MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
     ports:
       - 1434:1433
@@ -89,8 +99,40 @@ services:
     restart: always
     volumes:
       - generaldatadb_volume:/var/opt/mssql
+  
+  authservice:
+    container_name: authservice
+    build:
+      context: ./authservice
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - AUTH_DB_HOST_NAME=authdb
+      - AUTH_DB_PORT=27017
+      - AUTH_DB_USER_ID=authdb_user
+      - AUTH_DB_USER_PASSWORD=AuthDBPass12345
+      - JWT_SECRET_TOKEN=JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr
+      - JWT_AUDIENCE=VA_AuthAudience
+      - JWT_ISSUER=VA_AuthIssuer
+    depends_on:
+      - "authdb"
+
+  authdb:
+    container_name: authdb
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=authdb_user
+      - MONGO_INITDB_ROOT_PASSWORD=AuthDBPass12345
+    ports:
+      - 27018:27017
+    restart: always
+    volumes:
+      - authdb_volume:/data/auth_db
 
 volumes:
   loggingdb_volume:
+  authdb_volume:
   userdatadb_volume:
   generaldatadb_volume:

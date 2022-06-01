@@ -4,9 +4,9 @@ on:
     branches:
     - dev
 env:
-  AZURE_WEBAPP_NAME: va-bots-dev
+  AZURE_WEBAPP_NAME: va-bot-hans
   AZURE_WEBAPP_PACKAGE_PATH: Bot/publish
-  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.va_bots_dev_47ba }}
+  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.VA_BOT_PUBLISH_PROFILE }}
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 5.0.x
   WORKING_DIRECTORY: Bot
@@ -15,6 +15,12 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: microsoft/variable-substitution@v1 
+      with:
+        files: '**/appsettings.json'
+      env:
+        MicrosoftAppPassword: ${{ secrets.VA_BOT_APP_PASSWORD }}
+        LuisApiKey: ${{ secrets.VA_LUIS_API_KEY }}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:

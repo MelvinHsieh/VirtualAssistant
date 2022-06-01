@@ -1,19 +1,31 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text;
 using web.Models;
+using web.Models.Common;
+using web.Models.CreateModels;
+using web.Utils;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using web.Models.ViewModels;
 
 namespace web.Controllers
 {
+    [Authorize(Roles = Roles.Personnel)]
     public class PatientController : Controller
     {
-
+        private readonly ILogger<PatientController> _logger;
         private readonly string _apiURL;
+        private readonly string _authURL;
 
-        public PatientController(IConfiguration configuration)
+        public PatientController(IConfiguration configuration, ILogger<PatientController> logger)
         {
             _apiURL = configuration.GetValue<String>("DataServiceURL");
+            _logger = logger;
+            _authURL = configuration.GetValue<String>("AuthURL");
         }
 
         // GET: PatientController
@@ -21,7 +33,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/Patient");
 
@@ -49,7 +61,8 @@ namespace web.Controllers
                         return View();
                     }
                 }
-            } catch
+            }
+            catch
             {
                 TempData["error"] = "Geen connectie kon gemaakt worden met de Dataservice.";
                 return View();
@@ -57,32 +70,168 @@ namespace web.Controllers
         }
 
         // GET: PatientController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            if (id > 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        var uri = new Uri($"{_apiURL}/Patient/{id}");
+                        var response = client.GetAsync(uri).Result;
+                        string result = await response.Content.ReadAsStringAsync();
+                        PatientModel? patient = JsonConvert.DeserializeObject<PatientModel>(result);
+
+                        uri = new Uri($"{_apiURL}/PatientIntake/patient/{id}");
+                        response = client.GetAsync(uri).Result;
+                        result = await response.Content.ReadAsStringAsync();
+                        List<IntakeModel>? intake = JsonConvert.DeserializeObject<List<IntakeModel>>(result);
+
+                        return View("Details", new PatientDetailsViewModel(patient, intake));
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Ophalen van patiëntgegevens is mislukt!";
+                }
+            }
+            return RedirectToAction(nameof(IndexAsync));
         }
 
         // GET: PatientController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
 
-        // POST: PatientController/Create
+        // GET: PatientController/Show/5
+        public async Task<ActionResult> CreateIntake(int id)
+        {
+            if (id > 0)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+
+                        var uri = new Uri(_apiURL + "/Patient/" + id);
+                        var response = client.GetAsync(uri).Result;
+                        string result = await response.Content.ReadAsStringAsync();
+                        PatientModel? patient = JsonConvert.DeserializeObject<PatientModel>(result);
+
+                        uri = new Uri(_apiURL + "/Medicine");
+                        response = client.GetAsync(uri).Result;
+                        result = await response.Content.ReadAsStringAsync();
+                        List<MedicineModel>? models = JsonConvert.DeserializeObject<List<MedicineModel>>(result);
+                        SetMedicineBag(models);
+
+                        return View(Tuple.Create(patient, new IntakeModel()));
+                    }
+                }
+                catch
+                {
+                    TempData["error"] = "Ophalen van patiënt is mislukt!";
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // helper method for the SHOW method
+        private void SetMedicineBag(List<MedicineModel>? models)
+        {
+            if (models != null)
+            {
+                var references = models.AsEnumerable().OrderBy(o => o.Id);
+
+                List<SelectListItem> medicineItems = references.Select(r =>
+                    new SelectListItem()
+                    {
+                        Value = r.Id.ToString(),
+                        Text = r.Name
+                    }).ToList();
+
+                ViewBag.Medicine = new SelectList(medicineItems, "Value", "Text");
+            }
+            else
+                ViewBag.Medicine = new SelectList(null);
+        }
+
+        // POST: PatientController/CreateIntake/id
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(PatientModel model)
+        public async Task<ActionResult> CreateIntakeAsync(IntakeModel model)
         {
             try
             {
                 using (var client = new HttpClient())
                 {
-                    var uri = new Uri(_apiURL + "/Patient");
+                    var uri = new Uri(_apiURL + "/PatientIntake");
                     var result = await client.PostAsJsonAsync(uri, model);
 
                     if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                        TempData["success"] = "Inname schema successvol gecreëerd!";
+                    else
+                        TempData["error"] = "Schema kon niet gekoppeld/gecreëerd worden!";
+                }
+            }
+            catch
+            {
+                TempData["error"] = "Inname creatie mislukt!";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: PatientController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateAsync(PatientCreateModel model)
+        {
+            try
+            {
+                using (var client = new AuthHttpClient(User))
+                {
+                    var apiUri = new Uri(_apiURL + "/Patient");
+                    var result = await client.PostAsJsonAsync(apiUri, model.PatientData);
+
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        TempData["success"] = "Patiënt aangemaakt!";
+                        var response = await result.Content.ReadAsStringAsync();
+                        var patientId = int.Parse(response);
+
+                        using (var client2 = new HttpClient())
+                        {
+                            var authUri = new Uri(_authURL + "/signup");
+
+                            string json = JsonConvert.SerializeObject(new AuthRequestModel() //Creates a JSON object of the authRequest
+                            {
+                                UserName = model.AccountData.UserName,
+                                Password = model.AccountData.Password,
+                                Role = Roles.PatientOnly,
+                                Id = patientId
+                            }, Formatting.Indented);
+
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            content.Headers.Remove("Content-Type");
+                            content.Headers.Add("Content-Type", "application/json");
+
+                            var authResult = await client2.PostAsync(authUri, content);
+
+                            if (!authResult.IsSuccessStatusCode)
+                            {
+
+
+                                var deleteUri = new Uri(_apiURL + $"/Patient/{patientId}");
+                                await client.DeleteAsync(deleteUri);
+
+                                TempData["error"] = "Er is iets fout gegaan bij het registreren van het account!";
+                            }
+                            else
+                            {
+                                TempData["success"] = "Patiënt aangemaakt!";
+                            }
+                        }
                     }
                     else
                     {
@@ -104,15 +253,20 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
+                        var careWorkersUri = new Uri(_apiURL + "/Careworker");
 
                         var response = client.GetAsync(uri).Result;
+                        var careWorkerseResponse = client.GetAsync(careWorkersUri).Result;
 
                         string result = await response.Content.ReadAsStringAsync();
+                        string careWorkersResult = await careWorkerseResponse.Content.ReadAsStringAsync();
 
                         PatientModel? model = JsonConvert.DeserializeObject<PatientModel>(result);
+                        ViewBag.CareWorkers = JsonConvert.DeserializeObject<List<CareWorkerModel>>(careWorkersResult);
+
                         return View(model);
                     }
                 }
@@ -127,28 +281,23 @@ namespace web.Controllers
         // POST: PatientController/Edit/id
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id)
+        public async Task<ActionResult> EditAsync(PatientModel model)
         {
-            if (id > 0)
+            try
             {
-                try
+                using (var client = new AuthHttpClient(User))
                 {
-                    using (var client = new HttpClient())
-                    {
-                        var uri = new Uri(_apiURL + "/Patient/" + id);
-                        var result = await client.DeleteAsync(uri);
+                    var uri = new Uri(_apiURL + "/Patient/" + model.Id);
+                    var result = await client.PutAsJsonAsync(uri, model);
 
-                        if (result.StatusCode == System.Net.HttpStatusCode.OK)
-                            TempData["success"] = "Patiënt successvol verwijderd!";
-                        else
-                            TempData["error"] = "Patiënt kon niet worden verwijderd!";
-                    }
-                }
-                catch
-                {
-                    TempData["error"] = "Verwijderen mislukt!";
+                    TempData["success"] = "Patiënt is aangepast!";
                 }
             }
+            catch
+            {
+                TempData["error"] = "Er is iets fout gegaan bij het aanpassen van de Patiënt!";
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -159,7 +308,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
 
@@ -188,7 +337,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
                         var result = await client.DeleteAsync(uri);
@@ -206,10 +355,8 @@ namespace web.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
-
         private bool IsValidJson(string strInput)
-        {//Using JSON.Net
+        {
             if (string.IsNullOrWhiteSpace(strInput)) { return false; }
             strInput = strInput.Trim();
             if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || //For object
@@ -237,6 +384,5 @@ namespace web.Controllers
                 return false;
             }
         }
-
     }
 }

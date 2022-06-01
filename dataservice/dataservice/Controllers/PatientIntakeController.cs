@@ -1,6 +1,8 @@
-﻿using Application.Repositories.Interfaces;
-using dataservice.ViewModels;
+﻿using Application.Common.Enums;
+using Application.Repositories.Interfaces;
+using dataservice.DTO;
 using Infrastructure.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -10,6 +12,12 @@ namespace dataservice.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.Personnel)]
+    /*
+     * GET intake -> All Roles
+     * CREATE intake -> Personnel only
+     * DELETE intake -> Personnel only
+     */
     public class PatientIntakeController : ControllerBase
     {
         private IPatientIntakeRepo _intakeRepo;
@@ -22,15 +30,9 @@ namespace dataservice.Controllers
             _jserOptions.Converters.Add(new TimeOnlySerializer());
         }
 
-        // GET: api/<PatientIntakeController>
-        /*        [HttpGet]
-                public IEnumerable<string> Get()
-                {
-                    return new string[] { "value1", "value2" };
-                }*/
-
         // GET api/<PatientIntakeController>/5
         [HttpGet("intake/{id}")]
+        [Authorize(Roles = Roles.All)]
         public IActionResult GetByIntakeId(int id)
         {
             try
@@ -54,6 +56,7 @@ namespace dataservice.Controllers
 
         // GET api/<PatientIntakeController>/5
         [HttpGet("patient/{id}")]
+        [Authorize(Roles = Roles.All)]
         public IActionResult GetByPatientId(int id)
         {
             var intake = _intakeRepo.GetRemainingIntakesByPatientId(id);
