@@ -9,7 +9,6 @@ defaults:
 on:
   push:
     branches:
-      - fix-nodedeployscripts
       - dev
   workflow_dispatch:
 
