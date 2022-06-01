@@ -12,7 +12,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: 'authservice'
+        
     steps:
       - uses: actions/checkout@v2
 
@@ -20,6 +23,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: npm install, build, and test
         run: |
