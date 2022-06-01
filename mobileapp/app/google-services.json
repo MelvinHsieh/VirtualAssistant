@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "852880330464",
+    "project_id": "virtualassistentnotifications",
+    "storage_bucket": "virtualassistentnotifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852880330464:android:724dc7a68a458e60540a85",
+        "android_client_info": {
+          "package_name": "com.infosupport.virtualassistent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852880330464-rd8rmja5jhk5ektcst6cvmqufitp2fql.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk_fhQHkD1TKR18ueOjhj7GoMBR5AidH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852880330464-rd8rmja5jhk5ektcst6cvmqufitp2fql.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

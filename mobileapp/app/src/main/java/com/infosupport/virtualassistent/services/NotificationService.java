@@ -1,31 +1,16 @@
 package com.infosupport.virtualassistent.services;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 
-public class NotificationService extends Service {
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
+public class NotificationService extends FirebaseMessagingService {
     @Override
-    public void onCreate() {
-        super.onCreate();
-    }
+    public void onMessageReceived(@NonNull RemoteMessage message) {
+        // everytime a message is received from firebase
+        super.onMessageReceived(message);
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 }

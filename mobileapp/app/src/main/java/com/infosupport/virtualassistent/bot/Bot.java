@@ -30,7 +30,7 @@ public class Bot {
     Gson gson = null;
 
     public Bot(MainActivity activity) {
-        secretCode = activity.getApplicationContext().getString(R.string.bot_secret_code);
+        /*secretCode = activity.getApplicationContext().getString(R.string.bot_secret_code);*/
         gson = new Gson();
         queue = Volley.newRequestQueue(activity.getApplicationContext());
         startConversation(activity);

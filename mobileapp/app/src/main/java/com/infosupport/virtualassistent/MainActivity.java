@@ -138,11 +138,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void setNotificationButtonListener() {
         ImageButton notifButton = (ImageButton) findViewById(R.id.notification_button);
-        notifButton.setImageResource(R.drawable.NotificationDisabledDark);
+        notifButton.setImageResource(R.drawable.notification_dark_disabled);
         notifButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                notifButton.setImageResource(R.drawable.NotificationEnabledDark);
+                notifButton.setImageResource(R.drawable.notification_dark_disabled);
             }
         });
     }
