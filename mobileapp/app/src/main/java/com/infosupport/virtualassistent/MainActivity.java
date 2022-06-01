@@ -41,8 +41,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final String CHANNEL_ID = "HANS Notification Channel";
     public static final Integer RecordAudioRequestCode = 1;
     private MessageListAdapter messageAdapter;
     private List<Message> messageList;
@@ -78,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         startWakeWordService();
 
         setNotificationButtonListener();
-        createNotificationChannel();
     }
 
     private void dbInit() {
@@ -120,20 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void showNotification(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    /** Creates notification channel **/
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "HANS Notification",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(serviceChannel);
-        }
     }
 
     private void setNotificationButtonListener() {
