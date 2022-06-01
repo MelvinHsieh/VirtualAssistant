@@ -6,6 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - va-authservice
 on:
   push:
     branches:
+      - fix-nodedeployscripts
       - dev
   workflow_dispatch:
 
