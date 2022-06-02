@@ -17,12 +17,12 @@ namespace CoreBot
             httpClient.BaseAddress = new Uri($"https://{configuration["DataServiceHostName"]}/api/");
         }
 
-        public async Task<string> GetRequest(string endpoint)
+        public async Task<string> GetRequest(string endpoint, string authToken)
         {
             return await httpClient.GetStringAsync(endpoint);
         }
 
-        public async Task<HttpResponseMessage> PostRequest(string endpoint, string data)
+        public async Task<HttpResponseMessage> PostRequest(string endpoint, string data, string authToken)
         {
             StringContent httpContent = new StringContent(data, System.Text.Encoding.UTF8, "application/json");
             return await httpClient.PostAsync(endpoint, httpContent); 
