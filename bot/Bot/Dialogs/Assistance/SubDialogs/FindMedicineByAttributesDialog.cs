@@ -31,20 +31,21 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
         private async Task<DialogTurnResult> Inform(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            System.Diagnostics.Trace.TraceError("If you're seeing this, something bad happened! YEEEEEEEEEEEEEEET");
+            System.Diagnostics.Trace.WriteLine("If you're seeing this, something bad happened! YEEEEEEEEEEEEEEET");
 
             var authToken = stepContext.Context.Activity.Properties["authToken"].First.ToString();
 
-            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
-            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
-            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
-            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
-            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            System.Diagnostics.Trace.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            System.Diagnostics.Trace.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            System.Diagnostics.Trace.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            System.Diagnostics.Trace.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            System.Diagnostics.Trace.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
             Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
 
-            System.Diagnostics.Trace.TraceError("AuthToken: " + authToken);
-            System.Diagnostics.Trace.TraceError("Activity: " + stepContext.Context.Activity.ToString());
-            System.Diagnostics.Trace.TraceError("Properties: " + stepContext.Context.Activity.Properties.ToString());
+
+            System.Diagnostics.Trace.WriteLine("AuthToken: " + authToken);
+            System.Diagnostics.Trace.WriteLine("Activity: " + stepContext.Context.Activity.ToString());
+            System.Diagnostics.Trace.WriteLine("Properties: " + stepContext.Context.Activity.Properties.ToString());
 
             var medicines = JsonConvert.DeserializeObject<List<Medicine>>(await connection.GetRequest("medicine", authToken));
             string color = ((JObject)stepContext.Options)["Color"]?.Children().First().First().Value<string>();
