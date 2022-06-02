@@ -124,10 +124,10 @@ public class AssistantActivity extends AppCompatActivity {
         SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
     }
 
-    public void showMessage(String msg, boolean isUser) {
+    public void showMessage(String msg, boolean isUser, boolean isImage) {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setImageResource(R.drawable.mic_inactive);
-        Message message = new Message(msg, isUser, Calendar.getInstance().getTimeInMillis());
+        Message message = new Message(msg, isUser, isImage, Calendar.getInstance().getTimeInMillis());
         messageList.add(message);
         int pos = messageList.size() - 1;
         messageAdapter.notifyItemInserted(pos);
@@ -138,7 +138,7 @@ public class AssistantActivity extends AppCompatActivity {
             msgDao.insertAll(message);
         }).start();
 
-        if(!isUser) {
+        if(!isUser && !isImage) {
             textToSpeech.speak(msg, TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
