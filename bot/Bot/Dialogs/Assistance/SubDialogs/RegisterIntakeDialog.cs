@@ -43,7 +43,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
             //Set up register object
             IntakeRegistration intakeRegistration = new IntakeRegistration();
-            var intakes = JsonConvert.DeserializeObject<List<PatientIntake>>(await connection.GetRequest($"patientIntake/patient/{1}")); //TODO get id from android app
+            var intakes = JsonConvert.DeserializeObject<List<PatientIntake>>(await connection.GetRequest($"patientIntake/patient/{1}", "")); //TODO get id from android app
             var matchingIntakes = new List<PatientIntake>();
 
             var medicine = ((JObject)stepContext.Options)["Medicine"];
@@ -141,7 +141,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                     //Start the registration
                     IntakeRegistration intakeRegistration = (IntakeRegistration)stepContext.Values["intake"];
 
-                    var response = await connection.PostRequest("IntakeRegistration", JsonConvert.SerializeObject(new { PatientIntakeId = intakeRegistration.PatientIntakeId, Date = intakeRegistration.TakenOn }));
+                    var response = await connection.PostRequest("IntakeRegistration", JsonConvert.SerializeObject(new { PatientIntakeId = intakeRegistration.PatientIntakeId, Date = intakeRegistration.TakenOn }), "");
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Uw inname is geregistreerd."));

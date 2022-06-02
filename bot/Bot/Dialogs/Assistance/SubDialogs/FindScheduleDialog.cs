@@ -26,7 +26,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             await stepContext.Context.SendActivityAsync(MessageFactory.Text("Het medicijnrooster wordt geopend!"));
 
-            var intake = await connection.GetRequest($"PatientIntake/Patient/1"); // TODO: Ensure that patient ID is actually equal to currently logged in user (mobile app).
+            var intake = await connection.GetRequest($"PatientIntake/Patient/1", ""); // TODO: Ensure that patient ID is actually equal to currently logged in user (mobile app).
             var activity = new Activity
             {
                 Type = "OPEN_SCHEDULE",
