@@ -14,13 +14,13 @@ public class RecognizeSpeechResultReceiver implements SpeechResultReceiver.Resul
     @Override
     public void onSuccess(String data) {
         if (activityRef.get() != null) {
-            activityRef.get().showMessage(data, true);
+            activityRef.get().showMessage(data, true, false);
             activityRef.get().getBot().sendMessage(data);
         }
     }
 
     @Override
     public void onError(Exception exception) {
-        activityRef.get().showMessage("Account info failed", false);
+        activityRef.get().showMessage("Account info failed", false, false);
     }
 }

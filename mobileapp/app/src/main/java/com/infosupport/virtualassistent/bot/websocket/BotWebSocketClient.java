@@ -44,10 +44,14 @@ public class BotWebSocketClient extends WebSocketClient {
                     String text = msg.getString("text");
                     if (lastMessage.equalsIgnoreCase(text)) continue;
                     lastMessage = text;
-                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(text, false));
+                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(text, false, false));
+                }
+                else if (type.equalsIgnoreCase("image")) {
+                    String image_url = msg.getString("image_url");
+                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(image_url, false, true));
                 }
                 else if (type.equalsIgnoreCase("OPEN_SCHEDULE")) {
-                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(Schedule.fromJSON(msg), false));
+                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(Schedule.fromJSON(msg), false, false));
                 }
                 if (msg.has("inputHint") && msg.getString("inputHint").equalsIgnoreCase("expectingInput")) {
                     // This would activate the speech whenever input is expected again.
