@@ -31,7 +31,9 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
         private async Task<DialogTurnResult> Inform(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var authToken = stepContext.Context.Activity.Properties["authToken"].First.ToString();
+            
+            var authRequest = stepContext.Context.Activity.Properties["authToken"].ToString();
+
             Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
             Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
             Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
@@ -39,7 +41,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
             Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
 
-            Console.WriteLine("AUTHTOKEN: " + authToken);
+            Console.WriteLine("PROPPERTIES TO STRING: " + authRequest);
 
             var medicines = JsonConvert.DeserializeObject<List<Medicine>>(await connection.GetRequest("medicine", authToken));
             string color = ((JObject)stepContext.Options)["Color"]?.Children().First().First().Value<string>();
