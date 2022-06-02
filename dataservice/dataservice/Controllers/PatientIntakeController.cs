@@ -1,6 +1,7 @@
 ﻿using Application.Common.Enums;
 using Application.Repositories.Interfaces;
 using dataservice.DTO;
+using Domain.Entities.MedicalData;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -59,8 +60,10 @@ namespace dataservice.Controllers
         [Authorize(Roles = Roles.All)]
         public IActionResult GetByPatientId(int id)
         {
+           
             var intake = _intakeRepo.GetRemainingIntakesByPatientId(id);
-            if (intake == null)
+            
+            if (intake.Count() <= 0)
             {
                 return NotFound();
             }
@@ -69,6 +72,21 @@ namespace dataservice.Controllers
 
             return Ok(result);
 
+        }
+
+        [HttpGet("missed")]
+        [Authorize(Roles = Roles.AdminOnly)]
+        public IActionResult GetAllMissedIntakes([FromQuery] DateTime searchStart, [FromQuery] DateTime searchEnd)
+        {
+            var intake = _intakeRepo.GetAllMissedIntakes(searchStart, searchEnd);
+
+            if(intake.Count() <= 0)
+            {
+                return NotFound();
+            }
+            var result = JsonSerializer.Serialize(intake, _jserOptions);
+
+            return Ok(result);
         }
 
         // POST api/<PatientIntakeController>
