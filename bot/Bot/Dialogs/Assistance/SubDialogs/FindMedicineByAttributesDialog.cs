@@ -31,18 +31,22 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
         private async Task<DialogTurnResult> Inform(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var authRequest = stepContext.Context.Activity.Properties["authToken"].First.ToString();
+            System.Diagnostics.Trace.TraceError("If you're seeing this, something bad happened! YEEEEEEEEEEEEEEET");
 
-            Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
-            Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
-            Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
-            Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
-            Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            var authToken = stepContext.Context.Activity.Properties["authToken"].First.ToString();
+
+            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
+            System.Diagnostics.Trace.TraceError("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
             Console.WriteLine("AUTHTOKEN DINGETJE HAHAAHAHAH - - - - - - -- - - - - - - - - -- - - - - - -- - - - - - - - - - - ");
 
-            Console.WriteLine("AuthToken: " + authRequest);
+            System.Diagnostics.Trace.TraceError("AuthToken: " + authToken);
+            System.Diagnostics.Trace.TraceError("Activity: " + stepContext.Context.Activity.ToString());
+            System.Diagnostics.Trace.TraceError("Properties: " + stepContext.Context.Activity.Properties.ToString());
 
-            var medicines = JsonConvert.DeserializeObject<List<Medicine>>(await connection.GetRequest("medicine", ""));
+            var medicines = JsonConvert.DeserializeObject<List<Medicine>>(await connection.GetRequest("medicine", authToken));
             string color = ((JObject)stepContext.Options)["Color"]?.Children().First().First().Value<string>();
             string type = ((JObject)stepContext.Options)["Type"]?.Children().First().First().Value<string>();
             var shape = ((JObject)stepContext.Options)["Shape"]?.Children().First().First().Value<string>();
