@@ -53,6 +53,7 @@ namespace Microsoft.BotBuilderSamples.Bots
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
+            System.Diagnostics.Trace.WriteLine("If you're seeing this, something bad happened! YEEEEEEEEEEEEEEET");
             await Dialogs.Find(nameof(AssistanceDialog)).RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
         }
 
