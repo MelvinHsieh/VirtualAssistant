@@ -47,7 +47,7 @@ public class BotWebSocketClient extends WebSocketClient {
                     activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(text, false, false));
                 }
                 else if (type.equalsIgnoreCase("image")) {
-                    String image_url = msg.getString("image_url");
+                    String image_url = msg.getString("text");
                     activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(image_url, false, true));
                 }
                 else if (type.equalsIgnoreCase("OPEN_SCHEDULE")) {
