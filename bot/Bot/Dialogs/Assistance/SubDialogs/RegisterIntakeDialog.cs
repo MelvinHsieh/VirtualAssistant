@@ -43,7 +43,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
             //Set up register object
             IntakeRegistration intakeRegistration = new IntakeRegistration();
-            var intakes = JsonConvert.DeserializeObject<List<PatientIntake>>(await connection.GetRequest($"patientIntake/patient/{1}", "")); //TODO get id from android app
+            var intakes = JsonConvert.DeserializeObject<List<PatientIntake>>(await connection.GetRequest($"patientIntake/patient/{1}")); //TODO get id from android app
             var matchingIntakes = new List<PatientIntake>();
 
             var medicine = ((JObject)stepContext.Options)["Medicine"];
