@@ -143,6 +143,7 @@ public class AssistantActivity extends AppCompatActivity {
 
     /** Run the speech recognition service */
     private void runSpeechRecognizer(FloatingActionButton fab) {
+        textToSpeech.stop();
         Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
         fab.setImageResource(R.drawable.mic_active);
         SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
@@ -160,7 +161,7 @@ public class AssistantActivity extends AppCompatActivity {
         int pos = messageList.size() - 1;
         messageAdapter.notifyItemInserted(pos);
         messageRecycler.scrollToPosition(pos);
-x
+
         // Save new message to the database
         new Thread(() -> {
             msgDao.insertAll(message);

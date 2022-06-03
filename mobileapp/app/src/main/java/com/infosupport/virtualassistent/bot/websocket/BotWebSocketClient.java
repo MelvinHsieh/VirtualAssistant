@@ -40,12 +40,16 @@ public class BotWebSocketClient extends WebSocketClient {
                 if(msg.has("serviceUrl")) continue;
                 String type = msg.getString("type");
                 if (type.equalsIgnoreCase("message")) {
-                    String text = msg.getString("text");
-                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(text, false, false));
+                    if(msg.has("text")) {
+                        String text = msg.getString("text");
+                        activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(text, false, false));
+                    }
                 }
                 else if (type.equalsIgnoreCase("image")) {
-                    String image_url = msg.getString("text");
-                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(image_url, false, true));
+                    if(msg.has("value")) {
+                        String image_url = msg.getString("value");
+                        activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(image_url, false, true));
+                    }
                 }
                 else if (type.equalsIgnoreCase("OPEN_SCHEDULE")) {
                     activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(Schedule.fromJSON(msg), false, false));
