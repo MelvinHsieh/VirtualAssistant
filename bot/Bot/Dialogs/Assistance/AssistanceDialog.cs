@@ -22,7 +22,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
         {
             _medicineRecognizer = medicineRecognizer;
 
-            AddDialog(new FindScheduleDialog(connection));
+            AddDialog(new FindScheduleDialog(connection, medicineRecognizer));
             AddDialog(new FindMedicineByAttributesDialog(connection));
             AddDialog(new RegisterIntakeDialog(connection, medicineRecognizer));
             AddDialog(new TextPrompt(nameof(TextPrompt)));
