@@ -54,16 +54,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                                             .ToList();
             }
 
-            if (_intakes != null)
+            if (_intakes != null && _intakes.Count > 0)
             {
                 PatientIntakeModel intake = _intakes[_intakes.Count-1];
-                    //var activity = new Activity
-                    //{
-                    //    Type = "OPEN_SCHEDULE",
-                    //    Value = intake
-                    //};
-
-                    //await stepContext.Context.SendActivityAsync(activity);
 
                     if (intake.Medicine.ImageURL != String.Empty)
                     {
@@ -80,18 +73,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     builder.Append("Heb je dit medicijn ingenomen?");
 
                     return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text(builder.ToString(), null, InputHints.ExpectingInput) }, cancellationToken);
-                    /*var promptOptions = new PromptOptions
-                    {
-                        Prompt = MessageFactory.Text("Heb je dit medicijn ingenomen?"),
-                        RetryPrompt = MessageFactory.Text("Neem alsjeblieft dit medicijn in."),
-                        Choices = new List<Choice> { new Choice("Ja"), new Choice("Jazeker"), new Choice("Ik heb ze ingenomen"), new Choice("Ze zijn ingenomen"), },
-                    };
-
-                    var intakeConfirm = await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);*/
-
-
-                    /*var response = await connection.PostRequest("IntakeRegistration", JsonConvert.SerializeObject(new { PatientIntakeId = intakeRegistration.PatientIntakeId, Date = intakeRegistration.TakenOn }));*/
-                
+         
             }
             else
             {
@@ -149,19 +131,5 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             }
 
         }
-
-        //private async Task<DialogTurnResult> ConfirmIntake(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        //{
-        //    var promptOptions = new PromptOptions
-        //    {
-        //        Prompt = MessageFactory.Text("Heb je dit medicijn ingenomen?"),
-        //        RetryPrompt = MessageFactory.Text("Neem alsjeblieft dit medicijn in."),
-        //        Choices = new List<Choice> { new Choice("Ja"), new Choice("Jazeker"), new Choice("Ik heb ze ingenomen"), new Choice("Ze zijn ingenomen"), },
-        //    };
-
-        //    //return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
-        //    return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
-        //}
-
     }
 }

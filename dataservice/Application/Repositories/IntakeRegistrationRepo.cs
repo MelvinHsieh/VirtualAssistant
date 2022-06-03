@@ -10,11 +10,14 @@ namespace Application.Repositories
     {
         private MedicineDbContext _context;
         private IMedicineRepo _medicineRepo;
+        private IPatientIntakeRepo _patientIntakeRepo;
 
-        public IntakeRegistrationRepo(IMedicineRepo medicineRepo, MedicineDbContext context)
+
+        public IntakeRegistrationRepo(IMedicineRepo medicineRepo, IPatientIntakeRepo patientIntakeRepo, MedicineDbContext context)
         {
             this._medicineRepo = medicineRepo;
             this._context = context;
+            this._patientIntakeRepo = patientIntakeRepo;
         }
 
         public Result AddIntakeRegistration(DateTime date, int patientIntakeId)
@@ -83,7 +86,7 @@ namespace Application.Repositories
 
         public Result ValidateIntakeRegistration(IntakeRegistration intakeRegistration)
         {
-            if (_medicineRepo.GetMedicine(intakeRegistration.PatientIntakeId) == null)
+            if (_patientIntakeRepo.GetIntakeById(intakeRegistration.PatientIntakeId) == null)
             {
                 return new Result(false, "The given intake id does not exist");
             }
