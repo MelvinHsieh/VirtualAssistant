@@ -6,6 +6,7 @@ using CoreBot.Dialogs.Assistance.SubDialogs;
 using CoreBot.Utils;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -25,6 +26,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new FindMedicineByAttributesDialog(connection));
             AddDialog(new RegisterIntakeDialog(connection, medicineRecognizer));
             AddDialog(new TextPrompt(nameof(TextPrompt)));
+            AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
 
             AddDialog(new WaterfallDialog("assistanceDialog", new WaterfallStep[]
             {
