@@ -21,7 +21,7 @@ namespace dataservice.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_medicineRepo.GetAllMedicine());
+          return Ok(_medicineRepo.GetAllMedicine());
         }
 
         // GET api/<ValuesController>/5

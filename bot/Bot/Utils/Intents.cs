@@ -2,7 +2,6 @@
 {
     public enum Intents
     {
-        Medicine_ConfirmMedicine,
         Medicine_FindDose,
         Medicine_FindMedicineByAttributes,
         Medicine_FindSchedule,
