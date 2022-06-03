@@ -160,7 +160,7 @@ public class AssistantActivity extends AppCompatActivity {
         int pos = messageList.size() - 1;
         messageAdapter.notifyItemInserted(pos);
         messageRecycler.scrollToPosition(pos);
-x
+
         // Save new message to the database
         new Thread(() -> {
             msgDao.insertAll(message);
