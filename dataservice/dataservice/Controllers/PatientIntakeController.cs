@@ -82,7 +82,7 @@ namespace dataservice.Controllers
 
             if(intake.Count() <= 0)
             {
-                return NotFound();
+                return Ok("");
             }
             var result = JsonSerializer.Serialize(intake, _jserOptions);
 
