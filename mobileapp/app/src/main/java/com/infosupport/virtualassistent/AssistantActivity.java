@@ -49,7 +49,7 @@ public class AssistantActivity extends AppCompatActivity {
     private Bot bot;
     private TextToSpeech textToSpeech;
     private int tts_utterance;
-    private int turn_mic_on_after_utterance;
+    public int turn_mic_on_after_utterance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +100,7 @@ public class AssistantActivity extends AppCompatActivity {
                 textToSpeech.setLanguage(new Locale("nl_NL"));
                 textToSpeech.setSpeechRate(0.8f);
                 textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+
                     @Override
                     public void onStart(String s) {
 
@@ -108,7 +109,7 @@ public class AssistantActivity extends AppCompatActivity {
                     @Override
                     public void onDone(String s) {
                         if(String.valueOf(turn_mic_on_after_utterance).equals(s)) {
-                            runSpeechRecognizer();
+                            runOnUiThread(() -> runSpeechRecognizer());
                         }
                     }
 
@@ -159,13 +160,14 @@ public class AssistantActivity extends AppCompatActivity {
         int pos = messageList.size() - 1;
         messageAdapter.notifyItemInserted(pos);
         messageRecycler.scrollToPosition(pos);
-
+x
         // Save new message to the database
         new Thread(() -> {
             msgDao.insertAll(message);
         }).start();
 
         if(!isUser && !isImage) {
+            tts_utterance++;
             textToSpeech.speak(msg, TextToSpeech.QUEUE_ADD, null, String.valueOf(tts_utterance));
         }
     }
