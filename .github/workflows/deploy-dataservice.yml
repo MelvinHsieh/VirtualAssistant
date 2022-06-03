@@ -22,6 +22,7 @@ jobs:
       env:
         ConnectionStrings.DbUserID: ${{ secrets.VA_DB_USER_ID }}
         ConnectionStrings.DbUserPassword: ${{ secrets.VA_DB_PASSWORD }}
+        JWT.Secret: JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
