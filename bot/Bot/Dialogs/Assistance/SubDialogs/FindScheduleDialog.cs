@@ -115,8 +115,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     PatientIntakeModel currentIntake = _intakes[_intakes.Count - 1];
                     IntakeRegistration intakeRegistration = new IntakeRegistration() { PatientIntakeId = currentIntake.Id, TakenOn = DateTime.Now };
 
-
                     var response = await connection.PostRequest("IntakeRegistration", JsonConvert.SerializeObject(new { PatientIntakeId = intakeRegistration.PatientIntakeId, Date = intakeRegistration.TakenOn }));
+                    
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Uw inname is geregistreerd."));
@@ -126,20 +126,25 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     {
                         await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Het registreren van de inname is mislukt."));
                     }
+
                     if(_intakes.Count > 0)
                     {
                         return await stepContext.ReplaceDialogAsync(nameof(FindScheduleDialog), _intakes, cancellationToken);
                     }
+                    
+                    _intakes = null;
                     return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
                 //End Dialog
                 case nameof(Intents.Cancel):
                     //Cancel the registration attempt
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text("De registratie poging is geannuleerd."));
+                    _intakes = null;
                     return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
                 //End Dialog
                 default:
                     //Not understood
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text("Ik heb je antwoord helaas niet begrepen!"));
+                    _intakes = null;
                     return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
             }
 
