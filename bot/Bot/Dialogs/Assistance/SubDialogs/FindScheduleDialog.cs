@@ -115,6 +115,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                     }
                     
                     _intakes = null;
+
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Je hebt alle medicijnen voor nu genomen."));
                     return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
                 //End Dialog
                 case nameof(Intents.Cancel):
