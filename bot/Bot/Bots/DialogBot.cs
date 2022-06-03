@@ -64,7 +64,7 @@ namespace Microsoft.BotBuilderSamples.Bots
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
                     await turnContext.SendActivityAsync(_configuration.GetSection("WelcomeMessage").Value);
-                    await turnContext.SendActivityAsync(_configuration.GetSection("HelpMessage").Value);
+                    await turnContext.SendActivityAsync(_configuration.GetSection("HelpMessage").Value, null, "expectingInput");
 
                     await Dialogs.Find(nameof(AssistanceDialog)).RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
                 }
