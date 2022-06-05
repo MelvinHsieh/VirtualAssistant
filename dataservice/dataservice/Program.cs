@@ -130,8 +130,6 @@ app.UseExceptionHandler(
     {
         var patientContext = scope.ServiceProvider.GetRequiredService<PatientDbContext>();
         var medicineContext = scope.ServiceProvider.GetRequiredService<MedicineDbContext>();
-        patientContext.Database.EnsureDeleted();
-        medicineContext.Database.EnsureDeleted();
         patientContext.Database.Migrate();
         medicineContext.Database.Migrate();
     }
