@@ -3,6 +3,7 @@ on:
   push:
     branches:
     - dev
+    - feature/patientlocation
 env:
   AZURE_WEBAPP_NAME: va-dataservice
   AZURE_WEBAPP_PACKAGE_PATH: dataservice/publish
