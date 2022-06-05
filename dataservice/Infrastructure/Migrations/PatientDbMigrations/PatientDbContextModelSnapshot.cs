@@ -63,7 +63,9 @@ namespace Infrastructure.Migrations.PatientDbMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patients");
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("Patients", (string)null);
 
                     b.HasData(
                         new
@@ -108,9 +110,6 @@ namespace Infrastructure.Migrations.PatientDbMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
                     b.Property<string>("RoomId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -121,17 +120,13 @@ namespace Infrastructure.Migrations.PatientDbMigrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientId")
-                        .IsUnique();
-
-                    b.ToTable("PatientLocations");
+                    b.ToTable("PatientLocations", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             Department = "TestLocatie",
-                            PatientId = 0,
                             RoomId = "1",
                             Status = "active"
                         },
@@ -139,25 +134,19 @@ namespace Infrastructure.Migrations.PatientDbMigrations
                         {
                             Id = 2,
                             Department = "TestLocatie",
-                            PatientId = 0,
                             RoomId = "2",
                             Status = "active"
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.PatientData.PatientLocation", b =>
+            modelBuilder.Entity("Domain.Entities.PatientData.Patient", b =>
                 {
-                    b.HasOne("Domain.Entities.PatientData.Patient", "Patient")
-                        .WithOne("Location")
-                        .HasForeignKey("Domain.Entities.PatientData.PatientLocation", "PatientId")
+                    b.HasOne("Domain.Entities.PatientData.PatientLocation", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("Domain.Entities.PatientData.Patient", b =>
-                {
                     b.Navigation("Location");
                 });
 #pragma warning restore 612, 618
