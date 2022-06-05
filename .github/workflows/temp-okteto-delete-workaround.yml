@@ -1,9 +1,9 @@
 name: Delete Preview Environment
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
+    branches:
+      - feature/patientlocation
 
 jobs:
   build:
