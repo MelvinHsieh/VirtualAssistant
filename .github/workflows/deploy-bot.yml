@@ -3,6 +3,7 @@ on:
   push:
     branches:
     - dev
+    - feature-graphical-represitation
 env:
   AZURE_WEBAPP_NAME: va-bot-hans
   AZURE_WEBAPP_PACKAGE_PATH: Bot/publish
