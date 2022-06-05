@@ -1,4 +1,4 @@
-name: Delete Preview Namespace
+name: Delete Preview Environment
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ jobs:
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
 
-      - name: Delete namespace
-        uses: okteto/delete-namespace@latest
+      - name: Delete preview environment
+        uses: okteto/destroy-preview@latest
         with:
           namespace: pr-${{ github.event.number }}-0xboomie

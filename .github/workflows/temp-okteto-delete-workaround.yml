@@ -1,9 +1,9 @@
-name: Temp delete workaround
+name: Delete Preview Environment
 
 on:
-  push:
-    branches:
-      - feature/patientlocation
+  pull_request:
+    types:
+      - closed
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
 
-      - name: Delete namespace
-        uses: okteto/delete-namespace@latest
+      - name: Delete preview environment
+        uses: okteto/destroy-preview@latest
         with:
           namespace: pr-48-0xboomie
