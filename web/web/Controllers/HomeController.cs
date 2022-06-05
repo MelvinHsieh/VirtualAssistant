@@ -15,13 +15,7 @@ namespace web.Controllers
 
         public IActionResult Index()
         {
-            var x = HttpContext.User;
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            return RedirectToAction("IndexAsync", "CareWorker");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

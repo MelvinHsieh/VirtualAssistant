@@ -7,7 +7,6 @@ using web.Utils;
 
 namespace web.Controllers
 {
-    [Authorize(Roles = Roles.All)]
     public class AlertController : Controller
     {
         private readonly IHubContext<NotificationHub, INotificationHubClient> _hub;
