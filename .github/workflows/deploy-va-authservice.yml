@@ -18,7 +18,12 @@ jobs:
         
     steps:
       - uses: actions/checkout@v2
-
+      - uses: microsoft/variable-substitution@v1 
+        with:
+          files: './docker-compose.yml'
+        env:
+          JWT_SECRET_TOKEN: ${{ secrets.JWT_SECRET_TOKEN }}
+          MONGO_URL: ${{ secrets.VA_AUTH_MONGO_URL }}
       - name: Set up Node.js version
         uses: actions/setup-node@v1
         with:
