@@ -72,15 +72,10 @@ public class Bot {
     }
 
     public void sendMessage(String message, String type) {
-        Map<String, String> properties = new HashMap<String, String>() {{
-            put("authToken", preferences.getString("authToken", "NoAuthToken"));
-        }};
-
         Activity activity = new Activity();
         activity.type = type;
         activity.text = message;
         activity.from = new From(preferences.getString("userId", "NoId"));
-        activity.properties = properties;
         activity.locale = "nl-NL";
         sendActivity(activity);
     }
@@ -117,9 +112,7 @@ public class Bot {
 
             @Override
             public byte[] getBody() {
-                String json = activity.ToJSON();
-                System.out.println(json);
-                return json.getBytes(StandardCharsets.UTF_8);
+                return activity.ToJSON().getBytes(StandardCharsets.UTF_8);
             }
         };
 

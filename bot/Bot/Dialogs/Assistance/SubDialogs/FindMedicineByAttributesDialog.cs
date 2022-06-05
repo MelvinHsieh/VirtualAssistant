@@ -60,17 +60,6 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             {
                 builder.Append($"Het medicijn waar u het over heeft is {matchingMedicines.First().Name}! Bent u hier voldoende mee geholpen?");
 
-                if(matchingMedicines[0].ImageURL != String.Empty)
-                {
-                    var activity = new Activity
-                    {
-                        Type = "image",
-                        Value = matchingMedicines[0].ImageURL
-                    };
-
-                    await stepContext.Context.SendActivityAsync(activity);
-                }
-             
                 return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text(builder.ToString(), null, InputHints.ExpectingInput) }, cancellationToken);
             } else
             {

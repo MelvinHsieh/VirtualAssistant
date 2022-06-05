@@ -58,6 +58,4 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.19.2'
     implementation 'com.rabbitmq:amqp-client:5.14.2'
     implementation 'org.slf4j:slf4j-log4j12:1.7.29'
-    implementation 'com.squareup.picasso:picasso:2.8'
-
 }

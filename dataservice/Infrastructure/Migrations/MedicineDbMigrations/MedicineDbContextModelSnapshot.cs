@@ -182,9 +182,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ImageURL")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Indication")
                         .HasColumnType("nvarchar(max)");
 
@@ -222,7 +219,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Color = "Wit",
                             Dose = 10.0,
                             DoseUnit = "mg",
-                            ImageURL = "https://va-cdn.azureedge.net/images/Paracetamol-1.jpg",
                             Indication = "Hypercholesterolemie",
                             Name = "Rosuvastatine",
                             Shape = "Vierkant",
@@ -235,7 +231,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Color = "Rood",
                             Dose = 12.5,
                             DoseUnit = "mg",
-                            ImageURL = "https://va-cdn.azureedge.net/images/Paracetamol-1.jpg",
                             Indication = "Hypertensei",
                             Name = "Hydrochloorthiazide",
                             Shape = "Rond",
@@ -248,7 +243,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Color = "Wit",
                             Dose = 500.0,
                             DoseUnit = "mg",
-                            ImageURL = "https://va-cdn.azureedge.net/images/Paracetamol-1.jpg",
                             Indication = "Diabetes Mellitus type 2",
                             Name = "Metformine",
                             Shape = "Vierkant",
@@ -261,7 +255,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Color = "Blauw",
                             Dose = 80.0,
                             DoseUnit = "mg",
-                            ImageURL = "https://va-cdn.azureedge.net/images/Paracetamol-1.jpg",
                             Indication = "Maagbeschermer",
                             Name = "Pantroprazol msr",
                             Shape = "Vierkant",
@@ -274,7 +267,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Color = "Wit",
                             Dose = 50.0,
                             DoseUnit = "mg",
-                            ImageURL = "https://va-cdn.azureedge.net/images/Paracetamol-1.jpg",
                             Indication = "Antibiotica (Urineweginfectie)",
                             Name = "Nitrofurantione",
                             Shape = "Vierkant",
@@ -287,7 +279,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Color = "Groen",
                             Dose = 10.0,
                             DoseUnit = "mg",
-                            ImageURL = "https://va-cdn.azureedge.net/images/Paracetamol-1.jpg",
                             Indication = "Somberheid",
                             Name = "Temazepam",
                             Shape = "Rond",
@@ -300,7 +291,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Color = "Wit",
                             Dose = 40.0,
                             DoseUnit = "mg",
-                            ImageURL = "https://va-cdn.azureedge.net/images/Paracetamol-1.jpg",
                             Indication = "Hartfalen",
                             Name = "Furosemide",
                             Shape = "Hexagonaal",
@@ -313,7 +303,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Color = "Zwart",
                             Dose = 5.0,
                             DoseUnit = "mg",
-                            ImageURL = "https://va-cdn.azureedge.net/images/Paracetamol-1.jpg",
                             Indication = "Nycturie",
                             Name = "Finasteride",
                             Shape = "Rond",
@@ -326,7 +315,6 @@ namespace Infrastructure.Migrations.MedicineDbMigrations
                             Color = "Wit",
                             Dose = 10.0,
                             DoseUnit = "mg",
-                            ImageURL = "https://va-cdn.azureedge.net/images/Paracetamol-1.jpg",
                             Indication = "Slaapproblemen",
                             Name = "Oxazepam",
                             Shape = "Vierkant",

@@ -25,6 +25,6 @@ public class DetectionResultReceiver implements SpeechResultReceiver.ResultRecei
 
     @Override
     public void onError(Exception exception) {
-        activityRef.get().showMessage("Account info failed", false, false);
+        activityRef.get().showMessage("Account info failed", false);
     }
 }

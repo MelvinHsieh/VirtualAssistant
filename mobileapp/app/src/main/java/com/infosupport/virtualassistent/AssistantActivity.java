@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,15 +47,11 @@ public class AssistantActivity extends AppCompatActivity {
     private MessageDAO msgDao;
     private Bot bot;
     private TextToSpeech textToSpeech;
-    private int tts_utterance;
-    public int turn_mic_on_after_utterance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assistant);
-        tts_utterance = 0;
-        turn_mic_on_after_utterance = -1;
 
         dbInit();
         ttsInit();
@@ -99,25 +94,6 @@ public class AssistantActivity extends AppCompatActivity {
             if(status != TextToSpeech.ERROR) {
                 textToSpeech.setLanguage(new Locale("nl_NL"));
                 textToSpeech.setSpeechRate(0.8f);
-                textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-
-                    @Override
-                    public void onStart(String s) {
-
-                    }
-
-                    @Override
-                    public void onDone(String s) {
-                        if(String.valueOf(turn_mic_on_after_utterance).equals(s)) {
-                            runOnUiThread(() -> runSpeechRecognizer());
-                        }
-                    }
-
-                    @Override
-                    public void onError(String s) {
-
-                    }
-                });
             }
         });
     }
@@ -143,20 +119,15 @@ public class AssistantActivity extends AppCompatActivity {
 
     /** Run the speech recognition service */
     private void runSpeechRecognizer(FloatingActionButton fab) {
-        textToSpeech.stop();
         Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
         fab.setImageResource(R.drawable.mic_active);
         SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
     }
 
-    public void turnMicOnAfterCurrentUtterance() {
-        turn_mic_on_after_utterance = tts_utterance;
-    }
-
-    public void showMessage(String msg, boolean isUser, boolean isImage) {
+    public void showMessage(String msg, boolean isUser) {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setImageResource(R.drawable.mic_inactive);
-        Message message = new Message(msg, isUser, isImage, Calendar.getInstance().getTimeInMillis());
+        Message message = new Message(msg, isUser, Calendar.getInstance().getTimeInMillis());
         messageList.add(message);
         int pos = messageList.size() - 1;
         messageAdapter.notifyItemInserted(pos);
@@ -167,9 +138,8 @@ public class AssistantActivity extends AppCompatActivity {
             msgDao.insertAll(message);
         }).start();
 
-        if(!isUser && !isImage) {
-            tts_utterance++;
-            textToSpeech.speak(msg, TextToSpeech.QUEUE_ADD, null, String.valueOf(tts_utterance));
+        if(!isUser) {
+            textToSpeech.speak(msg, TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
 

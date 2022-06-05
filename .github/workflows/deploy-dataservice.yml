@@ -3,7 +3,6 @@ on:
   push:
     branches:
     - dev
-    - feature-graphical-represitation
 env:
   AZURE_WEBAPP_NAME: va-dataservice
   AZURE_WEBAPP_PACKAGE_PATH: dataservice/publish
@@ -22,7 +21,6 @@ jobs:
       env:
         ConnectionStrings.DbUserID: ${{ secrets.VA_DB_USER_ID }}
         ConnectionStrings.DbUserPassword: ${{ secrets.VA_DB_PASSWORD }}
-        JWT.Secret: ${{ secrets.JWT_SECRET_TOKEN }}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:

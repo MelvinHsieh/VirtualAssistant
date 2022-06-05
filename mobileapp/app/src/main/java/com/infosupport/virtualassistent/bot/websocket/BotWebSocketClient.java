@@ -15,6 +15,7 @@ import java.net.URI;
 
 public class BotWebSocketClient extends WebSocketClient {
     private final WeakReference<AssistantActivity> activityRef;
+    private String lastMessage = "";
 
     public BotWebSocketClient(URI serverURI, AssistantActivity activity) {
         super(serverURI);
@@ -40,26 +41,20 @@ public class BotWebSocketClient extends WebSocketClient {
                 if(msg.has("serviceUrl")) continue;
                 String type = msg.getString("type");
                 if (type.equalsIgnoreCase("message")) {
-                    if(msg.has("text")) {
-                        String text = msg.getString("text");
-                        activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(text, false, false));
-                    }
-                }
-                else if (type.equalsIgnoreCase("image")) {
-                    if(msg.has("value")) {
-                        String image_url = msg.getString("value");
-                        activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(image_url, false, true));
-                    }
+                    String text = msg.getString("text");
+                    if (lastMessage.equalsIgnoreCase(text)) continue;
+                    lastMessage = text;
+                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(text, false));
                 }
                 else if (type.equalsIgnoreCase("OPEN_SCHEDULE")) {
-                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(Schedule.fromJSON(msg), false, false));
+                    activityRef.get().runOnUiThread(() -> activityRef.get().showMessage(Schedule.fromJSON(msg), false));
                 }
-                if (msg.has("inputHint") && msg.getString("inputHint").equals("expectingInput")) {
+                if (msg.has("inputHint") && msg.getString("inputHint").equalsIgnoreCase("expectingInput")) {
                     // This would activate the speech whenever input is expected again.
                     // Right now it causes way too many requests, because nearly every reply - EVEN ERRORS - expect reply
                     // And it detects internal TTS as input as well
 
-                    activityRef.get().runOnUiThread(() -> activityRef.get().turnMicOnAfterCurrentUtterance());
+                    //activityRef.get().runOnUiThread(() -> activityRef.get().runSpeechRecognizer());
                 }
             }
         } catch (JSONException e) {
