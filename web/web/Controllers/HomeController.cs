@@ -15,7 +15,7 @@ namespace web.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("IndexAsync", "CareWorker");
+            return RedirectToAction("Index", "CareWorker");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
