@@ -21,5 +21,9 @@ namespace Domain.Entities.PatientData
         [Required]
         public string Status { get; set; } = EntityStatus.Active.ToString().ToLower();
 
+        public int PatientId { get; set; } = 0;
+
+        public virtual Patient? Patient { get; set; }
+
     }
 }
