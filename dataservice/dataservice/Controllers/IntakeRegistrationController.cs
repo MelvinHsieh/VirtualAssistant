@@ -1,7 +1,9 @@
-﻿using Application.Repositories.Interfaces;
+﻿using Application.Common.Enums;
+using Application.Repositories.Interfaces;
 using dataservice.DTO;
 using Domain.Entities.MedicalData;
 using Infrastructure.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -11,6 +13,12 @@ namespace dataservice.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.All)]
+    /*
+     * GET intakeRegistration -> All Roles
+     * CREATE intakeRegistration -> All Roles
+     * DELETE intakeRegistration -> All Roles
+     */
     public class IntakeRegistrationController : ControllerBase
     {
         private IIntakeRegistrationRepo _registrationRepo;
@@ -26,6 +34,7 @@ namespace dataservice.Controllers
 
         // GET api/<IntakeRegistrationController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles = Roles.All)]
         public IActionResult GetByRegistrationId(int id)
         {
             try

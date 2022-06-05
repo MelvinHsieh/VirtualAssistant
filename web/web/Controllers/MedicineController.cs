@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using web.Models;
+using web.Utils;
 
 namespace web.Controllers
 {
+    [Authorize]
     public class MedicineController : Controller
     {
         private readonly string _apiURL;
@@ -16,7 +19,7 @@ namespace web.Controllers
         // GET: MedicineController
         public async Task<ActionResult> IndexAsync()
         {
-            using (var client = new HttpClient())
+            using (var client = new AuthHttpClient(User))
             {
                 var uri = new Uri(_apiURL + "/Medicine");
                 try
@@ -39,9 +42,10 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/Create
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateAsync()
         {
-            using (var client = new HttpClient())
+            using (var client = new AuthHttpClient(User))
             {
                 try
                 {
@@ -87,11 +91,12 @@ namespace web.Controllers
         // POST: MedicineController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateAsync(MedicineModel model)
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/Medicine");
                     var result = await client.PostAsJsonAsync(uri, model);
@@ -116,13 +121,14 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/Delete/5
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> DeleteAsync(int id)
         {
             if (id != 0)
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Medicine/" + id);
                         var result = await client.DeleteAsync(uri);
@@ -149,6 +155,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/CreateMedicineDoseUnit
+        [Authorize(Roles = Roles.Personnel)]
         public ActionResult CreateMedicineDoseUnit()
         {
             return View();
@@ -157,11 +164,12 @@ namespace web.Controllers
         // POST: MedicineController/CreateMedicineDoseUnit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateMedicineDoseUnitAsync(string doseUnit)
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/DoseUnit");
                     var result = await client.PostAsJsonAsync(uri, doseUnit);
@@ -187,6 +195,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/CreateMedicineColor
+        [Authorize(Roles = Roles.Personnel)]
         public ActionResult CreateMedicineColor()
         {
             return View();
@@ -195,11 +204,12 @@ namespace web.Controllers
         // POST: MedicineController/CreateMedicineColor
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateMedicineColorAsync(string color)
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/MedicineColor");
                     var result = await client.PostAsJsonAsync(uri, color);
@@ -225,6 +235,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/CreateMedicineShape
+        [Authorize(Roles = Roles.Personnel)]
         public ActionResult CreateMedicineShape()
         {
             return View();
@@ -233,11 +244,12 @@ namespace web.Controllers
         // POST: MedicineController/CreateMedicineShape
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateMedicineShapeAsync(string shape)
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/MedicineShape");
                     var result = await client.PostAsJsonAsync(uri, shape);
@@ -263,6 +275,7 @@ namespace web.Controllers
         }
 
         // GET: MedicineController/CreateMedicineType
+        [Authorize(Roles = Roles.Personnel)]
         public ActionResult CreateMedicineType()
         {
             return View();
@@ -271,11 +284,12 @@ namespace web.Controllers
         // POST: MedicineController/CreateMedicineType
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Personnel)]
         public async Task<ActionResult> CreateMedicineTypeAsync(string type)
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/MedicineType");
                     var result = await client.PostAsJsonAsync(uri, type);

@@ -1,6 +1,8 @@
-﻿using Application.Common.Models;
+﻿using Application.Common.Enums;
+using Application.Common.Models;
 using Application.Repositories.Interfaces;
 using dataservice.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,6 +11,7 @@ namespace dataservice.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Roles.Personnel)]
     public class PatientController : ControllerBase
     {
         private IPatientRepo _patientRepo;
@@ -40,16 +43,18 @@ namespace dataservice.Controllers
 
         // POST api/<PatientController>
         [HttpPost]
-        public void Post([FromBody] PatientDto data)
+        public int? Post([FromBody] PatientDto data)
         {
             if (data != null)
             {
                 DateTime date;
                 if (DateTime.TryParse(data.BirthDate, out date))
                 {
-                    _patientRepo.AddPatient(data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber, data.RoomId);
+                    var result = _patientRepo.AddPatient(data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber, data.RoomId);
+                    return (int?)result.ResponseData;
                 }
             }
+            return null;
         }
 
         //POST api/<PatientController>/5

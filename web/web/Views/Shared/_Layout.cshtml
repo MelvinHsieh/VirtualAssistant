@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using web.Utils
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,23 +14,36 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Patient" asp-action="Index">Overzicht</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">web</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patienten</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Medicine" asp-action="Index">Medicijnen</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CareWorker" asp-action="Index">Zorgmedewerkers</a>
-                        </li>
+                        @if(User.IsInRole(Roles.AdminOnly)){
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patient</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Medicine" asp-action="Index">Medicijnen</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="CareWorker" asp-action="Index">Zorgmedewerkers</a>
+                            </li>
+                        }
+                        @if(User.IsInRole(Roles.CareWorkerOnly))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patient</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Medicine" asp-action="Index">Medicijnen</a>
+                            </li>
+                        } 
                     </ul>
+
+                    @Html.Partial("_LoginPartial")
                 </div>
             </div>
         </nav>
@@ -66,7 +80,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            <p>Proof of Concept - InfoSupport @DateTime.Now.ToString("yyyy", System.Globalization.CultureInfo.InvariantCulture)</p>
+            &copy; 2022 - web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -1,21 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text;
 using web.Models;
+using web.Models.Common;
+using web.Models.CreateModels;
+using web.Utils;
 using web.Models.ViewModels;
 
 namespace web.Controllers
 {
+    [Authorize(Roles = Roles.Personnel)]
     public class PatientController : Controller
     {
         private readonly ILogger<PatientController> _logger;
         private readonly string _apiURL;
+        private readonly string _authURL;
 
         public PatientController(IConfiguration configuration, ILogger<PatientController> logger)
         {
             _apiURL = configuration.GetValue<String>("DataServiceURL");
             _logger = logger;
+            _authURL = configuration.GetValue<String>("AuthURL");
         }
 
         // GET: PatientController
@@ -23,7 +31,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/Patient");
 
@@ -176,18 +184,52 @@ namespace web.Controllers
         // POST: PatientController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(PatientModel model)
+        public async Task<ActionResult> CreateAsync(PatientCreateModel model)
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
-                    var uri = new Uri(_apiURL + "/Patient");
-                    var result = await client.PostAsJsonAsync(uri, model);
+                    var apiUri = new Uri(_apiURL + "/Patient");
+                    var result = await client.PostAsJsonAsync(apiUri, model.PatientData);
 
                     if (result.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        TempData["success"] = "Patiënt aangemaakt!";
+                        var response = await result.Content.ReadAsStringAsync();
+                        var patientId = int.Parse(response);
+
+                        using (var client2 = new HttpClient())
+                        {
+                            var authUri = new Uri(_authURL + "/signup");
+
+                            string json = JsonConvert.SerializeObject(new AuthRequestModel() //Creates a JSON object of the authRequest
+                            {
+                                UserName = model.AccountData.UserName,
+                                Password = model.AccountData.Password,
+                                Role = Roles.PatientOnly,
+                                Id = patientId
+                            }, Formatting.Indented);
+
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            content.Headers.Remove("Content-Type");
+                            content.Headers.Add("Content-Type", "application/json");
+
+                            var authResult = await client2.PostAsync(authUri, content);
+
+                            if (!authResult.IsSuccessStatusCode)
+                            {
+
+
+                                var deleteUri = new Uri(_apiURL + $"/Patient/{patientId}");
+                                await client.DeleteAsync(deleteUri);
+
+                                TempData["error"] = "Er is iets fout gegaan bij het registreren van het account!";
+                            }
+                            else
+                            {
+                                TempData["success"] = "Patiënt aangemaakt!";
+                            }
+                        }
                     }
                     else
                     {
@@ -209,7 +251,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
                         var careWorkersUri = new Uri(_apiURL + "/Careworker");
@@ -241,7 +283,7 @@ namespace web.Controllers
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new AuthHttpClient(User))
                 {
                     var uri = new Uri(_apiURL + "/Patient/" + model.Id);
                     var result = await client.PutAsJsonAsync(uri, model);
@@ -264,7 +306,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
 
@@ -293,7 +335,7 @@ namespace web.Controllers
             {
                 try
                 {
-                    using (var client = new HttpClient())
+                    using (var client = new AuthHttpClient(User))
                     {
                         var uri = new Uri(_apiURL + "/Patient/" + id);
                         var result = await client.DeleteAsync(uri);
