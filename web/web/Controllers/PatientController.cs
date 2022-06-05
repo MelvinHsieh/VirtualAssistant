@@ -79,7 +79,7 @@ namespace web.Controllers
                 {
                     using (var client = new HttpClient())
                     {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["AdminToken"]);
+                        client.DefaultRequestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Authorization", new List<string>() { "Bearer " + _configuration["AdminToken"]} ));
                         var uri = new Uri($"{_apiURL}/Patient/{id}");
                         var response = client.GetAsync(uri).Result;
                         string result = await response.Content.ReadAsStringAsync();
@@ -116,7 +116,7 @@ namespace web.Controllers
                 {
                     using (var client = new HttpClient())
                     {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["AdminToken"]);
+                        client.DefaultRequestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Authorization", new List<string>() { "Bearer " + _configuration["AdminToken"] }));
                         var uri = new Uri(_apiURL + "/Patient/" + id);
                         var response = client.GetAsync(uri).Result;
                         string result = await response.Content.ReadAsStringAsync();
@@ -168,7 +168,7 @@ namespace web.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["AdminToken"]);
+                    client.DefaultRequestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Authorization", new List<string>() { "Bearer " + _configuration["AdminToken"] }));
                     var uri = new Uri(_apiURL + "/PatientIntake");
                     var result = await client.PostAsJsonAsync(uri, model);
 
@@ -195,7 +195,7 @@ namespace web.Controllers
             {
                 using (var client = new AuthHttpClient(User))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["AdminToken"]);
+                    client.DefaultRequestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Authorization", new List<string>() { "Bearer " + _configuration["AdminToken"] }));
                     var apiUri = new Uri(_apiURL + "/Patient");
                     var result = await client.PostAsJsonAsync(apiUri, model.PatientData);
 
@@ -206,7 +206,7 @@ namespace web.Controllers
 
                         using (var client2 = new HttpClient())
                         {
-                            client2.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["AdminToken"]);
+                            client2.DefaultRequestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Authorization", new List<string>() { "Bearer " + _configuration["AdminToken"] }));
                             var authUri = new Uri(_authURL + "/signup");
 
                             string json = JsonConvert.SerializeObject(new AuthRequestModel() //Creates a JSON object of the authRequest
@@ -260,7 +260,7 @@ namespace web.Controllers
                 {
                     using (var client = new AuthHttpClient(User))
                     {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["AdminToken"]);
+                        client.DefaultRequestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Authorization", new List<string>() { "Bearer " + _configuration["AdminToken"] }));
                         var uri = new Uri(_apiURL + "/Patient/" + id);
                         var careWorkersUri = new Uri(_apiURL + "/Careworker");
 
@@ -293,7 +293,7 @@ namespace web.Controllers
             {
                 using (var client = new AuthHttpClient(User))
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["AdminToken"]);
+                    client.DefaultRequestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Authorization", new List<string>() { "Bearer " + _configuration["AdminToken"] }));
                     var uri = new Uri(_apiURL + "/Patient/" + model.Id);
                     var result = await client.PutAsJsonAsync(uri, model);
 
@@ -317,7 +317,7 @@ namespace web.Controllers
                 {
                     using (var client = new AuthHttpClient(User))
                     {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["AdminToken"]);
+                        client.DefaultRequestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Authorization", new List<string>() { "Bearer " + _configuration["AdminToken"] }));
                         var uri = new Uri(_apiURL + "/Patient/" + id);
 
                         var response = client.GetAsync(uri).Result;
@@ -347,7 +347,7 @@ namespace web.Controllers
                 {
                     using (var client = new AuthHttpClient(User))
                     {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration["AdminToken"]);
+                        client.DefaultRequestHeaders.Append(new KeyValuePair<string, IEnumerable<string>>("Authorization", new List<string>() { "Bearer " + _configuration["AdminToken"] }));
                         var uri = new Uri(_apiURL + "/Patient/" + id);
                         var result = await client.DeleteAsync(uri);
 
