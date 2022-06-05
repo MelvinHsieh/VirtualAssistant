@@ -1,0 +1,23 @@
+name: Temp delete workaround
+
+on:
+  push:
+    branches:
+      - feature/patientlocation
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@master
+
+      - name: Context
+        uses: okteto/context@latest
+        with:
+          token: ${{ secrets.OKTETO_TOKEN }}
+
+      - name: Delete namespace
+        uses: okteto/delete-namespace@latest
+        with:
+          namespace: pr-48-0xboomie
