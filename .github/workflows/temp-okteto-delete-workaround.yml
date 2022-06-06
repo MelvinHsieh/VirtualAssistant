@@ -3,7 +3,7 @@ name: Delete Preview Environment
 on:
   push:
     branches:
-      - feature/patientlocation
+      - feature/emergency
 
 jobs:
   build:
