@@ -21,38 +21,38 @@ namespace CoreBot.Utils
 
         public Task LogActivityAsync(IActivity activity)
         {
-            var messageActivity = activity.AsMessageActivity();
+            //var messageActivity = activity.AsMessageActivity();
 
-            if(messageActivity != null)
-            {
-                if(messageActivity.From.Name == "User")
-                {
-                    _messagePublisher.SendMessage(new InteractionModel()
-                    {
-                        Id = messageActivity.Id,
-                        From = "User",
-                        Message = messageActivity.Text
-                    });
-                } else if (messageActivity.From.Name == "Bot")
-                {
-                    if(messageActivity.ReplyToId != null)
-                    {
-                        //TODO hier een betere oplossing voor vinden
-                        if(messageActivity.Text != _configuration.GetSection("WelcomeMessage").Value &&
-                            messageActivity.Text != _configuration.GetSection("HelpMessage").Value)
-                        {
-                            _messagePublisher.SendMessage(
-                            new InteractionModel()
-                            {
-                                Id = messageActivity.Id,
-                                From = "Bot",
-                                ReplyToId = messageActivity.ReplyToId,
-                                Message = messageActivity.Text
-                            });
-                        }
-                    }
-                }
-            }
+            //if(messageActivity != null)
+            //{
+            //    if(messageActivity.From.Name == "User")
+            //    {
+            //        _messagePublisher.SendMessage(new InteractionModel()
+            //        {
+            //            Id = messageActivity.Id,
+            //            From = "User",
+            //            Message = messageActivity.Text
+            //        });
+            //    } else if (messageActivity.From.Name == "Bot")
+            //    {
+            //        if(messageActivity.ReplyToId != null)
+            //        {
+            //            //TODO hier een betere oplossing voor vinden
+            //            if(messageActivity.Text != _configuration.GetSection("WelcomeMessage").Value &&
+            //                messageActivity.Text != _configuration.GetSection("HelpMessage").Value)
+            //            {
+            //                _messagePublisher.SendMessage(
+            //                new InteractionModel()
+            //                {
+            //                    Id = messageActivity.Id,
+            //                    From = "Bot",
+            //                    ReplyToId = messageActivity.ReplyToId,
+            //                    Message = messageActivity.Text
+            //                });
+            //            }
+            //        }
+            //    }
+            //}
 
             return Task.CompletedTask;
         }
