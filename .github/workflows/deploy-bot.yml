@@ -2,7 +2,10 @@ name: Build and deploy .NET Core app to Windows WebApp va-bots-dev
 on:
   push:
     branches:
-    - dev
+      - dev
+  pull_request:
+    branches:
+      - dev
 env:
   AZURE_WEBAPP_NAME: va-bot-hans
   AZURE_WEBAPP_PACKAGE_PATH: Bot/publish
@@ -21,6 +24,7 @@ jobs:
       env:
         MicrosoftAppPassword: ${{ secrets.VA_BOT_APP_PASSWORD }}
         LuisApiKey: ${{ secrets.VA_LUIS_API_KEY }}
+        WebServiceHostName: web-pr-${{ github.event.number }}-0xboomie.cloud.okteto.net
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
