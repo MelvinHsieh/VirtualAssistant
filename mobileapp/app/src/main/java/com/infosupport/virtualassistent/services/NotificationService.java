@@ -18,6 +18,8 @@ public class NotificationService extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(@NonNull String token) {
+        // Log new token
+        sendRegistrationToServer(token);
         super.onNewToken(token);
     }
 
@@ -47,5 +49,9 @@ public class NotificationService extends FirebaseMessagingService {
                     .setAutoCancel(false);
             NotificationManagerCompat.from(this).notify(1, notification.build());
         }
+    }
+
+    private void sendRegistrationToServer(String token) {
+
     }
 }
