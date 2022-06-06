@@ -52,5 +52,10 @@ namespace web.Models
         [JsonProperty(PropertyName = "CareWorkerId")]
         [DisplayName("Zorgmedewerker")]
         public int CareWorkerId { get; set; }
+
+        [Required]
+        [JsonProperty(PropertyName = "roomId")]
+        [DisplayName("Zorgmedewerker")]
+        public string RoomId { get; set; } = string.Empty;
     }
 }

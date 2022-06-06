@@ -5,12 +5,12 @@ namespace Application.Repositories.Interfaces
 {
     public interface IPatientRepo
     {
-        public Result AddPatient(string firstname, string lastname, DateTime birthdate, string postalcode, string housenumber, string email, string phonenumber);
+        public Result AddPatient(string firstname, string lastname, DateTime birthdate, string postalcode, string housenumber, string email, string phonenumber, string roomId);
 
         public Patient? GetPatient(int id);
 
         public IEnumerable<Patient> GetAllPatients();
-        public Result UpdatePatient(int id, string firstname, string lastname, DateTime birthdate, string postalcode, string housenumber, string email, string phonenumber, int careworkerid);
+        public Result UpdatePatient(int id, string firstname, string lastname, DateTime birthdate, string postalcode, string housenumber, string email, string phonenumber, int careworkerid, string roomId);
 
         public Result RemovePatient(int id);
 

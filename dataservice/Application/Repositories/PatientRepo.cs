@@ -17,8 +17,15 @@ namespace Application.Repositories
             _careWorkerRepo = careWorkerRepo;
         }
 
-        public Result AddPatient(string firstname, string lastname, DateTime birthdate, string postalcode, string homenumber, string email, string phonenumber)
+        public Result AddPatient(string firstname, string lastname, DateTime birthdate, string postalcode, string homenumber, string email, string phonenumber, string roomId)
         {
+            PatientLocation location = new PatientLocation()
+            {
+                RoomId = roomId,
+            };
+
+            var locationResult = _context.PatientLocations.Add(location).Entity; 
+
             Patient patient = new Patient()
             {
                 FirstName = firstname,
@@ -28,6 +35,7 @@ namespace Application.Repositories
                 BirthDate = birthdate,
                 PostalCode = postalcode,
                 HomeNumber = homenumber,
+                LocationId = locationResult.Id
             };
 
             Result result = ValidatePatient(patient);
@@ -58,7 +66,7 @@ namespace Application.Repositories
             return _context.Patients.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
         }
 
-        public Result UpdatePatient(int id, string firstname, string lastname, DateTime birthdate, string postalcode, string homenumber, string email, string phonenumber, int careworkerid)
+        public Result UpdatePatient(int id, string firstname, string lastname, DateTime birthdate, string postalcode, string homenumber, string email, string phonenumber, int careworkerid, string roomId)
         {
             Result result = new Result(false, "Patient aanpassen mislukt!");
 
@@ -83,6 +91,16 @@ namespace Application.Repositories
                 return result;
             }
 
+            PatientLocation ? location = _context.PatientLocations.Find(patient.LocationId);
+            if (location is null)
+            {
+                result.Success = false;
+                result.Message = "De locatie bestaat niet.";
+                return result;
+            }
+
+            location.RoomId = roomId;
+
             patient.FirstName = firstname;
             patient.LastName = firstname;
             patient.BirthDate = birthdate;
@@ -91,6 +109,7 @@ namespace Application.Repositories
             patient.PhoneNumber = phonenumber;
             patient.CareWorkerId = careworkerid;
 
+            _context.PatientLocations.Update(location);
             _context.Patients.Update(patient);
             _context.SaveChanges();
 
