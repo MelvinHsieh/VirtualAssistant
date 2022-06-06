@@ -1,3 +1,4 @@
+using FirebaseAdmin.Messaging;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -55,18 +56,13 @@ namespace ReminderService
                         {
                             //ForEach PatientId send to FIREBASE
                             var json = await response.Content.ReadAsStringAsync();    
-                            var jtoken = JToken.Parse(json);
-                        
-                            foreach(JProperty x in jtoken)
-                            {
-                                //SEND DATA
-                            }
+
+                            SendAllReminders(json);
 
                             _logger.LogInformation("API response: Succes (Void)");
                         }
                         else
                         {
-                            { "1":[{ "id":1,"patientId":1,"medicineId":1,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":1,"name":"Rosuvastatine","indication":"Hypercholesterolemie","dose":10,"doseUnit":"mg","shape":"Vierkant","color":"Wit","type":"Tablet","status":"active"},"status":"active"},{ "id":3,"patientId":1,"medicineId":2,"intakeStart":"12:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":2,"name":"Hydrochloorthiazide","indication":"Hypertensei","dose":12.5,"doseUnit":"mg","shape":"Rond","color":"Rood","type":"Tablet","status":"active"},"status":"active"},{ "id":4,"patientId":1,"medicineId":3,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":3,"name":"Metformine","indication":"Diabetes Mellitus type 2","dose":500,"doseUnit":"mg","shape":"Vierkant","color":"Wit","type":"Tablet","status":"active"},"status":"active"},{ "id":5,"patientId":1,"medicineId":4,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":4,"name":"Pantroprazol msr","indication":"Maagbeschermer","dose":80,"doseUnit":"mg","shape":"Vierkant","color":"Blauw","type":"Tablet","status":"active"},"status":"active"},{ "id":6,"patientId":1,"medicineId":5,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":5,"name":"Nitrofurantione","indication":"Antibiotica (Urineweginfectie)","dose":50,"doseUnit":"mg","shape":"Vierkant","color":"Wit","type":"Tablet","status":"active"},"status":"active"},{ "id":7,"patientId":1,"medicineId":6,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":6,"name":"Temazepam","indication":"Somberheid","dose":10,"doseUnit":"mg","shape":"Rond","color":"Groen","type":"Tablet","status":"active"},"status":"active"},{ "id":8,"patientId":1,"medicineId":7,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":7,"name":"Furosemide","indication":"Hartfalen","dose":40,"doseUnit":"mg","shape":"Hexagonaal","color":"Wit","type":"Tablet","status":"active"},"status":"active"},{ "id":9,"patientId":1,"medicineId":8,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":8,"name":"Finasteride","indication":"Nycturie","dose":5,"doseUnit":"mg","shape":"Rond","color":"Zwart","type":"Capsule","status":"active"},"status":"active"},{ "id":10,"patientId":1,"medicineId":9,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":9,"name":"Oxazepam","indication":"Slaapproblemen","dose":10,"doseUnit":"mg","shape":"Vierkant","color":"Wit","type":"Tablet","status":"active"},"status":"active"}],"2":[{ "id":1,"patientId":1,"medicineId":1,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":1,"name":"Rosuvastatine","indication":"Hypercholesterolemie","dose":10,"doseUnit":"mg","shape":"Vierkant","color":"Wit","type":"Tablet","status":"active"},"status":"active"},{ "id":3,"patientId":1,"medicineId":2,"intakeStart":"12:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":2,"name":"Hydrochloorthiazide","indication":"Hypertensei","dose":12.5,"doseUnit":"mg","shape":"Rond","color":"Rood","type":"Tablet","status":"active"},"status":"active"},{ "id":4,"patientId":1,"medicineId":3,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":3,"name":"Metformine","indication":"Diabetes Mellitus type 2","dose":500,"doseUnit":"mg","shape":"Vierkant","color":"Wit","type":"Tablet","status":"active"},"status":"active"},{ "id":5,"patientId":1,"medicineId":4,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":4,"name":"Pantroprazol msr","indication":"Maagbeschermer","dose":80,"doseUnit":"mg","shape":"Vierkant","color":"Blauw","type":"Tablet","status":"active"},"status":"active"},{ "id":6,"patientId":1,"medicineId":5,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":5,"name":"Nitrofurantione","indication":"Antibiotica (Urineweginfectie)","dose":50,"doseUnit":"mg","shape":"Vierkant","color":"Wit","type":"Tablet","status":"active"},"status":"active"},{ "id":7,"patientId":1,"medicineId":6,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":6,"name":"Temazepam","indication":"Somberheid","dose":10,"doseUnit":"mg","shape":"Rond","color":"Groen","type":"Tablet","status":"active"},"status":"active"},{ "id":8,"patientId":1,"medicineId":7,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":7,"name":"Furosemide","indication":"Hartfalen","dose":40,"doseUnit":"mg","shape":"Hexagonaal","color":"Wit","type":"Tablet","status":"active"},"status":"active"},{ "id":9,"patientId":1,"medicineId":8,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":8,"name":"Finasteride","indication":"Nycturie","dose":5,"doseUnit":"mg","shape":"Rond","color":"Zwart","type":"Capsule","status":"active"},"status":"active"},{ "id":10,"patientId":1,"medicineId":9,"intakeStart":"00:00:00.000","intakeEnd":"23:59:59.000","amount":1,"medicine":{ "id":9,"name":"Oxazepam","indication":"Slaapproblemen","dose":10,"doseUnit":"mg","shape":"Vierkant","color":"Wit","type":"Tablet","status":"active"},"status":"active"}]}
                             _logger.LogError("API returned: {statusCode}", response.StatusCode);
                         }                
                     }
@@ -74,6 +70,51 @@ namespace ReminderService
 
                 await Task.Delay(15000, stoppingToken);
             }
+        }
+
+        private async void SendAllReminders(string json)
+        {
+            var jtoken = JToken.Parse(json);
+            var messages = new List<Message>();
+            foreach (JProperty user in jtoken)
+            {
+                //SEND DATA
+                foreach (var intake in user.Children().Children())
+                {
+                    var message = CreateMessage(int.Parse(user.Name), intake);
+                    if(message != null)
+                    {
+                        messages.Add(message);
+                    }
+                }
+            }
+
+            var result = await FirebaseMessaging.DefaultInstance.SendAllAsync(messages);
+            return;
+        }
+
+        private Message? CreateMessage(int id, JToken intake)
+        {
+            string? medicineName = intake.Value<JToken>("medicine").Value<string>("name");
+            TimeOnly intakeStart = TimeOnly.Parse(intake.Value<string>("intakeStart"));
+            TimeOnly intakeEnd = TimeOnly.Parse(intake.Value<string>("intakeEnd"));
+
+            if(medicineName != null) {  
+                var registrationToken = "ADD_TOKEN"; //GET DEVICEID
+
+                var message = new Message()
+                {
+                    Token = registrationToken,
+                    Notification = new Notification()
+                    {
+                        Title = "Gemiste inname",
+                        Body = $"U heeft uw inname van {medicineName} tussen {intakeStart.ToString("HH:mm")} en {intakeEnd.ToString("HH:mm")} gemist"
+                    }
+                };
+                    return message;
+            }
+
+            return null;
         }
     }
 }
