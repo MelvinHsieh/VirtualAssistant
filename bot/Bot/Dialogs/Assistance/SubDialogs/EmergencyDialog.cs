@@ -41,7 +41,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                 var content = new
                 {
                     message = "Een patiënt heeft een noodoproep geplaatst! Klik op dit bericht om naar het dossier van de patiënt te gaan!",
-                    URI = $"/patient/details/{stepContext.Context.Activity.Properties["userId"]}"
+                    URI = $"/patient/details/{stepContext.Context.Activity.From.Id}"
                 };
 
                 StringContent httpContent = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
@@ -57,7 +57,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
                     await stepContext.Context.SendActivityAsync(MessageFactory.Text("De hulpoproep kon niet worden verzonden."));
                 }
 
-                await LogEmergencyCall((string)stepContext.Context.Activity.Properties["userId"]);
+                await LogEmergencyCall((string)stepContext.Context.Activity.From.Id);
             }
 
             return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
