@@ -2,16 +2,16 @@ package com.infosupport.virtualassistent.receivers;
 
 import android.media.MediaPlayer;
 
-import com.infosupport.virtualassistent.MainActivity;
+import com.infosupport.virtualassistent.AssistantActivity;
 import com.infosupport.virtualassistent.R;
 
 import java.lang.ref.WeakReference;
 
 public class DetectionResultReceiver implements SpeechResultReceiver.ResultReceiverCallBack<String> {
-    private final WeakReference<MainActivity> activityRef;
+    private final WeakReference<AssistantActivity> activityRef;
 
-    public DetectionResultReceiver(MainActivity activity) {
-        activityRef = new WeakReference<MainActivity>(activity);
+    public DetectionResultReceiver(AssistantActivity activity) {
+        activityRef = new WeakReference<AssistantActivity>(activity);
     }
 
     @Override
@@ -25,6 +25,6 @@ public class DetectionResultReceiver implements SpeechResultReceiver.ResultRecei
 
     @Override
     public void onError(Exception exception) {
-        activityRef.get().showMessage("Account info failed", false);
+        activityRef.get().showMessage("Account info failed", false, false);
     }
 }

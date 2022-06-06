@@ -7,11 +7,11 @@ namespace web.Models
     {
         [JsonProperty(PropertyName = "id")]
         public int Id { get; set; } = 0;
-        
+
         [JsonProperty(PropertyName = "name")]
         [DisplayName("Naam")]
         public string Name { get; set; } = string.Empty;
-        
+
         [JsonProperty(PropertyName = "indication")]
         [DisplayName("Indicatie")]
         public string Indication { get; set; } = string.Empty;

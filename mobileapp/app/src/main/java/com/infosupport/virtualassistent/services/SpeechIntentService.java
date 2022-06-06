@@ -66,7 +66,7 @@ public class SpeechIntentService extends IntentService {
             bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, speechRecognitionResult.getText());
         }
         else if (speechRecognitionResult.getReason() == ResultReason.NoMatch) {
-            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "Sorry, dat kon ik niet verstaan.");
+            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "");
         }
         else if (speechRecognitionResult.getReason() == ResultReason.Canceled) {
             CancellationDetails cancellation = CancellationDetails.fromResult(speechRecognitionResult);

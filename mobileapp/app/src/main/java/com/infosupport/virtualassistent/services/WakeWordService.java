@@ -17,7 +17,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.infosupport.virtualassistent.MainActivity;
+import com.infosupport.virtualassistent.AssistantActivity;
 import com.infosupport.virtualassistent.R;
 import com.infosupport.virtualassistent.receivers.SpeechResultReceiver;
 
@@ -105,6 +105,7 @@ public class WakeWordService extends Service {
         Intent i = new Intent("PorcupineInitError");
         i.putExtra("errorMessage", message);
         sendBroadcast(i);
+        LoggingService.Log(message);
     }
 
     private Notification getNotification(String title, String message) {
@@ -113,7 +114,7 @@ public class WakeWordService extends Service {
             pendingIntent = PendingIntent.getActivity(
                     this,
                     0,
-                    new Intent(this, MainActivity.class),
+                    new Intent(this, AssistantActivity.class),
                     PendingIntent.FLAG_MUTABLE);
         }
 
@@ -138,6 +139,7 @@ public class WakeWordService extends Service {
                 porcupineManager.stop();
                 porcupineManager.delete();
             } catch (PorcupineException e) {
+                LoggingService.Log(e.getMessage());
                 Log.e("PORCUPINE", e.toString());
             }
         }

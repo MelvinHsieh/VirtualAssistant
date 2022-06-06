@@ -2,7 +2,6 @@
 using Application.Repositories.Interfaces;
 using Domain.Entities.MedicalData;
 using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Repositories
 {

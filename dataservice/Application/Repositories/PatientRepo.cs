@@ -37,10 +37,10 @@ namespace Application.Repositories
                 return result;
             }
 
-            _context.Patients.Add(patient);
+            var entityEntry = _context.Patients.Add(patient);
             _context.SaveChanges();
 
-            return new Result(true);
+            return new Result(true, null, entityEntry.Entity.Id);
         }
 
         public bool DoesPatientExist(int id)

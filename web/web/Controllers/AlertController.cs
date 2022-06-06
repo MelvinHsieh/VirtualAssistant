@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using web.Models;
 using web.SignalR.Hubs;
+using web.Utils;
 
 namespace web.Controllers
 {
+    [Authorize(Roles = Roles.All)]
     public class AlertController : Controller
     {
         private readonly IHubContext<NotificationHub, INotificationHubClient> _hub;
@@ -17,7 +20,7 @@ namespace web.Controllers
         [HttpPost("/alert")]
         public async Task<IActionResult> PostAlert([FromBody] AlertDto alert)
         {
-            await _hub.Clients.All.SendAlert(alert.Message);  
+            await _hub.Clients.All.SendAlert(alert.Message);
             return Ok("Alert sent!");
         }
     }

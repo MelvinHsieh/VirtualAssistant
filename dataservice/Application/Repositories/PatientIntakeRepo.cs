@@ -13,7 +13,7 @@ namespace Application.Repositories
         private IPatientRepo _patientRepo { get; set; }
         private IIntakeRegistrationRepo _intakeRegistrationRepo { get; set; }
 
-        public PatientIntakeRepo(MedicineDbContext medicineDbContext, IMedicineRepo medicineRepo, 
+        public PatientIntakeRepo(MedicineDbContext medicineDbContext, IMedicineRepo medicineRepo,
             IPatientRepo patientRepo, IIntakeRegistrationRepo intakeRegistrationRepo)
         {
             _medicineRepo = medicineRepo;

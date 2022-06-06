@@ -39,9 +39,9 @@ namespace Application.Repositories
                 Function = functionName
             };
 
-            _context.CareWorkers.Add(careWorker);
+            var entityEntry = _context.CareWorkers.Add(careWorker);
             _context.SaveChanges();
-            return new Result(true);
+            return new Result(true, null, entityEntry.Entity.Id);
         }
 
         public CareWorker? FindCareWorker(int id)

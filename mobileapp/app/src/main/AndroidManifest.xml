@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.infosupport.virtualassistent">
 
     <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
@@ -12,13 +13,24 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
+
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.VirtualAssistent">
+        android:theme="@style/Theme.VirtualAssistent"
+        tools:targetApi="m">
+        <activity
+            android:name=".AssistantActivity"
+            android:exported="false" />
 
         <service
             android:name=".services.WakeWordService"
@@ -46,9 +58,5 @@
         </service>
 
     </application>
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.TTS_SERVICE" />
-        </intent>
-    </queries>
+
 </manifest>
