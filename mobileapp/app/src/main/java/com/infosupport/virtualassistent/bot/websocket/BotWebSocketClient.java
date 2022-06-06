@@ -75,6 +75,6 @@ public class BotWebSocketClient extends WebSocketClient {
 
     @Override
     public void onError(Exception ex) {
-        System.out.println(ex.toString());
+        System.out.println("Error: " + ex.toString());
     }
 }
