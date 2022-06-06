@@ -36,25 +36,29 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
             httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + configuration["AdminToken"]);
             httpClient.BaseAddress = new Uri($"https://{configuration["WebServiceHostName"]}");
 
-            var content = new
+            if (stepContext.Context.Activity.Properties.HasValues)
             {
-                message = "Een patiënt heeft een noodoproep geplaatst! Klik op dit bericht om naar het dossier van de patiënt te gaan!",
-                URI = $"/patient/details/{stepContext.Context.Activity.From.Id}" // TODO: Make connection between android app and bot (combine with other subdialogs).
-            };
+                var content = new
+                {
+                    message = "Een patiënt heeft een noodoproep geplaatst! Klik op dit bericht om naar het dossier van de patiënt te gaan!",
+                    URI = $"/patient/details/{stepContext.Context.Activity.Properties["userId"]}"
+                };
 
-            StringContent httpContent = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
+                StringContent httpContent = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
 
-            var response = await httpClient.PostAsync("alert", httpContent);
+                var response = await httpClient.PostAsync("alert", httpContent);
 
-            if (response.IsSuccessStatusCode)
-            {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Een hulpoproep is verzonden! Een zorgmedewerker zal zo snel mogelijk bevestigen onderweg te zijn!"));
-            } else
-            {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text("De hulpoproep kon niet worden verzonden."));
+                if (response.IsSuccessStatusCode)
+                {
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Text("Een hulpoproep is verzonden! Een zorgmedewerker zal zo snel mogelijk bevestigen onderweg te zijn!"));
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync(MessageFactory.Text("De hulpoproep kon niet worden verzonden."));
+                }
+
+                await LogEmergencyCall((string)stepContext.Context.Activity.Properties["userId"]);
             }
-
-            await LogEmergencyCall(stepContext.Context.Activity.From.Id);
 
             return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
         }

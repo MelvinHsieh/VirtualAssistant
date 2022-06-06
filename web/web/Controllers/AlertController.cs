@@ -19,7 +19,7 @@ namespace web.Controllers
         [HttpPost("/alert")]
         public async Task<IActionResult> PostAlert([FromBody] AlertDto alert)
         {
-            await _hub.Clients.All.SendAlert(alert.Message);
+            await _hub.Clients.All.SendAlert(alert.Message, alert.URI);
             return Ok("Alert sent!");
         }
     }
