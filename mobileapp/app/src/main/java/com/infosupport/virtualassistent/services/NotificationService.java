@@ -13,6 +13,9 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.infosupport.virtualassistent.R;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class NotificationService extends FirebaseMessagingService {
     public static final String CHANNEL_ID = "HANS Notification Channel";
 
@@ -52,6 +55,15 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     private void sendRegistrationToServer(String token) {
+        try {
+            URL url = new URL("http://exampleurl.com/");
+            HttpURLConnection client = null;
+            client = (HttpURLConnection) url.openConnection();
+            client.setRequestMethod("POST");
+            client.setRequestProperty("Key","Value");
+            client.setDoOutput(true);
+        } catch (Exception e) {
 
+        }
     }
 }
