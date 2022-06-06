@@ -86,7 +86,7 @@ namespace Infrastructure.Migrations.PatientDbMigrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Patients", (string)null);
+                    b.ToTable("Patients");
 
                     b.HasData(
                         new
@@ -119,6 +119,47 @@ namespace Infrastructure.Migrations.PatientDbMigrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.PatientData.PatientLocation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PatientLocations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Department = "TestLocatie",
+                            RoomId = "1",
+                            Status = "active"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Department = "TestLocatie",
+                            RoomId = "2",
+                            Status = "active"
+                        });
+                });
+
             modelBuilder.Entity("Domain.Entities.PatientData.EmergencyNotice", b =>
                 {
                     b.HasOne("Domain.Entities.PatientData.Patient", "Patient")
@@ -128,61 +169,24 @@ namespace Infrastructure.Migrations.PatientDbMigrations
                         .IsRequired();
 
                     b.Navigation("Patient");
-                    modelBuilder.Entity("Domain.Entities.PatientData.PatientLocation", b =>
-                        {
-                            b.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                            b.Property<string>("Department")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b.Property<string>("RoomId")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b.Property<string>("Status")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b.HasKey("Id");
-
-                            b.ToTable("PatientLocations", (string)null);
-
-                            b.HasData(
-                                new
-                                {
-                                    Id = 1,
-                                    Department = "TestLocatie",
-                                    RoomId = "1",
-                                    Status = "active"
-                                },
-                                new
-                                {
-                                    Id = 2,
-                                    Department = "TestLocatie",
-                                    RoomId = "2",
-                                    Status = "active"
-                                });
-                        });
-
-                    modelBuilder.Entity("Domain.Entities.PatientData.Patient", b =>
-                        {
-                            b.Navigation("EmergencyNotices");
-                            b.HasOne("Domain.Entities.PatientData.PatientLocation", "Location")
-                                .WithMany()
-                                .HasForeignKey("LocationId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b.Navigation("Location");
-                        });
-#pragma warning restore 612, 618
-
                 });
+
+            modelBuilder.Entity("Domain.Entities.PatientData.Patient", b =>
+                {
+                    b.HasOne("Domain.Entities.PatientData.PatientLocation", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PatientData.Patient", b =>
+                {
+                    b.Navigation("EmergencyNotices");
+                });
+#pragma warning restore 612, 618
         }
     }
 }

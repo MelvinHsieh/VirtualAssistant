@@ -3,6 +3,7 @@ using Application.Repositories.Interfaces;
 using Domain.Entities.MedicalData;
 using Domain.Entities.PatientData;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Repositories
 {
@@ -58,7 +59,7 @@ namespace Application.Repositories
 
         public Patient? GetPatient(int id)
         {
-            return _context.Patients.Find(id);
+            return _context.Patients.Include(p => p.Location).FirstOrDefault(p => p.Id == id);
         }
 
         public IEnumerable<Patient> GetAllPatients()

@@ -27,7 +27,7 @@ namespace Domain.Entities.PatientData
 
         public List<EmergencyNotice> EmergencyNotices { get; set; } = new List<EmergencyNotice>();
 
-        public int LocationId { get; set; } = 0;
+        public int LocationId { get; set; }
 
         public virtual PatientLocation? Location { get; set; }
     }

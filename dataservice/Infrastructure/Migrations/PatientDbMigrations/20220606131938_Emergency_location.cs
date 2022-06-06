@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Infrastructure.Migrations.PatientDbMigrations
 {
-    public partial class PatientLocation : Migration
+    public partial class Emergency_location : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,6 +15,26 @@ namespace Infrastructure.Migrations.PatientDbMigrations
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
+
+            migrationBuilder.CreateTable(
+                name: "EmergencyNotices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Sent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PatientId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmergencyNotices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmergencyNotices_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateTable(
                 name: "PatientLocations",
@@ -59,6 +80,11 @@ namespace Infrastructure.Migrations.PatientDbMigrations
                 table: "Patients",
                 column: "LocationId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_EmergencyNotices_PatientId",
+                table: "EmergencyNotices",
+                column: "PatientId");
+
             migrationBuilder.AddForeignKey(
                 name: "FK_Patients_PatientLocations_LocationId",
                 table: "Patients",
@@ -73,6 +99,9 @@ namespace Infrastructure.Migrations.PatientDbMigrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Patients_PatientLocations_LocationId",
                 table: "Patients");
+
+            migrationBuilder.DropTable(
+                name: "EmergencyNotices");
 
             migrationBuilder.DropTable(
                 name: "PatientLocations");
