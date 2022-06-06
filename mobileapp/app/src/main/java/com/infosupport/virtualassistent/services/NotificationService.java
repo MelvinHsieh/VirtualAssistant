@@ -18,12 +18,9 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.infosupport.virtualassistent.R;
 
-import java.io.BufferedOutputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class NotificationService extends FirebaseMessagingService {
     private final RequestQueue queue;
@@ -45,7 +42,7 @@ public class NotificationService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
-        String title = message.getNotification().getTitle();
+        String title = Objects.requireNonNull(message.getNotification()).getTitle();
         String text = message.getNotification().getBody();
         createNotificationChannel(title, text);
         super.onMessageReceived(message);
@@ -72,14 +69,14 @@ public class NotificationService extends FirebaseMessagingService {
     }
 
     private void sendRegistrationToServer(String token) {
-        String url = activity.getApplicationContext().getString(R.string.dataservice);
+        String url = activity.getApplicationContext().getString(R.string.dataservice_url) + "api/PatientController";
 
         StringRequest req = new StringRequest(Request.Method.POST, url,
                 response -> {},
                 error -> {}) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
 
                 params.put("token", token);
 
