@@ -20,4 +20,4 @@ jobs:
       - name: Delete preview environment
         uses: okteto/destroy-preview@latest
         with:
-          name: pr-50-0xboomie
+          name: pr-51-0xboomie
