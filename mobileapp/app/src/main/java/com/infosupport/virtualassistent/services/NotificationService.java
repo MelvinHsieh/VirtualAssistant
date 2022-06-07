@@ -33,6 +33,7 @@ public class NotificationService extends FirebaseMessagingService {
     private final String CHANNEL_ID = "HANS Notification Channel";
 
     NotificationService(Activity activity) {
+        activity = (activity == null) ? (Activity) this.getApplicationContext() : activity;
         URL_DEVICE = activity.getApplicationContext().getString(R.string.dataservice_url) + "/api/PatientDevice";
         queue = Volley.newRequestQueue(activity);
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
