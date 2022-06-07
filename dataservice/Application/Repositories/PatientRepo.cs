@@ -166,7 +166,7 @@ namespace Application.Repositories
             return new Result(true);
         }
 
-        public Result RegisterAlert(int id, DateTime date)
+        public Result RegisterAlert(int id)
         {
             Result result = new Result(false, "Alert opslaan mislukt!");
 
@@ -183,14 +183,14 @@ namespace Application.Repositories
                 return result;
             }
 
-            patient.EmergencyNotices.Add(new EmergencyNotice {
+            patient.EmergencyNotices.Add(new EmergencyNotice
+            {
                 PatientId = id,
-                Sent = date
+                Sent = DateTime.Now
             });
 
             _context.Patients.Update(patient);
             _context.SaveChanges();
-
 
             result.Success = true;
             result.Message = "De melding is geregistreerd!";

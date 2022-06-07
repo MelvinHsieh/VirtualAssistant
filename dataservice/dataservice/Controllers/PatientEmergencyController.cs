@@ -23,18 +23,26 @@ namespace dataservice.Controllers
         /// </summary>
         // POST api/<PatientController>
         [HttpPost]
-        public void Post([FromBody] EmergencyDto data)
+        public IActionResult Post([FromBody] EmergencyDto data)
         {
+            Result result = null;
+
             if (data != null)
             {
-                DateTime date;
                 int patientId = data.PatientId;
-                if (DateTime.TryParse(data.date, out date))
-                {
-                    _patientRepo.RegisterAlert(patientId, date);
-                }
+
+                result = _patientRepo.RegisterAlert(patientId);
             }
+
+            return Ok(result);
         }
-        
+
+        [HttpPost("/confirm")]
+        public IActionResult Confirm([FromBody] int emergencyNoticeId)
+        {
+            Result result = null;
+
+            return Ok(result);
+        }
     }
 }

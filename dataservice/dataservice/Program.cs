@@ -3,14 +3,12 @@ using Application.Common.Models;
 using dataservice.Producers;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
 using Producer.RabbitMQ;
-using System.Net;
+using System.Text;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -35,9 +33,9 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddAuthentication(options =>
 {
-   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-   options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
    {
        options.SaveToken = true;
@@ -126,19 +124,17 @@ app.UseExceptionHandler(
 );
 
 // migrate any database changes on startup (includes initial db creation)
-    using (var scope = app.Services.CreateScope())
-    {
-        var patientContext = scope.ServiceProvider.GetRequiredService<PatientDbContext>();
-        var medicineContext = scope.ServiceProvider.GetRequiredService<MedicineDbContext>();
-        patientContext.Database.Migrate();
-        medicineContext.Database.Migrate();
-    }
+using (var scope = app.Services.CreateScope())
+{
+    var patientContext = scope.ServiceProvider.GetRequiredService<PatientDbContext>();
+    var medicineContext = scope.ServiceProvider.GetRequiredService<MedicineDbContext>();
+    patientContext.Database.Migrate();
+    medicineContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    
-
     app.UseSwagger();
     app.UseSwaggerUI();
 }

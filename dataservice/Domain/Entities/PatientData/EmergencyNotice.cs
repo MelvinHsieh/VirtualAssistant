@@ -10,6 +10,8 @@ namespace Domain.Entities.PatientData
         [Required]
         public DateTime Sent { get; set; }
 
+        public bool Confirmed { get; set; } = false;
+
         [Required]
         public int PatientId{ get; set; }
         

@@ -4,7 +4,5 @@
     {
         public int PatientId { get; set; }
 
-        public string date { get; set; }
-
     }
 }
