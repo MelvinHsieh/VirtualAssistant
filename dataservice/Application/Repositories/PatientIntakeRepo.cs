@@ -105,5 +105,42 @@ namespace Application.Repositories
 
             return new Result(true);
         }
+
+        public IEnumerable<PatientIntake> GetRemainingIntakesEndingBetween(int patientId, DateTime startSearch, DateTime endSearch)
+        {
+            var intakes = GetRemainingIntakesByPatientId(1);
+
+            if(startSearch.TimeOfDay.Hours == 23 && endSearch.TimeOfDay.Hours == 0)
+            {
+                intakes = intakes
+                .Where(i => (i.IntakeEnd.ToTimeSpan() > startSearch.TimeOfDay && i.IntakeEnd.ToTimeSpan() <= new TimeSpan(23, 59, 99)) ||
+                        (i.IntakeEnd.ToTimeSpan() >= new TimeSpan(0,0,0) && i.IntakeEnd.ToTimeSpan() <= endSearch.TimeOfDay));
+                   
+            } else
+            {
+                intakes = intakes
+                .Where(i => i.IntakeEnd.ToTimeSpan() > startSearch.TimeOfDay)
+                .Where(i => i.IntakeEnd.ToTimeSpan() <= endSearch.TimeOfDay);
+            }
+
+            return intakes;
+
+             
+        }
+
+        public Dictionary<int, IEnumerable<PatientIntake>> GetAllMissedIntakes(DateTime searchStart, DateTime searchEnd)
+        {
+            var patients = _patientRepo.GetAllPatients();
+            var missedIntakes = new Dictionary<int, IEnumerable<PatientIntake>>();
+            foreach(var patient in patients)
+            {
+                IEnumerable<PatientIntake> found = GetRemainingIntakesEndingBetween(patient.Id, searchStart, searchEnd);
+                if(found.Count() > 0)
+                {
+                    missedIntakes.Add(patient.Id, found);
+                }
+            }
+            return missedIntakes;
+        }
     }
 }
