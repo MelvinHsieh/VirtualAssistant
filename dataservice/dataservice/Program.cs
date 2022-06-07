@@ -34,27 +34,27 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+   options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
-    {
-        options.SaveToken = true;
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidAudience = configuration["JWT:ValidAudience"],
-            ValidIssuer = configuration["JWT:ValidIssuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateIssuerSigningKey = true,
-            ValidateLifetime = false,
-            RequireExpirationTime = false,
-            RoleClaimType = "auth_role"
-        };
-    }
- );
+   {
+       options.SaveToken = true;
+       options.RequireHttpsMetadata = false;
+       options.TokenValidationParameters = new TokenValidationParameters()
+       {
+           ValidAudience = configuration["JWT:ValidAudience"],
+           ValidIssuer = configuration["JWT:ValidIssuer"],
+           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
+           ValidateIssuer = true,
+           ValidateAudience = true,
+           ValidateIssuerSigningKey = true,
+           ValidateLifetime = false,
+           RequireExpirationTime = false,
+           RoleClaimType = "auth_role"
+       };
+   }
+);
 
 builder.Services.AddSwaggerGen(swagger =>
 {
@@ -124,10 +124,7 @@ app.UseExceptionHandler(
     }
 );
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    // migrate any database changes on startup (includes initial db creation)
+// migrate any database changes on startup (includes initial db creation)
     using (var scope = app.Services.CreateScope())
     {
         var patientContext = scope.ServiceProvider.GetRequiredService<PatientDbContext>();
@@ -135,6 +132,11 @@ if (app.Environment.IsDevelopment())
         patientContext.Database.Migrate();
         medicineContext.Database.Migrate();
     }
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    
 
     app.UseSwagger();
     app.UseSwaggerUI();

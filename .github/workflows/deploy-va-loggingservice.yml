@@ -2,6 +2,9 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
 name: Build and deploy Node.js app to Azure Web App - va-loggingservice
+defaults:
+      run:
+        working-directory: './loggingservice'
 
 on:
   push:
@@ -20,6 +23,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: npm install, build, and test
         run: |

@@ -10,6 +10,7 @@
         public string? Shape { get; set; }
         public string? Color { get; set; }
         public string? Type { get; set; }
+        public string? ImageURL { get; set; }
 
     }
 }

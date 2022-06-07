@@ -36,6 +36,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
         private async Task<DialogTurnResult> Confirm(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+
             //ask for confirmation
             var culture = CultureInfo.GetCultureInfo("nl-NL");
             CultureInfo.CurrentCulture = culture;

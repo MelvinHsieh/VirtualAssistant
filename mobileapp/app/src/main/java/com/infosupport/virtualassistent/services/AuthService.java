@@ -103,7 +103,7 @@ public class AuthService {
         try {
             JSONObject json = new JSONObject(jsonString);
             JSONObject userJson = json.getJSONObject("user");
-            userId = userJson.getString("_id");
+            userId = userJson.getString("patientId");
 
         } catch (JSONException e) {
             Toast.makeText(activity, "Je accountgegevens konden niet worden opgehaald.", Toast.LENGTH_SHORT).show();

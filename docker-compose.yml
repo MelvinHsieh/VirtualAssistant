@@ -28,7 +28,7 @@ services:
       - MESSAGE_BUS_PASSWORD=MessageBus12345!@
       - MESSAGE_BUS_EXCHANGE_NAME=storeInteraction
       - MESSAGE_BUS_QUEUE_NAME=storeInteractionQueue
-      - MONGO_URL=mongodb://loggingdb:loggingdbpass@loggingdb:27017/
+      - MONGO_URL=mongodb://vaadmin:dKw4kHHy6JxpCKSeCqI6pxwHjAsEKhqGHtxL5zLZY9ydNKiM8BSHQRHQ4ArV4BkHxkxGn0Eqsm8tdTmUAYANOQ==@vaadmin.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@vaadmin@
     depends_on:
       - "messagebus"
       - "loggingdb"
@@ -74,7 +74,7 @@ services:
 
   userdatadb:
     container_name: userdatadb
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/azure-sql-edge:latest
     environment:
       MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
@@ -88,7 +88,7 @@ services:
 
   generaldatadb:
     container_name: generaldatadb
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/azure-sql-edge:latest
     environment:
       MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
@@ -109,10 +109,7 @@ services:
       - "3001:3001"
     environment:
       - PORT=3001
-      - AUTH_DB_HOST_NAME=authdb
-      - AUTH_DB_PORT=27017
-      - AUTH_DB_USER_ID=authdb_user
-      - AUTH_DB_USER_PASSWORD=AuthDBPass12345
+      - MONGO_URL=mongodb://vaadmin:dKw4kHHy6JxpCKSeCqI6pxwHjAsEKhqGHtxL5zLZY9ydNKiM8BSHQRHQ4ArV4BkHxkxGn0Eqsm8tdTmUAYANOQ==@vaadmin.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@vaadmin@
       - JWT_SECRET_TOKEN=JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr
       - JWT_AUDIENCE=VA_AuthAudience
       - JWT_ISSUER=VA_AuthIssuer
