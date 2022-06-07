@@ -76,38 +76,44 @@ namespace ReminderService
 
         private async void SendAllReminders(string json)
         {
-            var jtoken = JToken.Parse(json);
-            var messages = new List<Message>();
-            foreach (JProperty user in jtoken)
-            {
-                var deviceId = user.Children().First().Value<string>("deviceId");
-                var intakeArray = user.Children().First().Value<JArray>("patientIntake");
+            if(!string.IsNullOrEmpty(json)) { 
+                var jtoken = JToken.Parse(json);
+                var messages = new List<Message>();
+                foreach (JProperty user in jtoken)
+                {
+                    var deviceId = user.Children().First().Value<string>("deviceId");
+                    var intakeArray = user.Children().First().Value<JArray>("patientIntake");
 
-                if(deviceId != null) {  
-                    foreach (var intake in intakeArray)
-                    {
-                        var message = CreateMessage(int.Parse(user.Name), intake, deviceId);
-                        if(message != null)
+                    if(deviceId != null) {  
+                        foreach (var intake in intakeArray)
                         {
-                            messages.Add(message);
+                            var message = CreateMessage(int.Parse(user.Name), intake, deviceId);
+                            if(message != null)
+                            {
+                                messages.Add(message);
+                            }
                         }
                     }
                 }
-            }
 
-            if(messages.Count > 0) { 
-                var result = await FirebaseMessaging.DefaultInstance.SendAllAsync(messages);
+                if(messages.Count > 0) { 
+                    var result = await FirebaseMessaging.DefaultInstance.SendAllAsync(messages);
+                }
             }
             return;
         }
 
         private Message? CreateMessage(int id, JToken intake, string deviceId)
         {
+            
+
             string? medicineName = intake.Value<JToken>("medicine").Value<string>("name");
             TimeOnly intakeStart = TimeOnly.Parse(intake.Value<string>("intakeStart"));
             TimeOnly intakeEnd = TimeOnly.Parse(intake.Value<string>("intakeEnd"));
 
-            if(medicineName != null) {  
+            if(medicineName != null) {
+                Console.WriteLine($"U heeft uw inname van {medicineName} tussen {intakeStart.ToString("HH:mm")} en {intakeEnd.ToString("HH:mm")} gemist");
+
                 var message = new Message()
                 {
                     Token = deviceId,
