@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dataservice_url">va-dataservice.azurewebsites.net</string>
+    <string name="dataservice_url">https://va-authservice.azurewebsites.net</string>
     <string name="wakeword_service_channel_id">WWEServiceChannel</string>
     <string name="wakeword_keyword_path">HansKeyword.ppn</string>
     <string name="direct_line_url">https://directline.botframework.com/v3/directline/conversations</string>

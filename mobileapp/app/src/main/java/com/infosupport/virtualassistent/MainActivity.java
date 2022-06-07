@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.infosupport.virtualassistent.services.AuthService;
 
 public class MainActivity extends AppCompatActivity {
@@ -69,16 +70,4 @@ public class MainActivity extends AppCompatActivity {
     private void showNotification(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
-
-    private void setNotificationButtonListener() {
-        ImageButton notifButton = (ImageButton) findViewById(R.id.notification_button);
-        notifButton.setImageResource(R.drawable.notification_dark_disabled);
-        notifButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                notifButton.setImageResource(R.drawable.notification_dark_disabled);
-            }
-        });
-    }
-
 }

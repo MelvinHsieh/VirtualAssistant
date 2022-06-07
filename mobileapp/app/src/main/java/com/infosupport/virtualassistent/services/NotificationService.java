@@ -5,7 +5,10 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
@@ -14,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.infosupport.virtualassistent.R;
@@ -23,14 +27,15 @@ import java.util.Map;
 import java.util.Objects;
 
 public class NotificationService extends FirebaseMessagingService {
+    private final String URL_DEVICE;
     private final RequestQueue queue;
-    private final Activity activity;
-
-    public static final String CHANNEL_ID = "HANS Notification Channel";
+    private final SharedPreferences preferences;
+    private final String CHANNEL_ID = "HANS Notification Channel";
 
     NotificationService(Activity activity) {
-        this.activity = activity;
-        this.queue = Volley.newRequestQueue(activity);
+        URL_DEVICE = activity.getApplicationContext().getString(R.string.dataservice_url) + "/api/PatientDevice";
+        queue = Volley.newRequestQueue(activity);
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
     }
 
     @Override
@@ -68,22 +73,36 @@ public class NotificationService extends FirebaseMessagingService {
         }
     }
 
-    private void sendRegistrationToServer(String token) {
-        String url = activity.getApplicationContext().getString(R.string.dataservice_url) + "api/PatientController";
+    private void sendRegistrationToServer() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        sendRegistrationToServer(task.getResult());
+                    }
+                });
+    }
 
-        StringRequest req = new StringRequest(Request.Method.POST, url,
+    private void sendRegistrationToServer(String token) {
+        String userId = preferences.getString("userId", null);
+
+        if (URL_DEVICE == null || queue == null || userId == null) return;
+
+        StringRequest req = new StringRequest(Request.Method.POST, URL_DEVICE,
                 response -> {},
                 error -> {}) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
 
-                params.put("token", token);
+                params.put("deviceId", token);
+                params.put("userId", token);
+
+                Log.i("Text", "Here is the retrieve");
+                Log.i("data", " retrieve --> "+userId);
 
                 return params;
             }
         };
         queue.add(req);
     }
-
 }

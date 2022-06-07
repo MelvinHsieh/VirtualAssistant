@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -16,6 +17,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.infosupport.virtualassistent.AssistantActivity;
 import com.infosupport.virtualassistent.MainActivity;
 import com.infosupport.virtualassistent.R;
 import com.infosupport.virtualassistent.model.LoginAsyncResponse;
@@ -27,14 +30,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AuthService {
-
+    private final String URL_DEVICE;
     private final RequestQueue queue;
     private final Activity activity;
     private final SharedPreferences preferences;
 
     public AuthService(Activity activity) {
-        this.activity = activity;
+        URL_DEVICE = activity.getApplicationContext().getString(R.string.dataservice_url) + "/api/PatientDevice";
         queue = Volley.newRequestQueue(activity);
+        this.activity = activity;
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
     }
 
@@ -118,7 +122,42 @@ public class AuthService {
         prefEditor.putString("userId", userId);
         prefEditor.apply();
 
+        sendRegistrationToServer();
+
         responseCallback.processFinished(true);
+    }
+
+    public void sendRegistrationToServer() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        sendRegistrationToServer(task.getResult());
+                    }
+                });
+    }
+
+    private void sendRegistrationToServer(String token) {
+        String userId = preferences.getString("userId", null);
+
+        if (URL_DEVICE == null || queue == null || userId == null) return;
+
+        StringRequest req = new StringRequest(Request.Method.POST, URL_DEVICE,
+                response -> {},
+                error -> {}) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("deviceId", token);
+                params.put("userId", token);
+
+                Log.i("Text", "Here is the retrieve");
+                Log.i("data", " retrieve --> "+userId);
+
+                return params;
+            }
+        };
+        queue.add(req);
     }
 
 }
