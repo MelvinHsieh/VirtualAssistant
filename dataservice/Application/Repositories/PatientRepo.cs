@@ -204,10 +204,19 @@ namespace Application.Repositories
                 result.Message = "De patient bestaat niet.";
                 return result;
             }
-            EmergencyNotice emergencynotice = _context.EmergencyNotices
+            
+            EmergencyNotice? emergencynotice = _context.EmergencyNotices
                 .Where(en => en.PatientId == patientId)
                 .Where(en => en.Confirmed != true)
-                .First();
+                .FirstOrDefault();
+
+            if (emergencynotice is null) 
+            {
+                result.Success = false;
+                result.Message = "Er is geen noodoproep geplaatst voor deze patient.";
+                return result;
+            }
+
             emergencynotice.Confirmed = true;
 
             _context.EmergencyNotices.Update(emergencynotice);
