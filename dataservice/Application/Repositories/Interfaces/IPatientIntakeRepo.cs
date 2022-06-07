@@ -10,8 +10,9 @@ namespace Application.Repositories.Interfaces
         public IEnumerable<PatientIntake> GetIntakesByPatientId(int patientId);
         public IEnumerable<PatientIntake> GetRemainingIntakesByPatientId(int patientId);
         public PatientIntake? GetIntakeById(int intakeId);
+
         public Result RemoveIntake(int id);
+
         public Result ValidateIntake(PatientIntake patientIntake);
-        public Dictionary<int, IEnumerable<PatientIntake>> GetAllMissedIntakes(DateTime searchStart, DateTime searchEnd);
     }
 }

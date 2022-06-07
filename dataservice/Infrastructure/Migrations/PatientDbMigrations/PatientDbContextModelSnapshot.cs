@@ -90,29 +90,6 @@ namespace Infrastructure.Migrations.PatientDbMigrations
                             Status = "active"
                         });
                 });
-
-            modelBuilder.Entity("Domain.Entities.PatientData.PatientDeviceIdentifier", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("DeviceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PatientDeviceIdentifiers");
-                });
 #pragma warning restore 612, 618
         }
     }
