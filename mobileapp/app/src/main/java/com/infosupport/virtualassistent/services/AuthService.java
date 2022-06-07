@@ -87,7 +87,7 @@ public class AuthService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer(issuer)
-                    .acceptLeeway(5)
+                    .acceptLeeway(50000)
                     .build();
             jwt = verifier.verify(response);
         } catch (JWTVerificationException exception){
