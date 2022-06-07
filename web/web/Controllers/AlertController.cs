@@ -10,7 +10,7 @@ namespace web.Controllers
     public class AlertController : Controller
     {
         private readonly IHubContext<NotificationHub, INotificationHubClient> _hub;
-
+        
         public AlertController(IHubContext<NotificationHub, INotificationHubClient> hub)
         {
             _hub = hub;
@@ -19,7 +19,8 @@ namespace web.Controllers
         [HttpPost("/alert")]
         public async Task<IActionResult> PostAlert([FromBody] AlertDto alert)
         {
-            await _hub.Clients.All.SendAlert(alert.Message, alert.URI);
+            await _hub.Clients.All.SendAlert(alert.Message, alert.DetailUri, alert.ConfirmUri);
+
             return Ok("Alert sent!");
         }
     }

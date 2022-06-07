@@ -10,12 +10,11 @@ connection.onreconnecting(() => {
     console.log("reconnecting")
 })
 
-connection.on("SendAlert", function (message, uri) {
+connection.on("SendAlert", function (message, detailuri, confirmuri) {
     var li = document.createElement("li");
     li.classList.add("d-flex", "justify-content-between", "list-group-item", "list-group-item-danger"); //Bootstrap
 
     var link = document.createElement("a")
-    link.setAttribute("href", `${uri}`)
     link.appendChild(li);
 
     document.getElementById("alertList").appendChild(link);
@@ -25,15 +24,28 @@ connection.on("SendAlert", function (message, uri) {
     var p = document.createElement("p");
     p.textContent = `${message}`;
 
+    var confirm = document.createElement("button");
+    confirm.textContent = "Noodoproep bevestigen";
+    confirm.classList.add("btn", "btn-light")
+    confirm.addEventListener("click", () => { 
+        fetch(confirmuri, {method: 'PUT'})
+        .then(data => {
+            return data
+        })
+        .then(res => {console.log(res)})
+    })
+
     var button = document.createElement("button");
-    button.textContent = "Ok";
+    button.textContent = "Naar detail pagina gaan";
     button.classList.add("btn", "btn-light")
     button.addEventListener("click", () => {
+        location.href = `${detailuri}`;
         li.remove();
     })
 
     li.appendChild(p);
     li.appendChild(button);
+    li.appendChild(confirm);
 });
 
 connection.start().then(() => {

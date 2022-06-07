@@ -37,12 +37,11 @@ namespace dataservice.Controllers
             return Ok(result);
         }
 
-        [HttpPost("/confirm")]
-        public IActionResult Confirm([FromBody] int emergencyNoticeId)
+        [HttpPut("/api/confirm")]
+        public IActionResult Confirm([FromBody] EmergencyDto data)
         {
-            Result result = null;
-
-            return Ok(result);
+            //maak call naar de bot
+           return Ok(_patientRepo.ConfirmAlert(data.PatientId));
         }
     }
 }

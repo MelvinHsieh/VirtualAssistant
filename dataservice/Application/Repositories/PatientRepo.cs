@@ -172,16 +172,12 @@ namespace Application.Repositories
 
             if (!DoesPatientExist(id))
             {
-                return result;
-            }
-
-            Patient? patient = GetPatient(id);
-            if (patient is null)
-            {
                 result.Success = false;
                 result.Message = "De patient bestaat niet.";
                 return result;
             }
+
+            Patient patient = GetPatient(id);
 
             patient.EmergencyNotices.Add(new EmergencyNotice
             {
@@ -194,6 +190,31 @@ namespace Application.Repositories
 
             result.Success = true;
             result.Message = "De melding is geregistreerd!";
+
+            return result;
+        }
+
+        public Result ConfirmAlert(int patientId) 
+        {
+            Result result = new Result(false, "Het bevestigen van de noodoproep is mislukt!");
+
+            if (!DoesPatientExist(patientId))
+            {
+                result.Success = false;
+                result.Message = "De patient bestaat niet.";
+                return result;
+            }
+            EmergencyNotice emergencynotice = _context.EmergencyNotices
+                .Where(en => en.PatientId == patientId)
+                .Where(en => en.Confirmed != true)
+                .First();
+            emergencynotice.Confirmed = true;
+
+            _context.EmergencyNotices.Update(emergencynotice);
+            _context.SaveChanges();
+
+            result.Success = true;
+            result.Message = "De noodoproep is bevestigd";
 
             return result;
         }

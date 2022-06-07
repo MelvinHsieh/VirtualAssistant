@@ -19,5 +19,6 @@ namespace Application.Repositories.Interfaces
         public Result ValidatePatient(Patient patient);
 
         public Result RegisterAlert(int id);
+        public Result ConfirmAlert(int patientId);
     }
 }
