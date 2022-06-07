@@ -29,7 +29,7 @@ namespace dataservice.Controllers
             {
                 DateTime date;
                 int patientId = data.PatientId;
-                if (DateTime.TryParse(data.date, out date))
+                if (DateTime.TryParse(data.Date, out date))
                 {
                     _patientRepo.RegisterAlert(patientId, date);
                 }
