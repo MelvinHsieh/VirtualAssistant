@@ -1,9 +1,6 @@
 using FirebaseAdmin.Messaging;
 using Newtonsoft.Json.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace ReminderService
 {
@@ -43,11 +40,12 @@ namespace ReminderService
 
 
                         //Get DateTime strings 
-                        /*var end = DateTime.Now;
-                        var start = end.AddMinutes(INTERVAL_MINUTES * -1);*/
+                        var end = DateTime.Now;
+                        var start = end.AddMinutes(INTERVAL_MINUTES * -1);
 
-                        var start = DateTime.Parse("2022-06-03T23:49:00");
-                        var end = DateTime.Parse("2022-06-04T00:10:00");
+                        // Tester 
+                        //var start = DateTime.Parse("2022-06-03T23:49:00");
+                        //var end = DateTime.Parse("2022-06-04T00:10:00");
 
 
                         var response = await _client.GetAsync(_dataURI + $"PatientIntake/missed?searchStart={start.ToString("s")}&searchEnd={end.ToString("s")}");
@@ -68,7 +66,7 @@ namespace ReminderService
                     }
                 }
 
-                await Task.Delay(15000, stoppingToken);
+                await Task.Delay(60000 * INTERVAL_MINUTES, stoppingToken);
             }
         }
 
@@ -78,40 +76,44 @@ namespace ReminderService
             var messages = new List<Message>();
             foreach (JProperty user in jtoken)
             {
-                //SEND DATA
-                foreach (var intake in user.Children().Children())
-                {
-                    var message = CreateMessage(int.Parse(user.Name), intake);
-                    if(message != null)
+                var deviceId = user.Children().First().Value<string>("deviceId");
+                var intakeArray = user.Children().First().Value<JArray>("patientIntake");
+
+                if(deviceId != null) {  
+                    foreach (var intake in intakeArray)
                     {
-                        messages.Add(message);
+                        var message = CreateMessage(int.Parse(user.Name), intake, deviceId);
+                        if(message != null)
+                        {
+                            messages.Add(message);
+                        }
                     }
                 }
             }
 
-            var result = await FirebaseMessaging.DefaultInstance.SendAllAsync(messages);
-            return;
+            if(messages.Count > 0) { 
+                var result = await FirebaseMessaging.DefaultInstance.SendAllAsync(messages);
+            }
+                return;
         }
 
-        private Message? CreateMessage(int id, JToken intake)
+        private Message? CreateMessage(int id, JToken intake, string deviceId)
         {
             string? medicineName = intake.Value<JToken>("medicine").Value<string>("name");
             TimeOnly intakeStart = TimeOnly.Parse(intake.Value<string>("intakeStart"));
             TimeOnly intakeEnd = TimeOnly.Parse(intake.Value<string>("intakeEnd"));
 
             if(medicineName != null) {  
-                var registrationToken = "ADD_TOKEN"; //GET DEVICEID
-
                 var message = new Message()
                 {
-                    Token = registrationToken,
+                    Token = deviceId,
                     Notification = new Notification()
                     {
                         Title = "Gemiste inname",
                         Body = $"U heeft uw inname van {medicineName} tussen {intakeStart.ToString("HH:mm")} en {intakeEnd.ToString("HH:mm")} gemist"
                     }
                 };
-                    return message;
+                return message;
             }
 
             return null;

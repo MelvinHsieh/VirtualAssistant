@@ -33,7 +33,7 @@ namespace Application.Repositories
             var activeDevice = _context.PatientDeviceIdentifiers
                 .Where(p => p.PatientId == patientId)
                 .Where(p => p.Status == Domain.EntityStatus.Active)
-                .First();
+                .FirstOrDefault();
 
             if (activeDevice != null)
             {
@@ -48,12 +48,12 @@ namespace Application.Repositories
             return new Result(false, "No active device found");
         }
 
-        public PatientDeviceIdentifier GetActiveDeviceForPatient(int patientId)
+        public PatientDeviceIdentifier? GetActiveDeviceForPatient(int patientId)
         {
             return _context.PatientDeviceIdentifiers
                 .Where(p => p.PatientId == patientId)
                 .Where(p => p.Status == Domain.EntityStatus.Active)
-                .First();
+                .FirstOrDefault();
         }
 
         public Dictionary<int, PatientDeviceIdentifier> GetActiveDeviceForPatient(int[] patientIdentifiers)

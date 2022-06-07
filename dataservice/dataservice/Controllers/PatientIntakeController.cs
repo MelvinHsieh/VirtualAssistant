@@ -91,14 +91,24 @@ namespace dataservice.Controllers
             foreach(var i in intake)
             {
                 var device = _deviceRepo.GetActiveDeviceForPatient(i.Key);
-                reminders.Add(i.Key, new IntakeReminderDto()
+                if (device != null)
                 {
-                    PatientIntake = i.Value,
-                    DeviceId = device.DeviceId
-                });
+                    reminders.Add(i.Key, new IntakeReminderDto()
+                    {
+                        PatientIntake = i.Value,
+                        DeviceId = device.DeviceId
+                    });
+                }
+                else
+                {
+                    reminders.Add(i.Key, new IntakeReminderDto()
+                    {
+                        PatientIntake = i.Value
+                    });
+                }
             }
 
-            var result = JsonSerializer.Serialize(intake, _jserOptions);
+            var result = JsonSerializer.Serialize(reminders, _jserOptions);
 
             return Ok(result);
         }
