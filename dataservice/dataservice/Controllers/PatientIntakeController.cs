@@ -22,11 +22,13 @@ namespace dataservice.Controllers
     public class PatientIntakeController : ControllerBase
     {
         private IPatientIntakeRepo _intakeRepo;
+        private IPatientDeviceRepo _deviceRepo;
         private JsonSerializerOptions _jserOptions;
 
-        public PatientIntakeController(IPatientIntakeRepo intakeRepo)
+        public PatientIntakeController(IPatientIntakeRepo intakeRepo, IPatientDeviceRepo deviceRepo)
         {
             _intakeRepo = intakeRepo;
+            _deviceRepo = deviceRepo;
             _jserOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
             _jserOptions.Converters.Add(new TimeOnlySerializer());
         }
@@ -84,6 +86,18 @@ namespace dataservice.Controllers
             {
                 return Ok("");
             }
+
+            var reminders = new Dictionary<int, IntakeReminderDto>();
+            foreach(var i in intake)
+            {
+                var device = _deviceRepo.GetActiveDeviceForPatient(i.Key);
+                reminders.Add(i.Key, new IntakeReminderDto()
+                {
+                    PatientIntake = i.Value,
+                    DeviceId = device.DeviceId
+                });
+            }
+
             var result = JsonSerializer.Serialize(intake, _jserOptions);
 
             return Ok(result);
