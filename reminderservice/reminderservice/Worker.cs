@@ -11,6 +11,8 @@ namespace ReminderService
         private readonly Uri _loginURI;
         private readonly Uri _dataURI;
         private const int INTERVAL_MINUTES = 15;
+        private readonly string AdminUname;
+        private readonly string AdminPass;
 
         public Worker(ILogger<Worker> logger, IConfiguration configuration)
         {
@@ -18,6 +20,8 @@ namespace ReminderService
             _client = new HttpClient();
             _loginURI = new Uri(configuration.GetValue<string>("AuthURL") + "/login");
             _dataURI = new Uri(configuration.GetValue<string>("DataserviceURL") + "/");
+            AdminUname = configuration.GetValue<string>("LoginCredentials:Username");
+            AdminPass = configuration.GetValue<string>("LoginCredentials:Password");
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -28,7 +32,7 @@ namespace ReminderService
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 _client.DefaultRequestHeaders.Remove("Authorization");
                 //Get an authToken from auth
-                var content = new StringContent("{ \"username\": \"admin1\", \"password\": \"admin!1\" }", UnicodeEncoding.UTF8, "application/json");
+                var content = new StringContent("{ \"username\": \"" + AdminUname  + "\", \"password\": \"" + AdminPass + "\" }", UnicodeEncoding.UTF8, "application/json");
                 var authResponse = await _client.PostAsync(_loginURI, content); //TODO extract (worker login?)
 
                 if(authResponse.IsSuccessStatusCode) {  
@@ -94,7 +98,7 @@ namespace ReminderService
             if(messages.Count > 0) { 
                 var result = await FirebaseMessaging.DefaultInstance.SendAllAsync(messages);
             }
-                return;
+            return;
         }
 
         private Message? CreateMessage(int id, JToken intake, string deviceId)
