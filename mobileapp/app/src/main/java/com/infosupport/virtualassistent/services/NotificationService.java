@@ -27,31 +27,58 @@ import java.util.Map;
 import java.util.Objects;
 
 public class NotificationService extends FirebaseMessagingService {
-    private final String URL_DEVICE;
+    /*private final String URL_DEVICE;
     private final RequestQueue queue;
-    private final SharedPreferences preferences;
+    private final SharedPreferences preferences;*/
     private final String CHANNEL_ID = "HANS Notification Channel";
 
-    NotificationService(Activity activity) {
+    /*NotificationService(Activity activity) {
         activity = (activity == null) ? (Activity) this.getApplicationContext() : activity;
         URL_DEVICE = activity.getApplicationContext().getString(R.string.dataservice_url) + "/api/PatientDevice";
         queue = Volley.newRequestQueue(activity);
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-    }
+    }*/
 
     @Override
     public void onNewToken(@NonNull String token) {
         // Log new token
-        sendRegistrationToServer(token);
+        /*sendRegistrationToServer(token);*/
+        Log.d("Token", "Refreshed token: " + token);
         super.onNewToken(token);
     }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
-        String title = Objects.requireNonNull(message.getNotification()).getTitle();
+        // ...
+
+        // TODO(developer): Handle FCM messages here.
+        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
+        Log.d("MEssage", "From: " + message.getFrom());
+
+        // Check if message contains a data payload.
+        if (message.getData().size() > 0) {
+            Log.d("Payload", "Message data payload: " + message.getData());
+
+            /*if (*//* Check if data needs to be processed by long running job *//* true) {
+                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
+                scheduleJob();
+            } else {
+                // Handle message within 10 seconds
+                handleNow();
+            }*/
+
+        }
+
+        // Check if message contains a notification payload.
+        if (message.getNotification() != null) {
+            Log.d("Body", "Message Notification Body: " + message.getNotification().getBody());
+        }
+
+        // Also if you intend on generating your own notifications as a result of a received FCM
+        // message, here is where that should be initiated. See sendNotification method below.
+        /*String title = Objects.requireNonNull(message.getNotification()).getTitle();
         String text = message.getNotification().getBody();
-        createNotificationChannel(title, text);
-        super.onMessageReceived(message);
+        createNotificationChannel(title, text);*/
     }
 
     /** Creates notification channel **/
@@ -74,16 +101,16 @@ public class NotificationService extends FirebaseMessagingService {
         }
     }
 
-    private void sendRegistrationToServer() {
+    /*private void sendRegistrationToServer() {
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         sendRegistrationToServer(task.getResult());
                     }
                 });
-    }
+    }*/
 
-    private void sendRegistrationToServer(String token) {
+    /*private void sendRegistrationToServer(String token) {
         String userId = preferences.getString("userId", null);
 
         if (URL_DEVICE == null || queue == null || userId == null) return;
@@ -98,12 +125,9 @@ public class NotificationService extends FirebaseMessagingService {
                 params.put("deviceId", token);
                 params.put("userId", token);
 
-                Log.i("Text", "Here is the retrieve");
-                Log.i("data", " retrieve --> "+userId);
-
                 return params;
             }
         };
         queue.add(req);
-    }
+    }*/
 }

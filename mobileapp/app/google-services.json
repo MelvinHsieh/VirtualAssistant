@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "852880330464-7hf7f0938u32cg7t5mc44or9ave5ijf5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.infosupport.virtualassistent",
+            "certificate_hash": "8fecfb6bd6d930e000c4694527520e69fadf0b39"
+          }
+        },
+        {
           "client_id": "852880330464-rd8rmja5jhk5ektcst6cvmqufitp2fql.apps.googleusercontent.com",
           "client_type": 3
         }
