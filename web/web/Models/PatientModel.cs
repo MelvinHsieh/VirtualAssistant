@@ -54,8 +54,8 @@ namespace web.Models
         public int CareWorkerId { get; set; }
 
         [Required]
-        [JsonProperty(PropertyName = "roomId")]
-        [DisplayName("Zorgmedewerker")]
+        [JsonProperty(PropertyName = "LocationId")]
+        [DisplayName("Kamernummer")]
         public string RoomId { get; set; } = string.Empty;
     }
 }
