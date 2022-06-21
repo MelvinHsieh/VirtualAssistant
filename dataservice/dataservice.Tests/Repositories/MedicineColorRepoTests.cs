@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace dataservice.Tests.Application.Services
+namespace dataservice.Tests.Repositories
 {
     [TestClass]
     public class MedicineColorRepoTests : DatabaseTestBase
@@ -18,7 +18,7 @@ namespace dataservice.Tests.Application.Services
         [TestInitialize]
         public void Initialize()
         {
-            _context = this.CreateMedicineTestContext();
+            _context = CreateMedicineTestContext();
             _colorRepo = new ColorRepo(_context);
         }
 
@@ -85,7 +85,7 @@ namespace dataservice.Tests.Application.Services
         [TestCleanup]
         public void TestCleanup()
         {
-            this._context.Dispose();
+            _context.Dispose();
         }
     }
 }

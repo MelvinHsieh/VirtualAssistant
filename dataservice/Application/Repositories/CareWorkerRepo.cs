@@ -49,9 +49,9 @@ namespace Application.Repositories
             return _context.CareWorkers.Find(id);
         }
 
-        public IEnumerable<CareWorker> GetCareWorkers()
+        public List<CareWorker> GetCareWorkers()
         {
-            return _context.CareWorkers.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
+            return _context.CareWorkers.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()).ToList();
         }
 
         public Result RemoveCareWorker(int id)

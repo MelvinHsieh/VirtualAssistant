@@ -7,6 +7,7 @@ namespace dataservice.Tests
     public class DatabaseTestBase
     {
         protected readonly Mock<IConfiguration> _mockConfig;
+
         public DatabaseTestBase()
         {
             _mockConfig = new Mock<IConfiguration>();

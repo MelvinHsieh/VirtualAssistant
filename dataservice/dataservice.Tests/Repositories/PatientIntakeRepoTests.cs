@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace dataservice.Tests.Application.Services
+namespace dataservice.Tests.Repositories
 {
     [TestClass]
     internal class PatientIntakeTests : DatabaseTestBase
@@ -23,13 +23,13 @@ namespace dataservice.Tests.Application.Services
         [TestInitialize]
         public void Initialize()
         {
-            _medicineDbContext = this.CreateMedicineTestContext();
-            _patientDbContext = this.CreatePatientTestContext();
+            _medicineDbContext = CreateMedicineTestContext();
+            _patientDbContext = CreatePatientTestContext();
             _careWorkerFunctionRepo = new CareWorkerFunctionRepo(_medicineDbContext);
             _patientRepo = new PatientRepo(_patientDbContext, _careWorkerRepo);
             _careWorkerRepo = new CareWorkerRepo(_medicineDbContext, _careWorkerFunctionRepo);
             var _medicineRepo = new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext));
-            var _intakeRegistrationRepo = new IntakeRegistrationRepo(_medicineRepo, _medicineDbContext);
+            var _intakeRegistrationRepo = new IntakeRegistrationRepo(_medicineDbContext);
             _intakeRepo = new PatientIntakeRepo(_medicineDbContext, _medicineRepo, _patientRepo, _intakeRegistrationRepo);
         }
 
@@ -105,8 +105,8 @@ namespace dataservice.Tests.Application.Services
         [TestCleanup]
         public void TestCleanup()
         {
-            this._medicineDbContext.Dispose();
-            this._patientDbContext.Dispose();
+            _medicineDbContext.Dispose();
+            _patientDbContext.Dispose();
         }
     }
 }
