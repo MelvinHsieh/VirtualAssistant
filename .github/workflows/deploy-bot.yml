@@ -25,6 +25,9 @@ jobs:
         MicrosoftAppPassword: ${{ secrets.VA_BOT_APP_PASSWORD }}
         LuisApiKey: ${{ secrets.VA_LUIS_API_KEY }}
         AdminToken: ${{ secrets.VA_BOT_ADMIN_TOKEN }}
+        MessageBusUsername: ${{ secrets.MESSAGEBUSUSERNAME }}
+        MessageBusPassword: ${{ secrets.MESSAGEBUSPASSWORD }}
+        WebServiceHostName: web-pr-${{ github.event.number }}-0xboomie.cloud.okteto.net
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
