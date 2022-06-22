@@ -103,7 +103,7 @@ public class AssistantActivity extends AppCompatActivity {
         }).start();
     }
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder iBinder) {
             speechServiceMessenger = new Messenger(iBinder);
         }
