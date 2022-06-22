@@ -18,6 +18,13 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: microsoft/variable-substitution@v1 
+      with:
+        files: '**/appsettings.json'
+      env:
+        MicrosoftAppPassword: ${{ secrets.VA_BOT_APP_PASSWORD }}
+        LuisApiKey: ${{ secrets.VA_LUIS_API_KEY }}
+        AdminToken: ${{ secrets.VA_BOT_ADMIN_TOKEN }}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:

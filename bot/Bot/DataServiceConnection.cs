@@ -13,7 +13,7 @@ namespace CoreBot
 
         public DataServiceConnection(IConfiguration configuration)
         {
-            var adminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYyOTdhMDhmYzEwYTIxNjJmYjg0M2U4NCIsInVzZXJuYW1lIjoiYWRtaW4xIiwicm9sZSI6ImFkbWluIn0sImF1dGhfcm9sZSI6ImFkbWluIiwiaWF0IjoxNjU0MTU4ODU2LCJhdWQiOiJWQV9BdXRoQXVkaWVuY2UiLCJpc3MiOiJWQV9BdXRoSXNzdWVyIn0.NCsb6pLbEQVc4NRxrFyXnVvFpChSoP0MLfolVoGnTz0";
+            var adminToken = configuration["AdminToken"];
             this.httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + adminToken);
             httpClient.BaseAddress = new Uri($"https://{configuration["DataServiceHostName"]}/api/");

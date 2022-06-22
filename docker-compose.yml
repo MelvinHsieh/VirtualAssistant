@@ -111,12 +111,6 @@ services:
       - "3001:3001"
     environment:
       - PORT=3001
-      - AUTH_DB_HOST_NAME=authdb
-      - AUTH_DB_PORT=27017
-      - AUTH_DB_USER_ID=authdb_user
-      - AUTH_DB_USER_PASSWORD=AuthDBPass12345
-      - MONGO_URL=mongodb://vaadmin:dKw4kHHy6JxpCKSeCqI6pxwHjAsEKhqGHtxL5zLZY9ydNKiM8BSHQRHQ4ArV4BkHxkxGn0Eqsm8tdTmUAYANOQ==@vaadmin.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@vaadmin@
-      - JWT_SECRET_TOKEN=JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr
       - JWT_AUDIENCE=VA_AuthAudience
       - JWT_ISSUER=VA_AuthIssuer
     depends_on:
