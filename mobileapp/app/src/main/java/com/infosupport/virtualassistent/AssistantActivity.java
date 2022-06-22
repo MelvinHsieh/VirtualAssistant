@@ -50,12 +50,14 @@ public class AssistantActivity extends AppCompatActivity {
     private TextToSpeech textToSpeech;
     private int tts_utterance;
     public int turn_mic_on_after_utterance;
+    public Boolean isListening;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assistant);
         tts_utterance = 0;
+        isListening = false;
         turn_mic_on_after_utterance = -1;
 
         dbInit();
@@ -147,6 +149,7 @@ public class AssistantActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
         fab.setImageResource(R.drawable.mic_active);
         SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
+        isListening = true;
     }
 
     public void turnMicOnAfterCurrentUtterance() {
@@ -201,6 +204,7 @@ public class AssistantActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.logout) {
             AuthService as = new AuthService(this);
             as.logOut();
+            stopWakeWordService();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -212,6 +216,5 @@ public class AssistantActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         textToSpeech.stop();
-        stopWakeWordService();
     }
 }
