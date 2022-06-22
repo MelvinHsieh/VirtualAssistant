@@ -1,11 +1,17 @@
 package com.infosupport.virtualassistent;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.view.Menu;
@@ -51,6 +57,8 @@ public class AssistantActivity extends AppCompatActivity {
     private int tts_utterance;
     public int turn_mic_on_after_utterance;
     public Boolean isListening;
+    public Messenger speechServiceMessenger;
+    public SpeechIntentService speechIntentService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,11 @@ public class AssistantActivity extends AppCompatActivity {
 
         dbInit();
         ttsInit();
+
+        // Start the speechIntentService and bind it to the serviceConnection for internal communication purposes.
+        speechIntentService = new SpeechIntentService();
+        bindService(new Intent(this, SpeechIntentService.class), serviceConnection,
+                Context.BIND_AUTO_CREATE);
 
         messageRecycler = (RecyclerView) findViewById(R.id.recycler_gchat);
         messageAdapter = new MessageListAdapter(messageList);
@@ -124,6 +137,14 @@ public class AssistantActivity extends AppCompatActivity {
         });
     }
 
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder iBinder) {
+            speechServiceMessenger = new Messenger(iBinder);
+        }
+        public void onServiceDisconnected(ComponentName className) {
+        }
+    };
+
     private void startWakeWordService() {
         SpeechResultReceiver speechResultReceiver = new SpeechResultReceiver(new Handler(getApplicationContext().getMainLooper()));
         speechResultReceiver.setReceiver(new DetectionResultReceiver(this));
@@ -145,11 +166,25 @@ public class AssistantActivity extends AppCompatActivity {
 
     /** Run the speech recognition service */
     private void runSpeechRecognizer(FloatingActionButton fab) {
-        textToSpeech.stop();
-        Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
-        fab.setImageResource(R.drawable.mic_active);
-        SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
-        isListening = true;
+        if(isListening) {
+            //stop listening
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("stopListening", true);
+            android.os.Message message = android.os.Message.obtain();
+            message.setData(bundle);
+            try {
+                speechServiceMessenger.send(message);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            isListening = false;
+        } else {
+            textToSpeech.stop();
+            Toast.makeText(getApplicationContext(), "Aan het luisteren...", Toast.LENGTH_SHORT).show();
+            fab.setImageResource(R.drawable.mic_active);
+            speechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
+            isListening = true;
+        }
     }
 
     public void turnMicOnAfterCurrentUtterance() {
