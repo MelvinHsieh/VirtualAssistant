@@ -41,8 +41,8 @@ services:
     ports:
       - "80:80"
     environment:
-      - MSSQL_URL_USER_DATA="Server=userdatadb,1433; User=sa; Password=DbPasswordDev12345!@;"
-      - MSSQL_URL_GENERAL_DATA="Server=userdatadb,1434; User=sa; Password=DbPasswordDev12345!@;"
+      - MSSQL_URL_USER_DATA=mongodb://userdatadb:userdatadbpass@userdatadb:27017/
+      - MSSQL_URL_GENERAL_DATA=mongodb://generaldatadb:generaldatadbpass@generaldatadb:27017/
     depends_on:
       - "userdatadb"
       - "generaldatadb"
@@ -74,7 +74,7 @@ services:
 
   userdatadb:
     container_name: userdatadb
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/azure-sql-edge:latest
     environment:
       MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
@@ -89,7 +89,7 @@ services:
 
   generaldatadb:
     container_name: generaldatadb
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/azure-sql-edge:latest
     environment:
       MSSQL_SA_PASSWORD: DbPasswordDev12345!@
       ACCEPT_EULA: Y
