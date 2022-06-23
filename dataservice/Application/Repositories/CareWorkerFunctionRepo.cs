@@ -41,9 +41,9 @@ namespace Application.Repositories
             return _context.CareWorkerFunctions.Find(functionName);
         }
 
-        public IEnumerable<CareWorkerFunction> GetCareWorkerFunctions()
+        public List<CareWorkerFunction> GetCareWorkerFunctions()
         {
-            return _context.CareWorkerFunctions.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
+            return _context.CareWorkerFunctions.Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower()).ToList();
         }
 
         public Result RemoveCareWorkerFunction(string functionName)

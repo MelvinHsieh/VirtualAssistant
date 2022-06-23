@@ -7,7 +7,7 @@ namespace Application.Repositories.Interfaces
     {
         public Result AddCareWorker(string firstName, string lastName, string function);
 
-        public IEnumerable<CareWorker> GetCareWorkers();
+        public List<CareWorker> GetCareWorkers();
 
         public CareWorker? FindCareWorker(int id);
 

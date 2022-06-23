@@ -6,7 +6,7 @@ using Infrastructure.Persistence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace dataservice.Tests.Application.Services
+namespace dataservice.Tests.Repositories
 {
     [TestClass]
     internal class PatientRepoTests : DatabaseTestBase
@@ -20,8 +20,8 @@ namespace dataservice.Tests.Application.Services
         [TestInitialize]
         public void Initialize()
         {
-            _patientDbContext = this.CreatePatientTestContext();
-            _medcontext = this.CreateMedicineTestContext();
+            _patientDbContext = CreatePatientTestContext();
+            _medcontext = CreateMedicineTestContext();
 
             _careWorkerRepo = new CareWorkerRepo(_medcontext, _careWorkerFunctionRepo);
             _patientRepo = new PatientRepo(_patientDbContext, _careWorkerRepo);
@@ -82,7 +82,7 @@ namespace dataservice.Tests.Application.Services
         [TestCleanup]
         public void TestCleanup()
         {
-            this._patientDbContext.Dispose();
+            _patientDbContext.Dispose();
         }
     }
 }

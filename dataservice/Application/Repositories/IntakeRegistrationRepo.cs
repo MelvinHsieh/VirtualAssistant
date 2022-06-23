@@ -46,23 +46,25 @@ namespace Application.Repositories
                 .FirstOrDefault();
         }
 
-        public IEnumerable<IntakeRegistration> GetIntakeRegistrationForDate(int patientId, DateOnly date)
+        public List<IntakeRegistration> GetIntakeRegistrationForDate(int patientId, DateOnly date)
         {
             return _context.IntakeRegistrations
                 .Include(x => x.PatientIntake)
                 .Include(x => x.PatientIntake.Medicine)
                 .Where(x => x.PatientIntake.PatientId == patientId)
                 .Where(x => x.TakenOn.Date == date.ToDateTime(TimeOnly.MinValue).Date)
-                .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
+                .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower())
+                .ToList();
         }
 
-        public IEnumerable<IntakeRegistration> GetIntakeRegistrationForPatient(int patientId)
+        public List<IntakeRegistration> GetIntakeRegistrationForPatient(int patientId)
         {
             return _context.IntakeRegistrations
                 .Include(x => x.PatientIntake)
                 .Include(x => x.PatientIntake.Medicine)
                 .Where(x => x.PatientIntake.PatientId == patientId)
-                .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower());
+                .Where(x => x.Status == Domain.EntityStatus.Active.ToString().ToLower())
+                .ToList();
 
         }
 

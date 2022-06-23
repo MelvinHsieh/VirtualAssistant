@@ -7,7 +7,7 @@ namespace Application.Repositories.Interfaces
     {
         public Result AddCareWorkerFunction(string functionName);
 
-        public IEnumerable<CareWorkerFunction> GetCareWorkerFunctions();
+        public List<CareWorkerFunction> GetCareWorkerFunctions();
 
         public CareWorkerFunction? FindCareWorkerFunction(string functionName);
 

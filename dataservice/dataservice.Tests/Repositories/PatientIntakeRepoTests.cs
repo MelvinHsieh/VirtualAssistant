@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace dataservice.Tests.Application.Services
+namespace dataservice.Tests.Repositories
 {
     [TestClass]
     internal class PatientIntakeTests : DatabaseTestBase
@@ -23,9 +23,8 @@ namespace dataservice.Tests.Application.Services
         [TestInitialize]
         public void Initialize()
         {
-            MedicineRepo medicineRepo = new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext));
-            _medicineDbContext = this.CreateMedicineTestContext();
-            _patientDbContext = this.CreatePatientTestContext();
+            _medicineDbContext = CreateMedicineTestContext();
+            _patientDbContext = CreatePatientTestContext();
             _careWorkerFunctionRepo = new CareWorkerFunctionRepo(_medicineDbContext);
             _patientRepo = new PatientRepo(_patientDbContext, _careWorkerRepo);
             _careWorkerRepo = new CareWorkerRepo(_medicineDbContext, _careWorkerFunctionRepo);
@@ -107,8 +106,8 @@ namespace dataservice.Tests.Application.Services
         [TestCleanup]
         public void TestCleanup()
         {
-            this._medicineDbContext.Dispose();
-            this._patientDbContext.Dispose();
+            _medicineDbContext.Dispose();
+            _patientDbContext.Dispose();
         }
     }
 }
