@@ -113,7 +113,7 @@ services:
       - PORT=3001
       - JWT_AUDIENCE=VA_AuthAudience
       - JWT_ISSUER=VA_AuthIssuer
-      - MONGO_URL=authdb
+      - MONGO_URL=mongodb://authdb_user:AuthDBPass12345@authdb:27017/
     depends_on:
       - "authdb"
 
