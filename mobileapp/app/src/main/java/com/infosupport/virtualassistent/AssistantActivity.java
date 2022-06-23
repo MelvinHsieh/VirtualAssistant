@@ -1,13 +1,17 @@
 package com.infosupport.virtualassistent;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
+import android.os.IBinder;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +34,7 @@ import com.infosupport.virtualassistent.receivers.RecognizeSpeechResultReceiver;
 import com.infosupport.virtualassistent.receivers.SpeechResultReceiver;
 import com.infosupport.virtualassistent.services.AuthService;
 import com.infosupport.virtualassistent.services.SpeechIntentService;
+import com.infosupport.virtualassistent.services.TextToSpeechService;
 import com.infosupport.virtualassistent.services.WakeWordService;
 import com.infosupport.virtualassistent.storage.AppDatabase;
 import com.infosupport.virtualassistent.storage.MessageDAO;
@@ -37,7 +42,6 @@ import com.infosupport.virtualassistent.storage.MessageDAO;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 public class AssistantActivity extends AppCompatActivity {
 
@@ -47,19 +51,24 @@ public class AssistantActivity extends AppCompatActivity {
     private RecyclerView messageRecycler;
     private MessageDAO msgDao;
     private Bot bot;
-    private TextToSpeech textToSpeech;
-    private int tts_utterance;
-    public int turn_mic_on_after_utterance;
+    public Boolean isListening;
+    public Messenger speechServiceMessenger;
+    public SpeechIntentService speechIntentService;
+    public TextToSpeechService textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assistant);
-        tts_utterance = 0;
-        turn_mic_on_after_utterance = -1;
+        isListening = false;
 
         dbInit();
-        ttsInit();
+        textToSpeech = new TextToSpeechService(this);
+
+        // Start the speechIntentService and bind it to the serviceConnection for internal communication purposes.
+        speechIntentService = new SpeechIntentService();
+        bindService(new Intent(this, SpeechIntentService.class), serviceConnection,
+                Context.BIND_AUTO_CREATE);
 
         messageRecycler = (RecyclerView) findViewById(R.id.recycler_gchat);
         messageAdapter = new MessageListAdapter(messageList);
@@ -94,33 +103,13 @@ public class AssistantActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void ttsInit() {
-        textToSpeech=new TextToSpeech(getApplicationContext(), status -> {
-            if(status != TextToSpeech.ERROR) {
-                textToSpeech.setLanguage(new Locale("nl_NL"));
-                textToSpeech.setSpeechRate(0.8f);
-                textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-
-                    @Override
-                    public void onStart(String s) {
-
-                    }
-
-                    @Override
-                    public void onDone(String s) {
-                        if(String.valueOf(turn_mic_on_after_utterance).equals(s)) {
-                            runOnUiThread(() -> runSpeechRecognizer());
-                        }
-                    }
-
-                    @Override
-                    public void onError(String s) {
-
-                    }
-                });
-            }
-        });
-    }
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder iBinder) {
+            speechServiceMessenger = new Messenger(iBinder);
+        }
+        public void onServiceDisconnected(ComponentName className) {
+        }
+    };
 
     private void startWakeWordService() {
         SpeechResultReceiver speechResultReceiver = new SpeechResultReceiver(new Handler(getApplicationContext().getMainLooper()));
@@ -143,14 +132,29 @@ public class AssistantActivity extends AppCompatActivity {
 
     /** Run the speech recognition service */
     private void runSpeechRecognizer(FloatingActionButton fab) {
-        textToSpeech.stop();
-        Toast.makeText(getApplicationContext(),"Aan het luisteren...", Toast.LENGTH_SHORT).show();
-        fab.setImageResource(R.drawable.mic_active);
-        SpeechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
+        if(isListening) {
+            //stop listening
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("stopListening", true);
+            android.os.Message message = android.os.Message.obtain();
+            message.setData(bundle);
+            try {
+                speechServiceMessenger.send(message);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            isListening = false;
+        } else {
+            textToSpeech.Stop();
+            Toast.makeText(getApplicationContext(), "Aan het luisteren...", Toast.LENGTH_SHORT).show();
+            fab.setImageResource(R.drawable.mic_active);
+            speechIntentService.startServiceForRecognizer(this, new RecognizeSpeechResultReceiver(this));
+            isListening = true;
+        }
     }
 
     public void turnMicOnAfterCurrentUtterance() {
-        turn_mic_on_after_utterance = tts_utterance;
+        textToSpeech.turnOnMicAfter = textToSpeech.latestId;
     }
 
     public void showMessage(String msg, boolean isUser, boolean isImage) {
@@ -168,8 +172,7 @@ public class AssistantActivity extends AppCompatActivity {
         }).start();
 
         if(!isUser && !isImage) {
-            tts_utterance++;
-            textToSpeech.speak(msg, TextToSpeech.QUEUE_ADD, null, String.valueOf(tts_utterance));
+            textToSpeech.Speak(msg);
         }
     }
 
@@ -201,6 +204,7 @@ public class AssistantActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.logout) {
             AuthService as = new AuthService(this);
             as.logOut();
+            stopWakeWordService();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -211,7 +215,6 @@ public class AssistantActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        textToSpeech.stop();
-        stopWakeWordService();
+        textToSpeech.Stop();
     }
 }

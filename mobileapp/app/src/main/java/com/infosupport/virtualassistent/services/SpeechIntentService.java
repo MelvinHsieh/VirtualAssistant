@@ -5,26 +5,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.ResultReceiver;
 
 import androidx.annotation.NonNull;
 
 import com.infosupport.virtualassistent.R;
 import com.infosupport.virtualassistent.receivers.SpeechResultReceiver;
-import com.microsoft.cognitiveservices.speech.CancellationDetails;
+import com.microsoft.cognitiveservices.speech.CancellationReason;
 import com.microsoft.cognitiveservices.speech.ResultReason;
 import com.microsoft.cognitiveservices.speech.SpeechConfig;
-import com.microsoft.cognitiveservices.speech.SpeechRecognitionResult;
 import com.microsoft.cognitiveservices.speech.SpeechRecognizer;
 import com.microsoft.cognitiveservices.speech.audio.AudioConfig;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.Semaphore;
 
 public class SpeechIntentService extends IntentService {
 
     private String SubscriptionKey;
     private static final String ServiceRegion = "westeurope";
+    private static Semaphore stopTranslationSemaphore;
+    final Messenger messenger = new Messenger(new ServiceHandler());
+    private SpeechRecognizer speechRecognizer;
 
     private static final String ACTION_RECOGNIZE = "com.infosupport.virtualassistent.services.action.RECOGNIZE";
     private static final String RESULT_RECEIVER = "com.infosupport.virtualassistent.services.extra.RESULT_RECEIVER";
@@ -57,28 +62,46 @@ public class SpeechIntentService extends IntentService {
         speechConfig.setSpeechRecognitionLanguage("nl-NL");
 
         AudioConfig audioConfig = AudioConfig.fromDefaultMicrophoneInput();
-        SpeechRecognizer speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
+        speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
 
-        Future<SpeechRecognitionResult> task = speechRecognizer.recognizeOnceAsync();
-        SpeechRecognitionResult speechRecognitionResult = task.get();
+        stopTranslationSemaphore = new Semaphore(0);
 
-        if (speechRecognitionResult.getReason() == ResultReason.RecognizedSpeech) {
-            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, speechRecognitionResult.getText());
-        }
-        else if (speechRecognitionResult.getReason() == ResultReason.NoMatch) {
-            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "");
-        }
-        else if (speechRecognitionResult.getReason() == ResultReason.Canceled) {
-            CancellationDetails cancellation = CancellationDetails.fromResult(speechRecognitionResult);
-            bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "Er is helaas iets fout gegaan met de spraakherkenner.");
-        }
+        speechRecognizer.startContinuousRecognitionAsync().get();
 
-        if(resultReceiver != null){
-            resultReceiver.send(SpeechResultReceiver.RESULT_CODE_OK, bundle);
-        }
+        speechRecognizer.recognized.addEventListener((s, e) -> {
+            if (e.getResult().getReason() == ResultReason.RecognizedSpeech) {
+                // Speech is recognized
+                bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, e.getResult().getText());
+            }
+            else if (e.getResult().getReason() == ResultReason.NoMatch) {
+                // No speech was detected (so it was silent)
+                bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "");
+            }
+            speechRecognizer.stopContinuousRecognitionAsync();
+            if(resultReceiver != null) {
+                resultReceiver.send(SpeechResultReceiver.RESULT_CODE_OK, bundle);
+            }
+        });
+
+        speechRecognizer.canceled.addEventListener((s, e) -> {
+
+            if (e.getReason() == CancellationReason.Error) {
+                // An error occurred
+                bundle.putSerializable(SpeechResultReceiver.PARAM_RESULT, "Er is helaas iets fout gegaan met de spraakherkenner.");
+                if(resultReceiver != null) {
+                    resultReceiver.send(SpeechResultReceiver.RESULT_CODE_OK, bundle);
+                }
+            }
+
+            stopTranslationSemaphore.release();
+        });
+
+        speechRecognizer.sessionStopped.addEventListener((s, e) -> {
+            stopTranslationSemaphore.release();
+        });
     }
 
-    public static void startServiceForRecognizer(@NonNull Context context, SpeechResultReceiver.ResultReceiverCallBack resultReceiverCallBack){
+    public void startServiceForRecognizer(@NonNull Context context, SpeechResultReceiver.ResultReceiverCallBack resultReceiverCallBack){
         SpeechResultReceiver speechResultReceiver = new SpeechResultReceiver(new Handler(context.getMainLooper()));
         speechResultReceiver.setReceiver(resultReceiverCallBack);
 
@@ -86,6 +109,21 @@ public class SpeechIntentService extends IntentService {
         intent.setAction(ACTION_RECOGNIZE);
         intent.putExtra(RESULT_RECEIVER, speechResultReceiver);
         context.startService(intent);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return messenger.getBinder();
+    }
+
+    class ServiceHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.getData().getBoolean("stopListening")) {
+                speechRecognizer.stopContinuousRecognitionAsync();
+            }
+            super.handleMessage(msg);
+        }
     }
 
 }

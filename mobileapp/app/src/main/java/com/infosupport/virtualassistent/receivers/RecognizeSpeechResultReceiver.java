@@ -17,8 +17,11 @@ public class RecognizeSpeechResultReceiver implements SpeechResultReceiver.Resul
             if(!data.isEmpty()) {
                 activityRef.get().showMessage(data, true, false);
                 activityRef.get().getBot().sendMessage(data);
+                activityRef.get().isListening = false;
             } else {
-                activityRef.get().showMessage("Sorry dat heb ik niet verstaan.", false, false);
+                activityRef.get().isListening = false;
+                // currently commented out, when no result is received it will just do nothing.
+                //activityRef.get().showMessage("Sorry dat heb ik niet verstaan.", false, false);
             }
         }
     }
