@@ -4,14 +4,14 @@ namespace web.SignalR.Hubs
 {
     public interface INotificationHubClient
     {
-        Task SendAlert(string message);
+        Task SendAlert(string message, string URI);
     }
 
     public class NotificationHub : Hub<INotificationHubClient>
     {
-        public async Task SendAlert(string message)
+        public async Task SendAlert(string message, string URI)
         {
-            await Clients.Others.SendAlert(message);
+            await Clients.Others.SendAlert(message, URI);
         }
     }
 }

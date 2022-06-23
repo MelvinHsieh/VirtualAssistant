@@ -37,7 +37,6 @@ namespace CoreBot.Utils
                 {
                     if(messageActivity.ReplyToId != null)
                     {
-                        //TODO hier een betere oplossing voor vinden
                         if(messageActivity.Text != _configuration.GetSection("WelcomeMessage").Value &&
                             messageActivity.Text != _configuration.GetSection("HelpMessage").Value)
                         {

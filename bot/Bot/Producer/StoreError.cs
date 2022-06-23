@@ -49,7 +49,7 @@ namespace CoreBot.Producer
             var body = Encoding.UTF8.GetBytes(json);
 
             channel.BasicPublish(exchange: EXCHANGE_NAME, routingKey: QUEUE_NAME, body: body);
-
+            
             channel.Close();
             connection.Close();
         }

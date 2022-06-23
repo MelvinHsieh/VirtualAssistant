@@ -50,7 +50,7 @@ namespace dataservice.Controllers
                 DateTime date;
                 if (DateTime.TryParse(data.BirthDate, out date))
                 {
-                    var result = _patientRepo.AddPatient(data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber);
+                    var result = _patientRepo.AddPatient(data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber, data.RoomId);
                     return (int?)result.ResponseData;
                 }
             }
@@ -67,7 +67,7 @@ namespace dataservice.Controllers
                 DateTime date;
                 if (DateTime.TryParse(data.BirthDate, out date))
                 {
-                    result = _patientRepo.UpdatePatient(id, data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber, data.CareWorkerId);
+                    result = _patientRepo.UpdatePatient(id, data.FirstName, data.LastName, date, data.PostalCode, data.HomeNumber, data.Email, data.PhoneNumber, data.CareWorkerId, data.RoomId);
                 }
             }
 
@@ -80,5 +80,6 @@ namespace dataservice.Controllers
         {
             _patientRepo.RemovePatient(id);
         }
+
     }
 }

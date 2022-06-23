@@ -15,6 +15,9 @@
         public string? PostalCode { get; set; }
 
         public string? HomeNumber { get; set; }
+
+        public string? RoomId { get; set; }
+
         public int CareWorkerId { get; set; }
     }
 }

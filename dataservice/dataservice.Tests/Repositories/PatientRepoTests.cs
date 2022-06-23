@@ -31,14 +31,14 @@ namespace dataservice.Tests.Repositories
         [TestMethod]
         public void AddPatient_ValidData_ReturnsTrueResult()
         {
-            Result result = _patientRepo.AddPatient("Test", "Testerman", new DateTime(1992, 12, 12), "1234AB", "43", "tester@test.nl", "0612345678");
+            Result result = _patientRepo.AddPatient("Test", "Testerman", new DateTime(1992, 12, 12), "1234AB", "43", "tester@test.nl", "0612345678", "1");
             Assert.IsTrue(result.Success);
         }
 
         [TestMethod]
         public void AddPatient_InvalidData_ReturnsFalseResult()
         {
-            Result result = _patientRepo.AddPatient(null, null, new DateTime(), null, null, null, null);
+            Result result = _patientRepo.AddPatient(null, null, new DateTime(), null, null, null, null, null);
             Assert.IsFalse(result.Success);
         }
 

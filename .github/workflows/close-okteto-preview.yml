@@ -1,0 +1,23 @@
+name: Delete Preview Environment
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@master
+
+      - name: Context
+        uses: okteto/context@latest
+        with:
+          token: ${{ secrets.OKTETO_TOKEN }}
+
+      - name: Delete preview environment
+        uses: okteto/destroy-preview@latest
+        with:
+          namespace: pr-${{ github.event.number }}-0xboomie
