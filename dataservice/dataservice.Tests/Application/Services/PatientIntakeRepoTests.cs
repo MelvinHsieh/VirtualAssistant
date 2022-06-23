@@ -23,13 +23,15 @@ namespace dataservice.Tests.Application.Services
         [TestInitialize]
         public void Initialize()
         {
+            MedicineRepo medicineRepo = new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext));
             _medicineDbContext = this.CreateMedicineTestContext();
             _patientDbContext = this.CreatePatientTestContext();
             _careWorkerFunctionRepo = new CareWorkerFunctionRepo(_medicineDbContext);
             _patientRepo = new PatientRepo(_patientDbContext, _careWorkerRepo);
             _careWorkerRepo = new CareWorkerRepo(_medicineDbContext, _careWorkerFunctionRepo);
+
             var _medicineRepo = new MedicineRepo(_medicineDbContext, new ShapeRepo(_medicineDbContext), new ColorRepo(_medicineDbContext), new TypeRepo(_medicineDbContext), new DoseUnitRepo(_medicineDbContext));
-            var _intakeRegistrationRepo = new IntakeRegistrationRepo(_medicineRepo, _medicineDbContext);
+            var _intakeRegistrationRepo = new IntakeRegistrationRepo(_medicineDbContext);
             _intakeRepo = new PatientIntakeRepo(_medicineDbContext, _medicineRepo, _patientRepo, _intakeRegistrationRepo);
         }
 

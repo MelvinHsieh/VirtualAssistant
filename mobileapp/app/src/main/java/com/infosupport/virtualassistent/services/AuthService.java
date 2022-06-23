@@ -87,7 +87,7 @@ public class AuthService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer(issuer)
-                    .acceptLeeway(5)
+                    .acceptLeeway(50000)
                     .build();
             jwt = verifier.verify(response);
         } catch (JWTVerificationException exception){
@@ -103,7 +103,12 @@ public class AuthService {
         try {
             JSONObject json = new JSONObject(jsonString);
             JSONObject userJson = json.getJSONObject("user");
-            userId = userJson.getString("patientId");
+            if(userJson.has("patientId")) {
+                userId = userJson.getString("patientId");
+            } else {
+                Toast.makeText(activity, "Alleen patienten kunnen inloggen in de app.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
         } catch (JSONException e) {
             Toast.makeText(activity, "Je accountgegevens konden niet worden opgehaald.", Toast.LENGTH_SHORT).show();

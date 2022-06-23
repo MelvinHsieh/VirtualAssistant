@@ -10,12 +10,15 @@ connection.onreconnecting(() => {
     console.log("reconnecting")
 })
 
-connection.on("SendAlert", function (message) {
-    console.log(message)
-
+connection.on("SendAlert", function (message, uri) {
     var li = document.createElement("li");
-    li.classList.add("d-flex", "justify-content-between", "list-group-item",  "list-group-item-danger"); //Bootstrap
-    document.getElementById("alertList").appendChild(li);
+    li.classList.add("d-flex", "justify-content-between", "list-group-item", "list-group-item-danger"); //Bootstrap
+
+    var link = document.createElement("a")
+    link.setAttribute("href", `${uri}`)
+    link.appendChild(li);
+
+    document.getElementById("alertList").appendChild(link);
     // We can assign user-supplied strings to an element's textContent because it
     // is not interpreted as markup. If you're assigning in any other way, you 
     // should be aware of possible script injection concerns.

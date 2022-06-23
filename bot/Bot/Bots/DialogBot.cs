@@ -40,7 +40,7 @@ namespace Microsoft.BotBuilderSamples.Bots
             var userStateAccessor = UserState.CreateProperty<UserProfile>(nameof(UserProfile));
 
             Dialogs = new DialogSet(dialogStateAccessor);
-            Dialogs.Add(new AssistanceDialog(medicineRecognizer, connection));
+            Dialogs.Add(new AssistanceDialog(medicineRecognizer, connection, configuration));
         }
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))

@@ -35,8 +35,8 @@ public class LoggingService {
                 channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, QUEUE_NAME);
 
                 JSONObject json = new JSONObject();
-                json.put("service", "mobileApp");
-                json.put("error", message);
+                json.put("ServiceName", "mobileApp");
+                json.put("ErrorMessage", message);
 
                 byte[] messageBodyBytes = json.toString().getBytes(StandardCharsets.UTF_8);
 

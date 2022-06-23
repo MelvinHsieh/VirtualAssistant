@@ -74,6 +74,7 @@ public class Bot {
     public void sendMessage(String message, String type) {
         Map<String, String> properties = new HashMap<String, String>() {{
             put("authToken", preferences.getString("authToken", "NoAuthToken"));
+            put("userId", preferences.getString("userId", "NoId"));
         }};
 
         Activity activity = new Activity();

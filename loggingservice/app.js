@@ -40,7 +40,7 @@ app.use(function (err, req, res, next) {
 async function startConsumers() {
   try {
     await storeInteraction();
-    await storeErrorLog();
+    // await storeErrorLog();
 
     console.log('Consumers enabled in loggingservice');
   } catch (err) {
