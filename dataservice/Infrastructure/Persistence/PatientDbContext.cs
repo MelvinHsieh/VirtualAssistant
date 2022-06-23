@@ -6,6 +6,7 @@ namespace Infrastructure.Persistence
     public class PatientDbContext : DbContext
     {
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<PatientDeviceIdentifier> PatientDeviceIdentifiers { get; set; }
         public DbSet<EmergencyNotice> EmergencyNotices { get; set; }
 
         public DbSet<PatientLocation> PatientLocations { get; set; }
