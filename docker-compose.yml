@@ -41,8 +41,8 @@ services:
     ports:
       - "80:80"
     environment:
-      - MSSQL_URL_USER_DATA=mongodb://userdatadb:userdatadbpass@userdatadb:27017/
-      - MSSQL_URL_GENERAL_DATA=mongodb://generaldatadb:generaldatadbpass@generaldatadb:27017/
+      - MSSQL_URL_USER_DATA="Server=userdatadb,1433; User=sa; Password=DbPasswordDev12345!@;"
+      - MSSQL_URL_GENERAL_DATA="Server=userdatadb,1434; User=sa; Password=DbPasswordDev12345!@;"
     depends_on:
       - "userdatadb"
       - "generaldatadb"
