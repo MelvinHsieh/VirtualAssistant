@@ -43,16 +43,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             var intakesToDo = new List<PatientIntakeModel>();
             var builder = new StringBuilder();
 
-            if (_intakes == null)
-            {
-                var result = await connection.GetRequest($"PatientIntake/Patient/1"); // TODO: Ensure that patient ID is actually equal to currently logged in user (mobile app).
+            var result = await connection.GetRequest($"PatientIntake/Patient/1");
 
-                List<PatientIntakeModel>? intakes = JsonConvert.DeserializeObject<List<PatientIntakeModel>>(result);
+            List<PatientIntakeModel>? intakes = JsonConvert.DeserializeObject<List<PatientIntakeModel>>(result);
 
-                _intakes = intakes.Where(intake => intake.IntakeStart < DateTime.Now.TimeOfDay && 
-                                            (intake.IntakeEnd <= DateTime.Now.TimeOfDay || intake.IntakeEnd >= DateTime.Now.TimeOfDay))
-                                            .ToList();
-            }
+            _intakes = intakes.Where(intake => intake.IntakeStart < DateTime.Now.TimeOfDay && 
+                                        (intake.IntakeEnd <= DateTime.Now.TimeOfDay || intake.IntakeEnd >= DateTime.Now.TimeOfDay))
+                                        .ToList();
 
             if (_intakes != null && _intakes.Count > 0)
             {
@@ -68,12 +65,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
                         await stepContext.Context.SendActivityAsync(image);
                     }
-                    await stepContext.Context.SendActivityAsync(MessageFactory.Text("Neem nu " + intake.Amount + " " + intake.Medicine.Color + " " + intake.Medicine.Shape + " " + intake.Medicine.Type + " " + intake.Medicine.Name));
-                    
-                    builder.Append("Heb je dit medicijn ingenomen?");
 
-                    return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text(builder.ToString(), null, InputHints.ExpectingInput) }, cancellationToken);
-         
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Neem nu " + intake.Amount + " " + intake.Medicine.Color + " " + intake.Medicine.Shape + " " + intake.Medicine.Type + " " + intake.Medicine.Name));           
+                builder.Append("Heb je dit medicijn ingenomen?");
+
+                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text(builder.ToString(), null, InputHints.ExpectingInput) }, cancellationToken);
             }
             else
             {

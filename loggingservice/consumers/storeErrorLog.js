@@ -1,4 +1,4 @@
-const AMQP = require('amqplib');
+const AMQP = require('amqp-connection-manager');
 const URI = process.env.MESSAGE_BUS_URI
 const USERNAME = process.env.MESSAGE_BUS_USERNAME
 const PASSWORD = process.env.MESSAGE_BUS_PASSWORD
@@ -12,15 +12,19 @@ var ErrorLog = mongoose.model('ErrorLog');
 const consume = async () => {
     try {
         const opt = { credentials: require('amqplib').credentials.plain(USERNAME, PASSWORD) };
-        const connection = await AMQP.connect(URI, opt);
-        let channel = await connection.createChannel();
+        const connection = await AMQP.connect([URI], { connectionOptions: opt });
 
-        await channel.assertExchange(EXCHANGE_NAME, 'direct')
+        var channelWrapper = connection.createChannel({
+            json: true,
+            setup: function (channel) {
+                channel.assertExchange(EXCHANGE_NAME, 'direct')
+                return channel.assertQueue(QUEUE_NAME, { exclusive: false, durable: true });
+            },
+        });
 
-        let q = await channel.assertQueue(QUEUE_NAME, { exclusive: false, durable: true });
-        await channel.bindQueue(q.queue, EXCHANGE_NAME, "");
+        channelWrapper.bindQueue(QUEUE_NAME, EXCHANGE_NAME, "")
 
-        await channel.consume("", data => {
+        await channelWrapper.consume("", data => {
 
             let content = JSON.parse(data.content)
 

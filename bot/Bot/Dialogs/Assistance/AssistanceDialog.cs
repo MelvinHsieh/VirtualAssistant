@@ -8,6 +8,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -17,7 +18,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
     {
         private MedicineRecognizer _medicineRecognizer;
 
-        public AssistanceDialog(MedicineRecognizer medicineRecognizer, DataServiceConnection connection)
+        public AssistanceDialog(MedicineRecognizer medicineRecognizer, DataServiceConnection connection, IConfiguration configuration)
             : base(nameof(AssistanceDialog))
         {
             _medicineRecognizer = medicineRecognizer;
@@ -25,6 +26,7 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             AddDialog(new FindScheduleDialog(connection, medicineRecognizer));
             AddDialog(new FindMedicineByAttributesDialog(connection));
             AddDialog(new RegisterIntakeDialog(connection, medicineRecognizer));
+            AddDialog(new EmergencyDialog(connection, configuration));
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
 
@@ -63,6 +65,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                         return await stepContext.BeginDialogAsync(nameof(FindMedicineByAttributesDialog), luisResult.Entities, cancellationToken);
                     case nameof(Intents.Intake_RegisterIntake):
                         return await stepContext.BeginDialogAsync(nameof(RegisterIntakeDialog), luisResult.Entities, cancellationToken);
+                    case nameof(Intents.Emergency_Notice):
+                        return await stepContext.BeginDialogAsync(nameof(EmergencyDialog), luisResult.Entities, cancellationToken);
                     case nameof(Intents.Cancel):
                         await stepContext.Context.SendActivityAsync(MessageFactory.Text("Oké, laat het mij weten als ik in de toekomst nog iets voor u kan betekenen."));
                         return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);

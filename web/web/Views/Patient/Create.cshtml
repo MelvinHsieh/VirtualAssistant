@@ -64,6 +64,11 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="PatientData.RoomId" class="control-label"></label>
+                <input asp-for="PatientData.RoomId" class="form-control" />
+                <span asp-validation-for="PatientData.RoomId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Patiënt aanmaken" class="btn btn-primary" />
             </div>
         </form>

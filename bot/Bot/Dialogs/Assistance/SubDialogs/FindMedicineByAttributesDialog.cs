@@ -82,7 +82,7 @@ namespace CoreBot.Dialogs.Assistance.SubDialogs
 
         private async Task<DialogTurnResult> Process(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Heeft u verder nog hulpvragen?"));
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text("Heeft u verder nog hulpvragen?", null, InputHints.ExpectingInput));
             return await stepContext.BeginDialogAsync("assistanceDialog", null, cancellationToken);
         }
     }
